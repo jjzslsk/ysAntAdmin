@@ -19,19 +19,26 @@ function hasPermission(roles, permissionRoles) {
   if (!permissionRoles) return true
   return roles.some(role => permissionRoles.indexOf(role) >= 0)
 }
+
 const whiteList = ['/login'] // 不重定向白名单
+
 router.beforeEach((to, from, next) => {
-  console.log (22)
+  console.log (22,'permission')
+  console.log ('to:',to, 'from:',from,'next:', next)
 
   NProgress.start()
   if (getToken()) {
     // 设置浏览器头部标题
+    console.log (77)
+    console.log (store.getters.isLock,to.path)
     const browserHeaderTitle = to.name
     store.commit('SET_BROWSERHEADERTITLE', {
       browserHeaderTitle: browserHeaderTitle
     })
     /* has token*/
     if (store.getters.isLock && to.path !== '/lock') {
+      console.log (66)
+      console.log (store.getters.isLock,to.path)
       next({
         path: '/lock'
       })
@@ -51,9 +58,8 @@ router.beforeEach((to, from, next) => {
           // const roles = res.roles // note: roles must be a array! such as: ['editor','develop']
           // store.dispatch('GenerateRoutes', { roles }).then(() => { // 根据roles权限生成可访问的路由表
           const data = res.router // note: roles must be a array! such as: ['editor','develop']
-          store.dispatch('GenerateRoutes', {
-            data
-          }).then(() => { // 根据路由权限生成可访问的路由表
+          store.dispatch('GenerateRoutes', {data}).then(() => { // 根据路由权限生成可访问的路由表
+            console.log ( 'store.getters.addRouters',store.getters.addRouters)
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({ ...to,
               replace: true

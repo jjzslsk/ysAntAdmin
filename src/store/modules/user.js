@@ -99,15 +99,15 @@ const user = {
     // 登录
     Login({commit}, userInfo) {
       console.log (2)
-      console.log ('username::::::1',userInfo)
+      console.log ('userInfo::::::1',userInfo)
       const username = userInfo.username.trim()//去除两端空格
       return new Promise((resolve, reject) => {
         // console.log("addrss in user.login")
         login(username, userInfo.password).then(response => {
           console.log (6)
-          console.log ('response::::::4',response)
-          if (response.IsSuccess == true) {
           console.log ('response::::::3',response)
+          if (response.IsSuccess == true) {
+          console.log ('response::::::4',response)
 
             setId(response.Data.MId)
             setToken(response.Data.Token)
@@ -136,7 +136,7 @@ const user = {
       console.log ('11',state.token)
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
-          console.log ('33返回数据',response)
+          console.log ('33返回数据getInfo',response)
           console.log('getInfo=>res', response)
           const data = response.Data
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组

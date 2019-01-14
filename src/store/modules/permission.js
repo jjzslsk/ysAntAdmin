@@ -107,11 +107,17 @@ function loadLayout(name) {
 //遍历后台传来的路由字符串，转换为组件对象
 function filterAsyncRouter(asyncRouterMap) { 
   const accessedRouters = asyncRouterMap.filter(route => {
+    console.log ('1',route.component)
     if (route.component) { 
         route.component = loadLayout(route.component)
+        console.log ('2',route.component)
     }
+
+    console.log ('3',route.children)
     if (route.children && route.children.length) {
       route.children = filterAsyncRouter(route.children)
+    console.log ('4',route.children)
+
     }
     return true
   })
@@ -158,7 +164,7 @@ const permission = {
       console.log ('55GenerateRoutes路由表',data)
       return new Promise(resolve => {
         //let accessedRouters =data
-
+        console.log (data.data)
         let accessedRouters = data.data
         
         accessedRouters = filterAsyncRouter(accessedRouters)
@@ -174,6 +180,7 @@ const permission = {
         // }
         //console.log('accessedRouters', accessedRouters)
         commit('SET_ROUTERS', accessedRouters)
+        console.log ('5可以访问路由表',accessedRouters)
         resolve()
       })
     }

@@ -85,11 +85,11 @@ export default {
       console.log (1)
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          console.log ('valid``',valid)
+          console.log ('validate``',valid)
           console.log ('userlogin::',this.loginForm)
           this.$store.dispatch('Login', this.loginForm).then(res => {
             console.log(7)
-            console.log('userlogin::res1',res)
+            console.log('userlogin::resolve',res)
             this.$router.push({ path: '/' })
           })
         }
