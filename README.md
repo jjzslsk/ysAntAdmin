@@ -1,9 +1,9 @@
 
 # 安装依赖
 npm install
-```
-Node.js 常见问题 之 node-sass 安装失败
 
+Node.js 常见问题 之 node-sass 安装失败
+```
 Node.js 常见问题 之 node-sass 安装失败
 问题分析
 安装 node-sass 依赖时，会从 github.com 上下载 .node 文件。
