@@ -1,6 +1,21 @@
 
 # 安装依赖
 npm install
+```
+Node.js 常见问题 之 node-sass 安装失败
+
+Node.js 常见问题 之 node-sass 安装失败
+问题分析
+安装 node-sass 依赖时，会从 github.com 上下载 .node 文件。
+
+由于网络环境的问题，多半会超时失败。
+
+解决方案
+使用淘宝cnpm安装
+
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+cnpm install node-sass
+```
    
 # 建议不要用cnpm安装 会有各种诡异的bug 可以通过如下操作解决 npm 下载速度慢的问题。
 npm install --registry=https://registry.npm.taobao.org
