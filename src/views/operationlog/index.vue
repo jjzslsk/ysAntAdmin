@@ -1,9 +1,6 @@
 <template>
   <section class="app-container">
     <el-card class="box-card">
-      
-
-
         <template>
           <a-card style="margin-bottom:1.6rem;">
          <template>
@@ -34,10 +31,10 @@
             </a-form-item>
           
             <!-- <a-form-item> -->
-              <a-button style="margin-top:.5rem" type='primary' htmlType='submit'>
+              <a-button :icon="ButtonIcons.query" style="margin-top:.5rem" type='primary' htmlType='submit'>
                 查询
               </a-button>
-              <a-button style="margin-top:.5rem" type='primary' htmlType='submit'>
+              <a-button :icon="ButtonIcons.del" style="margin-top:.5rem" type='primary' htmlType='submit'>
                 删除
               </a-button>
             <!-- </a-form-item> -->
@@ -80,81 +77,45 @@
           </span>
       </a-table> -->
 
-          <el-table @row-dblclick='Rowdblclick' stripe :data="dataList" highlight-current-row @selection-change="selsChange" style="width: 100%;">
+          <!-- <el-table @row-dblclick='Rowdblclick' stripe :data="dataList" highlight-current-row @selection-change="selsChange" style="width: 100%;">
             <el-table-column v-for="item in tableLabel" :key="item.Label" :label="item.Label" :prop="item.prop" :width='item.width' :type='item.type'>
             </el-table-column>
             <el-table-column label="操作" width="100" fixed="right">
               <template slot-scope="scope">
-                <!-- <el-button type="text" @click="handleEdit(scope.$index, scope.row)">{{button.edit}}</el-button> -->
                 <el-button type="text"  @click="handleDel(scope.$index, scope.row)">{{button.del}}</el-button>
               </template>
             </el-table-column>
-          </el-table>
+          </el-table> -->
 
           <!-- 分页 -->
-        <el-col :span="24" class="toolbar">
+        <!-- <el-col :span="24" class="toolbar">
       <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total"
         style="float:right;">
       </el-pagination>
-    </el-col>
+    </el-col> -->
 
-        <!--图标-->
-    <el-dialog title="添加" :visible.sync="dialogFormVisibleIcon" :close-on-click-modal="false">
-      <ul class="anticons-list">
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-        <li class><i class="anticon anticon-lock"></i></li>
-        <li class><i class="anticon anticon-unlock"></i></li>
-        <li class><i class="anticon anticon-bars"></i></li>
-      </ul>
-      <div slot="footer" class="dialog-footer">
-        <a-button @click.native="dialogFormVisibleIcon=false">取消</a-button>
-        <a-button type="primary" @click.native="dialogFormVisibleIcon=false">确认</a-button>
-      </div>
-    </el-dialog>
+    <a-table :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}" :pagination='false' :dataSource="dataList" :columns="columns">
+    <template slot="Issuc" slot-scope="text,record">
+      {{record.Issuccess}}
+        <a-badge v-if="record.Issuccess == true" status="success" text="成功" />
+         <a-badge v-if="record.Issuccess == false" status="error" text="失败" />
+    </template>
+    <template slot="action" slot-scope="text, record">
+            <a href="javascript:;" @click="onDelete(record)">删除</a>
+          </template>
+    </a-table>
+
+          <a-pagination
+        style="margin-top:2rem;text-align: right;"
+        showSizeChanger
+        showQuickJumper
+        v-model="current"
+        :total="total"
+        :showTotal="(total, range) => ` 共${total}条记录 第 ${range[0]}/${range[1]}页` "
+        @showSizeChange="onShowSizeChange"
+      />
+
+
 
             <!--按钮-->
     <el-dialog title="添加" :visible.sync="dialogFormVisibleButton" :close-on-click-modal="false">
@@ -333,6 +294,68 @@ export default {
         return data;
       };
     return {
+                   //按钮
+      ButtonIcons:{},
+      ButtonNames:{},
+                  columns: [
+      //               {
+      //   title: '名称',
+      //   dataIndex: 'Name',
+      //   key: 'Name',
+      //   scopedSlots: {
+      //     filterDropdown: 'filterDropdown',
+      //     filterIcon: 'filterIcon',
+      //     customRender: 'customRender',
+      //   },
+      //   onFilter: (value, record) => record.name.toLowerCase().includes(value.toLowerCase()),
+      //   onFilterDropdownVisibleChange: (visible) => {
+      //     if (visible) {
+      //       setTimeout(() => {
+      //         this.$refs.searchInput.focus()
+      //       })
+      //     }
+      //   },
+      // }
+      , {
+        title: 'Id',
+        dataIndex: 'Id',
+        key: 'Id',
+        width: 100
+      },
+      {
+        title: '输入参数',
+        dataIndex: 'Input',
+        key: 'Input',
+        // width: 200
+      },
+      {
+        title: '返回结果',
+        dataIndex: 'Result',
+        key: 'Result',
+        // width: 200
+      },
+      { title: '是否成功', width: 100, dataIndex: 'Issuccess', key: 'Issuccess', scopedSlots: { customRender: 'Issuc' } },
+      {
+        title: '操作',
+        Key: 'action',
+        dataIndex: 'action',
+        scopedSlots: { customRender: 'action' },
+        width: 80
+      }, 
+      // {
+      //   title: 'Address',
+      //   dataIndex: 'address',
+      //   key: 'address',
+      //   filters: [{
+      //     text: 'London',
+      //     value: 'London',
+      //   }, {
+      //     text: 'New York',
+      //     value: 'New York',
+      //   }],
+      //   onFilter: (value, record) => record.address.indexOf(value) === 0,
+      // }
+      ],
       form: this.$form.createForm(this),
             //穿梭框
         data: generateData(),
@@ -449,6 +472,11 @@ export default {
         paixu: "",
         tubiao: ""
       },
+                  //批量选择
+      selectedRowKeys: [], // Check here to configure the default column
+            //分页
+      current: 1,
+    
 
       filterdataListData: [],
       ids: [],
@@ -465,7 +493,87 @@ export default {
       }
     };
   },
+    watch: {
+        checkedKeys(val) {
+      console.log('onCheck', val)
+    },
+    filterText(val) {
+      this.$refs.tree2.filter(val);
+    },
+
+    pageSize(val) {
+        
+        console.log('pageSize',val);
+      },
+      current(val) {
+        console.log('current',val);
+        this.page = val;
+        this.getDataList();
+      }
+  },
+    computed: {
+    hasSelected() {
+      return this.selectedRowKeys.length > 0
+    }
+  },
   methods: {
+            //分页操作
+    onShowSizeChange(current, pageSize) {
+        console.log('111',current, pageSize);
+        // this.page = val;
+        this.page = current;
+        this.size = pageSize;
+        this.getDataList();
+      },
+            //批量选择
+    start () {
+      this.loading = true;
+      // ajax request after empty completing
+      this.$confirm("确认执行删除操作吗？", "提示", {
+        type: "warning",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+      .then(() => {
+        setTimeout(() => {
+        this.loading = false;
+        // this.selectedRowKeys = [];
+
+      // this.idData = this.sels.map(item => item.id).toString();//转换为字符串
+      // var Ids = this.sels.map(item => item.Id);
+          const paraId = {
+            Ids: this.selectedRows
+          };
+          this.para.Code = this.bllCode.del;
+          this.para.Data = JSON.stringify(paraId);
+          handlePost(this.para).then(res => {
+            if (res.IsSuccess == true) {
+            this.getDataList();
+            this.$message({
+              message: "删除成功！",
+              type: "success"
+            });
+            this.selectedRowKeys = []
+            }else {
+                  this.$message({
+                    message: res.Code + ':' + res.Message,
+                    type: "warning"
+                  });
+                }
+          });
+
+      }, 1000);
+        })
+    },
+    onSelectChange (selectedRowKeys,selectedRows) {
+      this.selectedRows = []
+      console.log('selectedRowKeys changed: ', selectedRowKeys,selectedRows);
+      this.selectedRowKeys = selectedRowKeys
+       selectedRows.forEach(car =>{
+        this.selectedRows.push(car.Id)
+      })
+      console.log (this.selectedRows)
+    },
 
     //提交查询表单
     handleSearch  (e) {
@@ -556,6 +664,38 @@ export default {
     },
     // 获取列表
     getDataList() {
+
+
+            const paras = {};
+          this.para.Code = 'GetListYsdatabaseYsButton';
+          this.para.Data = JSON.stringify(paras);
+          handlePost(this.para).then(res => {
+            if (res.IsSuccess == true) {
+            this.buttonList = res.Data.List;
+            this.buttonList.map ((car)=>{
+            if(car.Name == '添加'){
+            this.ButtonIcons.add = car.Icon
+            this.ButtonNames.add = car.Name
+            };
+            if(car.Name == '编辑'){
+            this.ButtonIcons.edit = car.Icon
+            this.ButtonNames.edit = car.Name
+            };
+            if(car.Name == '批量删除'){
+            this.ButtonIcons.del = car.Icon
+            this.ButtonNames.del = car.Name
+            };
+            if(car.Name == '刷新'){
+            this.ButtonIcons.refresh = car.Icon
+            this.ButtonNames.refresh = car.Name
+            };
+            if(car.Name == '查询'){
+            this.ButtonIcons.query = car.Icon
+            this.ButtonNames.query = car.Name
+            };
+          })
+          }
+
       const paraId = {
         Page: this.page,
         Name: this.filters.data,
@@ -570,6 +710,39 @@ export default {
           this.dataList = res.Data.List;
         }
       });
+      });
+
+    },
+        //删除
+    onDelete(data) {
+      console.log(data);
+      this.$confirm("确认删除该记录吗?", "提示", {
+        type: "warning",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+        .then(() => {
+          const paraId = {
+            Id: data.Id
+          };
+          this.para.Code = this.bllCode.del;
+          this.para.Data = JSON.stringify(paraId);
+          handlePost(this.para).then(res => {
+            if (res.IsSuccess == true) {
+              this.getDataList();
+              this.$message({
+                message: "删除成功！",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.Code + ":" + res.Message,
+                type: "warning"
+              });
+            }
+          });
+        })
+        .catch(() => {});
     },
     // 删除
     handleDel(index, row) {

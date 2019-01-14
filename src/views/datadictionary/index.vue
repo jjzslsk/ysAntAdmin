@@ -1,51 +1,6 @@
 <template>
   <section class="app-container">
     <el-card class="box-card">
-    
-        
-    <!-- 部门树形 -->
-  <el-col style="height:;width:18rem;position: relative;z-index: 99;">
-  <el-card class="box-card" style="height: 62.8rem;">
-  <!-- <div slot="header" class="clearfix">
-    <el-input
-      placeholder="快速查找部门"
-      v-model="filterText">
-    </el-input>
-    <el-button style="float: right; padding: 3px 0" type="text"></el-button>
-  </div> -->
-  <dir style="margin:0 auto;padding-inline-start: 0px;padding-bottom:1rem;">
-          <a-button size="small" type="primary" @click="handleAddType">添加</a-button>
-          <a-button size="small" type="primary" @click="handleEditType">编辑</a-button>
-          <a-button size="small" type="primary" @click="handleDelType">删除</a-button>
-  </dir>
-
-  <div class="text item">
-    <template>
-      <a-table :bordered='false' :pagination='false' :columns="columnsData" :dataSource="DataSource" size="small" />
-      
-      <!-- <a-tree
-      defaultExpandAll
-        @select="onSelect"
-        :treeData="treeData"
-      /> -->
-
-    </template>
-
-    <!-- <el-tree
-      class="filter-tree"
-      :data="menus"
-      :props="defaultProps"
-      default-expand-all
-      node-key="value"
-      :highlight-current='true'
-      :filter-node-method="filterNode"
-      @node-click='changeClick'
-      ref="tree2">
-    </el-tree> -->
-
-    </div>
-    </el-card>
-    </el-col>
 
     <!-- <el-col class="UserTable"> -->
       <a-row>
@@ -53,7 +8,7 @@
       <el-form style="overflow: hidden;" :inline="true" :model="filters" @submit.native.prevent>
       
       <el-form-item style="float: right;">
-          <a-button type="primary" @click="getKeyList">查询</a-button>
+          <a-button type="primary" :icon="ButtonIcons.query" @click="getKeyList">查询</a-button>
         </el-form-item>
         <el-form-item style="float: right;">
           <a-input-group compact>
@@ -67,9 +22,9 @@
         </a-input-group>
         </el-form-item>
         <el-form-item style="float: right;">
-          <a-button type="primary" @click="handleAdd">添加字典</a-button>
+          <a-button type="primary" @click="handleAdd" :icon="ButtonIcons.add">添加字典</a-button>
           <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
-          <a-button type="primary" :loading="loadingRefresh" @click="Refresh">刷新</a-button>
+          <a-button type="primary" :loading="loadingRefresh" :icon="ButtonIcons.refresh" @click="Refresh">刷新</a-button>
           <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
           <!-- <a-button type="primary" @click="allotMent">权限</a-button> -->
           <!-- <a-button type="primary" @click="allotRoles">角色</a-button> -->
@@ -581,6 +536,10 @@ const treeData = [{
 export default {
   data() {
     return {
+                        //按钮
+      ButtonIcons:{},
+      ButtonNames:{},
+      buttonList:[],
       //初始化搜索字段
       selectValue:'Name',
 
@@ -1173,6 +1132,37 @@ export default {
     },
     // 获取列表
     getDataList() {
+
+            const paras = {};
+          this.para.Code = 'GetListYsdatabaseYsButton';
+          this.para.Data = JSON.stringify(paras);
+          handlePost(this.para).then(res => {
+            if (res.IsSuccess == true) {
+            this.buttonList = res.Data.List;
+            this.buttonList.map ((car)=>{
+            if(car.Name == '添加'){
+            this.ButtonIcons.add = car.Icon
+            this.ButtonNames.add = car.Name
+            };
+            if(car.Name == '编辑'){
+            this.ButtonIcons.edit = car.Icon
+            this.ButtonNames.edit = car.Name
+            };
+            if(car.Name == '批量删除'){
+            this.ButtonIcons.del = car.Icon
+            this.ButtonNames.del = car.Name
+            };
+            if(car.Name == '刷新'){
+            this.ButtonIcons.refresh = car.Icon
+            this.ButtonNames.refresh = car.Name
+            };
+            if(car.Name == '查询'){
+            this.ButtonIcons.query = car.Icon
+            this.ButtonNames.query = car.Name
+            };
+          })
+          }
+
       this.selectedRowKeys = []
       var dataSource = this.selectValue
       const paraId = [{
@@ -1209,6 +1199,8 @@ export default {
                   });
                 }
       });
+      });
+
     },
     //
     

@@ -5,8 +5,12 @@
     <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
           <!-- <el-button v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</el-button> -->
-          <a-button type="primary" @click="handleAdd">{{button.add}}</a-button>
-          <a-button type="primary" :loading="loadingRefresh" @click="Refresh">刷新</a-button>
+          <!-- <a-button type="primary" @click="handleAdd">{{button.add}}</a-button>
+          <a-button type="primary" :loading="loadingRefresh" @click="Refresh">刷新</a-button> -->
+        <a-button type="primary" @click="handleAdd" :icon="ButtonIcons.add">添加</a-button>
+        <a-button type="primary"  :loading="loadingRefresh" :icon="ButtonIcons.refresh" @click="Refresh">刷新</a-button>
+        <!-- <a-button type="primary" @click="start" :icon="ButtonIcons.del" :disabled="!hasSelected" :loading="loading">批量删除</a-button> -->
+         
           <!-- <a-button type="primary" @click="handleEdit">编辑</a-button> -->
         <!-- <el-form-item> -->
           <!-- <a-button type="primary" @click="allotButton">获取菜单按钮</a-button> -->
@@ -564,6 +568,10 @@ const rowSelectionTree = {
 export default {
   data() {
     return {
+      //按钮
+      ButtonIcons:{},
+      ButtonNames:{},
+      buttonList:[],
       // 多选
       checkedList: defaultCheckedList,
       indeterminate: true,
@@ -608,6 +616,7 @@ export default {
       
       bllCode: {
         //接口标识，由后端提供
+        getButton:'GetListYsdatabaseYsButton',
         add: "AddYsdatabaseYsMenu", //添加
         edit: "UpdateYsdatabaseYsMenu", //修改
         del: "DelYsdatabaseYsMenu", //删除
@@ -801,6 +810,7 @@ export default {
       }
   },
     computed: {
+      
     hasSelected() {
       return this.selectedRowKeys.length > 0
     }
@@ -1038,6 +1048,37 @@ export default {
     },
     // 获取列表
     getDataList() {
+
+            const paras = {};
+          this.para.Code = 'GetListYsdatabaseYsButton';
+          this.para.Data = JSON.stringify(paras);
+          handlePost(this.para).then(res => {
+            if (res.IsSuccess == true) {
+            this.buttonList = res.Data.List;
+            this.buttonList.map ((car)=>{
+            if(car.Name == '添加'){
+            this.ButtonIcons.add = car.Icon
+            this.ButtonNames.add = car.Name
+            };
+            if(car.Name == '编辑'){
+            this.ButtonIcons.edit = car.Icon
+            this.ButtonNames.edit = car.Name
+            };
+            if(car.Name == '批量删除'){
+            this.ButtonIcons.del = car.Icon
+            this.ButtonNames.del = car.Name
+            };
+            if(car.Name == '刷新'){
+            this.ButtonIcons.refresh = car.Icon
+            this.ButtonNames.refresh = car.Name
+            };
+            if(car.Name == '查询'){
+            this.ButtonIcons.query = car.Icon
+            this.ButtonNames.query = car.Name
+            };
+          })
+          }
+
       var dataSource = this.selectValue
       const paraId = [{
         Page: this.page,
@@ -1066,7 +1107,9 @@ export default {
         if (res.IsSuccess == true) {
           // this.total = res.Data.Count;
           this.dataList = res.Data;
+          // this.getIcon()
         }
+      });
       });
     },
         // 查询列表

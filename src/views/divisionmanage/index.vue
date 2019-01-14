@@ -5,16 +5,16 @@
         
     <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
+          <a-button type="primary" @click="handleAdd" :icon="ButtonIcons.add">{{button.add}}</a-button>
+          <a-button type="primary" :loading="loadingRefresh" :icon="ButtonIcons.refresh" @click="Refresh">刷新</a-button>
           <!-- <a-button  v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button> -->
-          <a-button type="primary" @click="handleAdd">{{button.add}}</a-button>
           <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
           <!-- <a-button type="primary" @click="Refresh">刷新</a-button> -->
-          <a-button type="primary" :loading="loadingRefresh" @click="Refresh">刷新</a-button>
           <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
           <!-- <a-button type="primary" @click="allotMent">分配权限</a-button> -->
       <!-- <a-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">{{button.batchRemove}}</a-button> -->
       <el-form-item style="float: right;">
-          <a-button type="primary" @click="getKeyList">查询</a-button>
+          <a-button type="primary" :icon="ButtonIcons.query" @click="getKeyList">查询</a-button>
         </el-form-item>
         <el-form-item style="float: right;">
           <a-input-group compact>
@@ -360,6 +360,10 @@ export default {
         return data;
       };
     return {
+                  //按钮
+      ButtonIcons:{},
+      ButtonNames:{},
+      buttonList:[],
             //批量选择
       selectedRowKeys: [], // Check here to configure the default column
       selectedRows:[],
@@ -667,6 +671,37 @@ export default {
     },
     // 获取列表
     getDataList() {
+
+      const paras = {};
+          this.para.Code = 'GetListYsdatabaseYsButton';
+          this.para.Data = JSON.stringify(paras);
+          handlePost(this.para).then(res => {
+            if (res.IsSuccess == true) {
+            this.buttonList = res.Data.List;
+            this.buttonList.map ((car)=>{
+            if(car.Name == '添加'){
+            this.ButtonIcons.add = car.Icon
+            this.ButtonNames.add = car.Name
+            };
+            if(car.Name == '编辑'){
+            this.ButtonIcons.edit = car.Icon
+            this.ButtonNames.edit = car.Name
+            };
+            if(car.Name == '批量删除'){
+            this.ButtonIcons.del = car.Icon
+            this.ButtonNames.del = car.Name
+            };
+            if(car.Name == '刷新'){
+            this.ButtonIcons.refresh = car.Icon
+            this.ButtonNames.refresh = car.Name
+            };
+            if(car.Name == '查询'){
+            this.ButtonIcons.query = car.Icon
+            this.ButtonNames.query = car.Name
+            };
+          })
+          }
+
       const paraId = {
         Page: this.page,
         Name: this.filters.data,
@@ -681,6 +716,9 @@ export default {
           this.dataList = res.Data;
         }
       });
+
+          })
+
     },
     // 删除
     handleDel(index, row) {

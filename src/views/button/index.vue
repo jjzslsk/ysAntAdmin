@@ -4,15 +4,15 @@
       <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
         <!-- <a-button v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button> -->
-        <a-button type="primary" class="addButtonClassName" @click="getIconDefaultevent" :icon="ButtonIcons.add">{{ButtonNames.add}}</a-button>
         <!-- <a-button type="primary" class="addButtonClassName" :icon="ButtonIcons.edit" @click="handleAdd">编辑</a-button> -->
-        <a-button type="primary"  :loading="loadingRefresh" :icon="ButtonIcons.refresh" @click="Refresh">{{ButtonNames.refresh}}</a-button>
         <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
-        <a-button type="primary" @click="start" :icon="ButtonIcons.del" :disabled="!hasSelected" :loading="loading">{{ButtonNames.del}}
+        <a-button type="primary" @click="handleAdd" :icon="ButtonIcons.add">添加</a-button>
+        <a-button type="primary"  :loading="loadingRefresh" :icon="ButtonIcons.refresh" @click="Refresh">刷新</a-button>
+        <a-button type="primary" @click="start" :icon="ButtonIcons.del" :disabled="!hasSelected" :loading="loading">批量删除
           <template v-if="hasSelected">{{`(${selectedRowKeys.length})`}}</template>
         </a-button>
         <el-form-item style="float: right;">
-          <a-button type="primary" :icon="ButtonIcons.query" @click="getKeyList">{{ButtonNames.query}}</a-button>
+          <a-button type="primary" :icon="ButtonIcons.query" @click="getKeyList">查询</a-button>
         </el-form-item>
         <el-form-item style="float: right;">
           <a-input-group compact>
@@ -75,7 +75,7 @@
           <a-button type="primary" @click="() => handleSearch(selectedKeys, confirm)">快速定位</a-button>
           <a-button @click="() => handleReset(clearFilters)">取消</a-button>
         </div>
-        <a-icon
+        <a-icon class="aIcon"
           slot="filterIcon"
           slot-scope="filtered"
           type="tag"
@@ -3973,6 +3973,7 @@ export default {
       //按钮
       ButtonIcons:{},
       ButtonNames:{},
+      buttonList:[],
       
       buttonClassName:'',
       //批量选择
@@ -4204,32 +4205,9 @@ export default {
     //    })
     //    }
     // },
-        //初始化图标
-       linIcon(){
-         this.dataList.map ((car)=>{
-         if(car.Name == '添加'){
-         this.ButtonIcons.add = car.Icon
-         this.ButtonNames.add = car.Name
-         };
-         if(car.Name == '编辑'){
-         this.ButtonIcons.edit = car.Icon
-         this.ButtonNames.edit = car.Name
-         };
-         if(car.Name == '批量删除'){
-         this.ButtonIcons.del = car.Icon
-         this.ButtonNames.del = car.Name
-         };
-         if(car.Name == '刷新'){
-         this.ButtonIcons.refresh = car.Icon
-         this.ButtonNames.refresh = car.Name
-         };
-         if(car.Name == '查询'){
-         this.ButtonIcons.query = car.Icon
-         this.ButtonNames.query = car.Name
-         };
 
-       })
-       },
+      //  linIcon(){
+
     //批量选择
     start() {
       this.loading = true;
@@ -4455,6 +4433,38 @@ export default {
     },
     // 获取列表
     getDataList() {
+
+
+            const paras = {};
+          this.para.Code = 'GetListYsdatabaseYsButton';
+          this.para.Data = JSON.stringify(paras);
+          handlePost(this.para).then(res => {
+            if (res.IsSuccess == true) {
+            this.buttonList = res.Data.List;
+            this.buttonList.map ((car)=>{
+            if(car.Name == '添加'){
+            this.ButtonIcons.add = car.Icon
+            this.ButtonNames.add = car.Name
+            };
+            if(car.Name == '编辑'){
+            this.ButtonIcons.edit = car.Icon
+            this.ButtonNames.edit = car.Name
+            };
+            if(car.Name == '批量删除'){
+            this.ButtonIcons.del = car.Icon
+            this.ButtonNames.del = car.Name
+            };
+            if(car.Name == '刷新'){
+            this.ButtonIcons.refresh = car.Icon
+            this.ButtonNames.refresh = car.Name
+            };
+            if(car.Name == '查询'){
+            this.ButtonIcons.query = car.Icon
+            this.ButtonNames.query = car.Name
+            };
+          })
+          }
+
       this.selectedRowKeys = [];
       var dataSource = this.selectValue;
       const paraId = [
@@ -4486,7 +4496,6 @@ export default {
         if (res.IsSuccess == true) {
           this.total = res.Data.Count;
           this.dataList = res.Data.List;
-          this.linIcon();
         } else {
           this.$message({
             message: res.Code + ":" + res.Message,
@@ -4494,6 +4503,8 @@ export default {
           });
         }
       });
+      });
+
     },
 
     // 删除
@@ -4686,6 +4697,7 @@ export default {
   mounted() {
     this.loadButton(store.getters.interfaces); //按权限加载按钮
     this.getDataList();
+
     // this.getIconDefaultevent();
   }
 };
@@ -4838,5 +4850,8 @@ export default {
 }
 .anticons-list .anticon:before {
   content: none !important;
+}
+.aIcon {
+  top: -.6rem;
 }
 </style>
