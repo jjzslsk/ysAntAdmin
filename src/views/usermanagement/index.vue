@@ -15,8 +15,8 @@
           <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
           <!-- <a-button type="primary" @click="allotMent">权限</a-button> -->
           <!-- <a-button type="primary" @click="allotRoles">角色</a-button> -->
-      <a-button
-        type="primary"
+      <!-- <a-button
+        type="danger"
         @click="start"
         :disabled="!hasSelected"
         :loading="loading"
@@ -26,7 +26,7 @@
         <template v-if="hasSelected">
           {{`(${selectedRowKeys.length})`}}
         </template>
-      </a-button>
+      </a-button> -->
 
       <el-form-item style="float: right;">
           <a-button type="primary" @click="getKeyList">查询</a-button>
@@ -110,7 +110,7 @@
       </el-pagination>
     </el-col> -->
 
-        <a-table :scroll="{ x: 1300 }" :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}" :pagination='false' :dataSource="users" :columns="columns">
+        <a-table :scroll="{ x: 1300 }" :pagination='false' :dataSource="users" :columns="columns">
     <div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters }" class='custom-filter-dropdown'>
       <a-input
         ref="searchInput"

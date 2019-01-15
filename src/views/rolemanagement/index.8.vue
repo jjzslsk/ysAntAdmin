@@ -13,7 +13,7 @@
           <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
           <!-- <a-button type="primary" @click="allotMent">分配权限</a-button> -->
           <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
-      <!-- <a-button
+      <a-button
         type="danger"
         @click="start"
         :disabled="!hasSelected"
@@ -24,7 +24,7 @@
         <template v-if="hasSelected">
           {{`(${selectedRowKeys.length})`}}
         </template>
-      </a-button> -->
+      </a-button>
       <el-form-item style="float: right;">
           <a-button type="primary" :icon="ButtonIcons.query" @click="getKeyList">查询</a-button>
         </el-form-item>
@@ -61,7 +61,7 @@
       </el-pagination>
     </el-col> -->
 
-        <a-table :pagination='false' :dataSource="dataList" :columns="columns">
+        <a-table :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}" :pagination='false' :dataSource="dataList" :columns="columns">
     <div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters }" class='custom-filter-dropdown'>
       <a-input
         ref="searchInput"

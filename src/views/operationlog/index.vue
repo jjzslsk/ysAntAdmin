@@ -2,13 +2,46 @@
   <section class="app-container">
     <el-card class="box-card">
         <template>
-          <a-card style="margin-bottom:1.6rem;">
+          <!-- <a-card style="margin-bottom:1.6rem;"> -->
          <template>
-          <a-form @submit="handleSearch" :form="form" layout='inline'>
-            <a-form-item label='操作人' >
+          <div id='components-form-demo-advanced-search'>
+    <a-form style="margin-bottom:1.6rem;"
+      class='ant-advanced-search-form'
+      @submit="handleSearch"
+      :form="form"
+    >
+    <a-row :gutter="24">
+        <a-col  :span="8">
+            <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label='操作人' >
             <a-input />
             </a-form-item>
-            <a-form-item label='操作时间' >
+        </a-col>
+
+        <a-col  :span="8">
+            <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label='操作类型'>
+            <a-select>
+              <a-select-option value='male'>male</a-select-option>
+              <a-select-option value='female'>female</a-select-option>
+            </a-select>
+            </a-form-item>
+        </a-col>
+
+        <a-col  :span="8">
+            <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label='操作表' >
+            <a-input />
+            </a-form-item>
+        </a-col>
+    </a-row>
+
+    <a-row :gutter="24">
+        <a-col  :span="8">
+            <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label='业务' >
+            <a-input />
+            </a-form-item>
+        </a-col>
+
+        <a-col  :span="8">
+            <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label='操作时间' >
               <a-range-picker
                 :showTime="{ format: 'HH:mm' }"
                 format="YYYY-MM-DD HH:mm"
@@ -16,32 +49,47 @@
                 @change="onChange"
                 @ok="onOk"
               />
+            <!-- <a-input /> -->
             </a-form-item>
-            <a-form-item label='操作表' >
-            <a-input />
+        </a-col>
+        <a-col  :span="8">
+            <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label=''>
+
+
             </a-form-item>
-            <a-form-item label='业务' >
-            <a-input />
-            </a-form-item>
-            <a-form-item label='操作类型'>
-            <a-select style="width: 14rem">
-              <a-select-option value='male'>male</a-select-option>
-              <a-select-option value='female'>female</a-select-option>
-            </a-select>
-            </a-form-item>
+        </a-col>
+    </a-row>
           
-            <!-- <a-form-item> -->
-              <a-button :icon="ButtonIcons.query" style="margin-top:.5rem" type='primary' htmlType='submit'>
+            <a-row>
+          <a-col :span="24" :style="{ textAlign: 'right' }">
+            <a-button :icon="ButtonIcons.query" type='primary' htmlType='submit'>查询</a-button>
+            <a-button :loading="loadingRefresh" type='primary' :icon="ButtonIcons.refresh" @click="Refresh">
+              刷新
+            </a-button>
+            <a-button :icon="ButtonIcons.del" type="danger" :disabled="!hasSelected" :loading="loading" @click="start">
+              <template v-if="hasSelected">{{`(${selectedRowKeys.length})`}}</template>
+              批量删除
+            </a-button>
+            <!-- <a :style="{ marginLeft: '8px', fontSize: '12px' }" @click="toggle">
+              Collapse <a-icon :type="expand ? 'up' : 'down'" />
+            </a> -->
+          </a-col>
+        </a-row>
+
+
+              <!-- <a-button :icon="ButtonIcons.query" style="margin-top:.5rem" type='primary' htmlType='submit'>
                 查询
-              </a-button>
-              <a-button :icon="ButtonIcons.del" style="margin-top:.5rem" type='primary' htmlType='submit'>
+              </a-button> -->
+        <!-- <a-button type="primary"  :loading="loadingRefresh" :icon="ButtonIcons.refresh" @click="Refresh">刷新</a-button> -->
+              <!-- <a-button :icon="ButtonIcons.del" :disabled="!hasSelected" :loading="loading" @click="start" style="margin-top:.5rem" type='primary' htmlType='submit'>
+          <template v-if="hasSelected">{{`(${selectedRowKeys.length})`}}</template>                
                 删除
-              </a-button>
-            <!-- </a-form-item> -->
+              </a-button> -->
           </a-form>
+          </div>
         </template>
                 
-          </a-card>
+          <!-- </a-card> -->
         </template>
 
     <!--工具条-->
@@ -472,8 +520,11 @@ export default {
         paixu: "",
         tubiao: ""
       },
-                  //批量选择
+      //批量选择
       selectedRowKeys: [], // Check here to configure the default column
+      selectedRows: [],
+      loading: false,
+      loadingRefresh: false,
             //分页
       current: 1,
     
@@ -598,13 +649,16 @@ export default {
       //   note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
       // })
     },
-        //刷新页面
+    //刷新页面
     Refresh() {
-      (this.filters = {
-        Page: 1,
-        Size: 15
-      }),
+      this.filters = {};
+      this.loadingRefresh = true;
+      setTimeout(() => {
+        this.loadingRefresh = false;
+        this.page = 1;
+        this.current = 1;
         this.getDataList();
+      }, 1000);
     },
         //穿梭框
     handleChange(value, direction, movedKeys) {
@@ -695,6 +749,8 @@ export default {
             };
           })
           }
+
+      this.selectedRowKeys = [];
 
       const paraId = {
         Page: this.page,
@@ -977,5 +1033,33 @@ export default {
     transition: transform .3s ease-in-out;
     transition: transform .3s ease-in-out,-webkit-transform .3s ease-in-out;
     will-change: transform;
+}
+/* ----------------------表单 */
+.ant-advanced-search-form {
+  padding: 24px;
+  background: #fbfbfb;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+}
+
+.ant-advanced-search-form .ant-form-item {
+  display: flex;
+}
+
+.ant-advanced-search-form .ant-form-item-control-wrapper {
+  flex: 1;
+}
+
+#components-form-demo-advanced-search .ant-form {
+  max-width: none;
+}
+#components-form-demo-advanced-search .search-result-list {
+  margin-top: 16px;
+  border: 1px dashed #e9e9e9;
+  border-radius: 6px;
+  background-color: #fafafa;
+  min-height: 200px;
+  text-align: center;
+  padding-top: 80px;
 }
 </style>

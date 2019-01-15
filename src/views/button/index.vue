@@ -8,7 +8,7 @@
         <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
         <a-button type="primary" @click="handleAdd" :icon="ButtonIcons.add">添加</a-button>
         <a-button type="primary"  :loading="loadingRefresh" :icon="ButtonIcons.refresh" @click="Refresh">刷新</a-button>
-        <a-button type="primary" @click="start" :icon="ButtonIcons.del" :disabled="!hasSelected" :loading="loading">批量删除
+        <a-button type="danger" @click="start" :icon="ButtonIcons.del" :disabled="!hasSelected" :loading="loading">批量删除
           <template v-if="hasSelected">{{`(${selectedRowKeys.length})`}}</template>
         </a-button>
         <el-form-item style="float: right;">
