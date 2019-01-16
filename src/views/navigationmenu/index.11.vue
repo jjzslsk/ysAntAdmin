@@ -3640,19 +3640,16 @@
       >
 
           <!-- <a-button type="primary" @click="GetYsMenuButton()">获取单个菜单按钮</a-button> -->
-          <!-- <a-button type="primary" @click="GetYsMenuButtons">获取所有菜单按钮</a-button> -->
-          <!-- <a-button type="primary" @click="SetButton">设置按钮</a-button> -->
-          <!-- {{buttonKey}}编辑ID : -->
-
-          <!-- 为"{{GetYsMenuButtonInfo.Name}}"分配按钮 -->
-          <!-- <hr>
+          <a-button type="primary" @click="GetYsMenuButtons">获取所有菜单按钮</a-button>
+          <a-button type="primary" @click="SetButton">设置按钮</a-button>
+          {{buttonKey}}编辑ID :
+          <hr>
           ==============
           选中： {{checkedList}}
-          {{selButtons}}
           <hr>
           ==============
           <hr>
-            所有按钮信息：{{GetYsMenuButtonsData}} -->
+            所有按钮信息：{{GetYsMenuButtonsData}}
           <!-- <template>
         <a-transfer
           :dataSource="mockData"
@@ -3663,11 +3660,12 @@
         >
         </a-transfer>
           </template>-->
-          <!-- ==============
+          ==============
           <hr>
-         获取操作按钮数据，已改为多选内容： {{ButtonData}} -->
+         获取操作按钮数据，已改为多选内容： {{ButtonData}}
          <!-- <template v-for="item in GetYsMenuButtonsData" > -->
-          <a-form-item  :labelCol="{ span: 3 }">
+          <a-form-item v-for="i in GetYsMenuButtonsData" 
+          :key="i.Id" :label="i.Name" :labelCol="{ span: 3 }">
 
                 <!-- <a-checkbox
                  :indeterminate="indeterminate"
@@ -3675,11 +3673,11 @@
                   :checked="checkAll" >
                   全选
                   </a-checkbox> -->
-
+                  {{i.ButtonIds}}
 
                 <a-checkbox-group
                   :options="ButtonData"
-                  v-model='checkedList'
+                  v-model="checkedList"
                   @change="onChangeCheckbox"
                 />
 
@@ -4022,7 +4020,6 @@ export default {
       ButtonIcons: {},
       ButtonNames: {},
       buttonList: [],
-      selButtons:[],
       // 多选
       checkedList: defaultCheckedList,
       // checkedList: [],
@@ -4047,7 +4044,6 @@ export default {
       buttonKey: "",
       //菜单按钮
       GetYsMenuButtonData: [], //获取单按钮
-      GetYsMenuButtonInfo: null, //获取单按钮
       GetYsMenuButtonsData: [], //获取多按钮
       selectValue: "Name",
       //穿梭框
@@ -4264,7 +4260,7 @@ export default {
     },
     // 多选框
     onChangeCheckbox(checkedList, checkedValues) {//单选
-      this.checkedLists = checkedList
+      // this.checkedLists = checkedList
       console.log("checked = ", checkedList, checkedValues);
       this.indeterminate =
         !!checkedList.length && checkedList.length < this.ButtonData.length;
@@ -4495,25 +4491,6 @@ export default {
       }
     },
 
-        //转按钮列表对象值
-    carButtons() {
-      var buttonkeyMap = {
-        Id: "value",
-        ButtonIds: "label"
-      };
-
-      for (var i = 0; i < this.GetYsMenuButtonsData.length; i++) {
-        var obj = this.GetYsMenuButtonsData[i];
-        for (var key in obj) {
-          var newKey = buttonkeyMap[key];
-          if (newKey) {
-            obj[newKey] = obj[key];
-            delete obj[key];
-          }
-        }
-      }
-    },
-
     // 获取列表
     getDataList() {
       
@@ -4590,7 +4567,6 @@ export default {
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
           if (res.Data[0].ButtonIds.length > 0) {
-            this.GetYsMenuButtonInfo = res.Data[0]
             this.GetYsMenuButtonData = res.Data[0].ButtonIds;
             this.checkedList = this.GetYsMenuButtonData;
           }
@@ -4634,7 +4610,6 @@ export default {
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
           this.GetYsMenuButtonsData = res.Data;
-          this.carButtons()
         }
       });
     },

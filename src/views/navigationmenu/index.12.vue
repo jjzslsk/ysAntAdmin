@@ -3640,19 +3640,17 @@
       >
 
           <!-- <a-button type="primary" @click="GetYsMenuButton()">获取单个菜单按钮</a-button> -->
-          <!-- <a-button type="primary" @click="GetYsMenuButtons">获取所有菜单按钮</a-button> -->
-          <!-- <a-button type="primary" @click="SetButton">设置按钮</a-button> -->
-          <!-- {{buttonKey}}编辑ID : -->
-
-          <!-- 为"{{GetYsMenuButtonInfo.Name}}"分配按钮 -->
-          <!-- <hr>
+          <a-button type="primary" @click="GetYsMenuButtons">获取所有菜单按钮</a-button>
+          <a-button type="primary" @click="SetButton">设置按钮</a-button>
+          {{buttonKey}}编辑ID :
+          <hr>
           ==============
           选中： {{checkedList}}
           {{selButtons}}
           <hr>
           ==============
           <hr>
-            所有按钮信息：{{GetYsMenuButtonsData}} -->
+            所有按钮信息：{{GetYsMenuButtonsData}}
           <!-- <template>
         <a-transfer
           :dataSource="mockData"
@@ -3663,11 +3661,12 @@
         >
         </a-transfer>
           </template>-->
-          <!-- ==============
+          ==============
           <hr>
-         获取操作按钮数据，已改为多选内容： {{ButtonData}} -->
+         获取操作按钮数据，已改为多选内容： {{ButtonData}}
          <!-- <template v-for="item in GetYsMenuButtonsData" > -->
-          <a-form-item  :labelCol="{ span: 3 }">
+          <a-form-item v-for="i in GetYsMenuButtonsData" 
+          :key="i.value" :label="i.Name" :labelCol="{ span: 3 }">
 
                 <!-- <a-checkbox
                  :indeterminate="indeterminate"
@@ -3675,12 +3674,12 @@
                   :checked="checkAll" >
                   全选
                   </a-checkbox> -->
-
+                  {{i.value}}
 
                 <a-checkbox-group
                   :options="ButtonData"
-                  v-model='checkedList'
-                  @change="onChangeCheckbox"
+                  :defaultValue="i.label"
+                  @change="onChangeCheckbox(i.value)"
                 />
 
 
@@ -4047,7 +4046,6 @@ export default {
       buttonKey: "",
       //菜单按钮
       GetYsMenuButtonData: [], //获取单按钮
-      GetYsMenuButtonInfo: null, //获取单按钮
       GetYsMenuButtonsData: [], //获取多按钮
       selectValue: "Name",
       //穿梭框
@@ -4590,7 +4588,6 @@ export default {
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
           if (res.Data[0].ButtonIds.length > 0) {
-            this.GetYsMenuButtonInfo = res.Data[0]
             this.GetYsMenuButtonData = res.Data[0].ButtonIds;
             this.checkedList = this.GetYsMenuButtonData;
           }
