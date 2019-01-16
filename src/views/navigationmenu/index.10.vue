@@ -3652,8 +3652,7 @@
         @ok="handleOkButton"
         @click="allotIcon"
       >
-      <!-- <div> -->
-        <!-- <div style="text-align: center" class="transferBox">
+        <div style="text-align: center" class="transferBox">
           <a-button type="primary" @click="GetYsMenuButton()">获取单个菜单按钮</a-button>
           <a-button type="primary" @click="GetYsMenuButtons">获取所有菜单按钮</a-button>
           <a-button type="primary" @click="SetButton">设置按钮</a-button>
@@ -3661,7 +3660,7 @@
           {{checkedList}}
           <hr>
           ==============
-          {{this.GetYsMenuButtonsData}} -->
+          {{this.GetYsMenuButtonsData}}
           <!-- <template>
         <a-transfer
           :dataSource="mockData"
@@ -3672,25 +3671,21 @@
         >
         </a-transfer>
           </template>-->
-          <a-form-item label='导航菜单' :labelCol="{ span: 3 }">
-            <!-- <a-row :gutter="24"> -->
-              <!-- <a-col :span="3">导航菜单</a-col> -->
-              <!-- <a-col :span="21" style="float:left;text-align: left;"> -->
-                <a-checkbox
-                 :indeterminate="indeterminate"
-                 @change="onCheckAllChange"
-                  :checked="checkAll" >
-                  全选
-                  </a-checkbox>
-
+          <a-form-item label>
+            <a-row :gutter="24">
+              <a-col :span="3">导航菜单</a-col>
+              <a-col :span="21" style="float:left;text-align: left;">
+                <!-- <a-checkbox :indeterminate="indeterminate" @change="onCheckAllChange" :checked="checkAll" >全选</a-checkbox> -->
                 <a-checkbox-group
                   :options="ButtonData"
                   v-model="checkedList"
                   @change="onChangeCheckbox"
                 />
-                <!-- {{buttonList}} -->
-              <!-- </a-col> -->
-            <!-- </a-row> -->
+                {{buttonList}}
+                <hr>
+                
+              </a-col>
+            </a-row>
             <!-- <a-row :gutter="24">
                   <a-col :span="3"> 操作按钮 </a-col>
                   <a-col :span="21" style="float:left;text-align: left;">
@@ -3698,9 +3693,50 @@
                     <a-checkbox-group  :options="plainOptions" v-model="checkedList" @change="onChangeCheckbox" />
                   </a-col>
             </a-row>-->
-
+            <!-- <a-row :gutter="24">
+                  <a-col :span="3"> 角色管理 </a-col>
+                  <a-col :span="21" style="float:left;text-align: left;">
+                    <a-checkbox :indeterminate="indeterminate" @change="onCheckAllChange" :checked="checkAll" >全选</a-checkbox>
+                    <a-checkbox-group  :options="plainOptions" v-model="checkedList" @change="onChangeCheckbox" />
+                  </a-col>
+                </a-row>
+                <a-row :gutter="24">
+                  <a-col :span="3"> 用户管理 </a-col>
+                  <a-col :span="21" style="float:left;text-align: left;">
+                    <a-checkbox :indeterminate="indeterminate" @change="onCheckAllChange" :checked="checkAll" >全选</a-checkbox>
+                    <a-checkbox-group  :options="plainOptions" v-model="checkedList" @change="onChangeCheckbox" />
+                  </a-col>
+                </a-row>
+                <a-row :gutter="24">
+                  <a-col :span="3"> 部门管理 </a-col>
+                  <a-col :span="21" style="float:left;text-align: left;">
+                    <a-checkbox :indeterminate="indeterminate" @change="onCheckAllChange" :checked="checkAll" >全选</a-checkbox>
+                    <a-checkbox-group  :options="plainOptions" v-model="checkedList" @change="onChangeCheckbox" />
+                  </a-col>
+                </a-row>
+                <a-row :gutter="24">
+                  <a-col :span="3"> 数据字典 </a-col>
+                  <a-col :span="21" style="float:left;text-align: left;">
+                    <a-checkbox :indeterminate="indeterminate" @change="onCheckAllChange" :checked="checkAll" >全选</a-checkbox>
+                    <a-checkbox-group  :options="plainOptions" v-model="checkedList" @change="onChangeCheckbox" />
+                  </a-col>
+                </a-row>
+                <a-row :gutter="24">
+                  <a-col :span="3"> 操作日志 </a-col>
+                  <a-col :span="21" style="float:left;text-align: left;">
+                    <a-checkbox :indeterminate="indeterminate" @change="onCheckAllChange" :checked="checkAll" >全选</a-checkbox>
+                    <a-checkbox-group  :options="plainOptions" v-model="checkedList" @change="onChangeCheckbox" />
+                  </a-col>
+                </a-row>
+                <a-row :gutter="24">
+                  <a-col :span="3"> 系统设置 </a-col>
+                  <a-col :span="21" style="float:left;text-align: left;">
+                    <a-checkbox :indeterminate="indeterminate" @change="onCheckAllChange" :checked="checkAll" >全选</a-checkbox>
+                    <a-checkbox-group  :options="plainOptions" v-model="checkedList" @change="onChangeCheckbox" />
+                  </a-col>
+            </a-row>-->
           </a-form-item>
-        <!-- </div> -->
+        </div>
 
         <div slot="footer" class="dialog-footer">
           <a-button @click.native="dialogFormVisibleButton=false">取消</a-button>
@@ -3878,7 +3914,7 @@ const plainOptions = [
 ];
 
 // const plainOptions = ['1',2, 3,'4','修改', '批量删除','5','6']
-const defaultCheckedList = [];
+const defaultCheckedList = ["新增", "查询"];
 
 //表头部
 const columnsTree = [
@@ -4037,13 +4073,13 @@ export default {
       ButtonNames: {},
       buttonList: [],
       // 多选
-      checkedList: defaultCheckedList,
-      // checkedList: [],
+      // checkedList: defaultCheckedList,
+      checkedList: [],
 
       indeterminate: true,
       checkAll: false,
       plainOptions,
-      // checkedLists: [],
+      checkedLists: [],
 
       searchText: "",
       //初始化搜索字段
@@ -4274,18 +4310,18 @@ export default {
       console.log(this.editForm.Icon);
       this.dialogFormVisibleIcon = false;
     },
-    // 多选框
-    onChangeCheckbox(checkedList, checkedValues) {//单选
+    // 多选
+    onChangeCheckbox(checkedList, checkedValues) {
       // this.checkedLists = checkedList
       console.log("checked = ", checkedList, checkedValues);
       this.indeterminate =
-        !!checkedList.length && checkedList.length < this.ButtonData.length;
-      this.checkAll = checkedList.length === this.ButtonData.length;
+        !!checkedList.length && checkedList.length < plainOptions.length;
+      this.checkAll = checkedList.length === plainOptions.length;
     },
-    onCheckAllChange(e) {//全选
+    onCheckAllChange(e) {
       // console.log (this.checkedLists)
       Object.assign(this, {
-        checkedList: e.target.checked ? this.ButtonData : [],
+        checkedList: e.target.checked ? plainOptions : [],
         indeterminate: false,
         checkAll: e.target.checked
       });
