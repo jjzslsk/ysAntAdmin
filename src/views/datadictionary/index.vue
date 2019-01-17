@@ -8,7 +8,7 @@
       <el-form style="overflow: hidden;" :inline="true" :model="filters" @submit.native.prevent>
       
       <el-form-item style="float: right;">
-          <a-button type="primary" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
+          <a-button type="primary" v-if="isShowButton.querys" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
         </el-form-item>
         <el-form-item style="float: right;">
           <a-input-group compact>
@@ -22,14 +22,14 @@
         </a-input-group>
         </el-form-item>
         <el-form-item style="float: right;">
-        <a-button type="primary" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
-        <a-button type="primary" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>  
+        <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
+        <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>  
           <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
           <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
           <!-- <a-button type="primary" @click="allotMent">权限</a-button> -->
           <!-- <a-button type="primary" @click="allotRoles">角色</a-button> -->
       <!-- <a-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">{{button.batchRemove}}</a-button> -->
-        <a-button type="danger" @click="start" :icon="buttonList[4].Icon" :disabled="!hasSelected" :loading="loading">{{buttonList[4].Name}}
+        <a-button type="danger" v-if="isShowButton.dels" @click="start" :icon="buttonList[4].Icon" :disabled="!hasSelected" :loading="loading">{{buttonList[4].Name}}
           <template v-if="hasSelected">{{`(${selectedRowKeys.length})`}}</template>
         </a-button>
       </el-form-item>
@@ -96,9 +96,9 @@
          <a-badge v-if="record.State == false" status="error" text="停用" />
     </template>
     <template slot="action" slot-scope="text, record">
-            <a href="javascript:;" @click="onEdit(record)">编辑</a>
-            <a-divider type="vertical" />
-            <a href="javascript:;" @click="onDelete(record)">删除</a>
+            <a href="javascript:;" v-if="isShowButton.edit" @click="onEdit(record)">编辑</a>
+            <a-divider type="vertical" v-if="isShowButton.del" />
+            <a href="javascript:;" v-if="isShowButton.del" @click="onDelete(record)">删除</a>
           </template>
   </a-table>
 
@@ -528,7 +528,9 @@ const treeData = [{
 export default {
   data() {
     return {
-                        //按钮
+      //按钮显示隐藏
+      isShowButton:{},
+      //按钮
       ButtonIcons:{},
       ButtonNames:{},
       buttonList:[],
@@ -1184,6 +1186,52 @@ export default {
         if (res.IsSuccess == true) {
           this.total = res.Data.Count;
           this.dataList = res.Data.List;
+
+                    //初始化按钮
+            this.isShowButton = {
+              add:false,
+              Refresh:false,
+              edit:false,
+              del:false,
+              dels:false,
+              query:false,  
+            };
+            //获取多菜单按钮
+            const paraId = {
+              MenuId:20,
+            };
+            this.para.Code = "GetYsMenuButton";
+            this.para.Data = JSON.stringify(paraId);
+            handlePost(this.para).then(res => {
+              if (res.IsSuccess == true) {
+                const buttonAr = res.Data[0].ButtonIds;
+                buttonAr.forEach((i)=>{
+                  switch(i){
+                    case 1:
+                    this.isShowButton.add = true;
+                    break;                   
+                    case 38:
+                    this.isShowButton.Refresh = true;
+                    break;                   
+                    case 39:
+                    this.isShowButton.edit = true;
+                    break;                   
+                    case 40:
+                    this.isShowButton.del = true;
+                    break;                   
+                    case 43:
+                    this.isShowButton.dels = true;
+                    break;                   
+                    case 45:
+                    this.isShowButton.query = true;
+                    break;                   
+                  }
+                  // if(typeof i == 'null'){
+                })
+              }
+            });
+
+
         }else {
                   this.$message({
                     message: res.Code + ':' + res.Message,

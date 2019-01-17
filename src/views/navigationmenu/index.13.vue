@@ -3,6 +3,19 @@
     <el-card class="box-card">
       <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
+        {{buttonList}}
+        <hr>
+         所有按钮信息：{{GetYsMenuButtonsData}} -->
+          <a-button type="primary" @click="GetYsMenuButtons">获取所有菜单按钮</a-button>
+
+          {{isShowButton.add}}
+          {{isShowButton}}
+
+
+
+        <!-- <el-button v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</el-button> -->
+        <!-- <a-button type="primary" @click="handleAdd">{{button.add}}</a-button>
+        <a-button type="primary" :loading="loadingRefresh" @click="Refresh">刷新</a-button>-->
         <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].label}}</a-button>
         <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].label}}</a-button>
         <!-- <a-button type="primary" @click="start" :icon="ButtonIcons.del" :disabled="!hasSelected" :loading="loading">批量删除</a-button> -->
@@ -129,10 +142,10 @@
 
         <template slot="action" slot-scope="text, record">
           <a href="javascript:;" @click="allotButton(record.Key)">分配按钮</a>
-          <a-divider v-if="isShowButton.edit"  type="vertical"/>
-          <a v-if="isShowButton.edit" href="javascript:;" @click="onEdit(record)">{{record.Edit}}</a>
-          <a-divider v-if="isShowButton.del"  type="vertical"/>
-          <a v-if="isShowButton.del" href="javascript:;" @click="onDelete(record)">{{record.Del}}</a>
+          <a-divider type="vertical"/>
+          <a href="javascript:;" @click="onEdit(record)">{{record.Edit}}</a>
+          <a-divider type="vertical"/>
+          <a href="javascript:;" @click="onDelete(record)">{{record.Del}}</a>
         </template>
       </a-table>
 
@@ -1298,7 +1311,6 @@ const rowSelectionTree = {
 export default {
   data() {
     return {
-      //按钮显示隐藏
       isShowButton:{},
       //按钮
       ButtonData: [],
@@ -1799,6 +1811,16 @@ export default {
 
     // 获取列表
     getDataList() {
+      //初始化按钮
+      this.isShowButton = {
+        add:false,
+        Refresh:false,
+        edit:false,
+        del:false,
+        dels:false,
+        query:false,  
+      };
+      
       //获取操作按钮
       const paras = {};
       this.para.Code = "GetListYsdatabaseYsButton";
@@ -1843,15 +1865,6 @@ export default {
             this.dataList = res.Data;
             // this.getIcon()
 
-            //初始化按钮
-            this.isShowButton = {
-              add:false,
-              Refresh:false,
-              edit:false,
-              del:false,
-              dels:false,
-              query:false,  
-            };
             //获取多菜单按钮
             const paraId = {
               MenuId:2,
@@ -1884,6 +1897,8 @@ export default {
                     break;                   
                   }
                   // if(typeof i == 'null'){
+
+
                 })
               }
             });

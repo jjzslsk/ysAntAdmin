@@ -224,31 +224,22 @@
 
         <!--二维权限-->
     <a-modal class="allotMent" title="分配权限" @ok="handleOkData" @click="allotMent" v-model="dialogFormVisibleData">
-          <!-- <a-table defaultExpandAllRows :pagination="false" size="small" :columns="columnsTree" :dataSource="dataTree" :rowSelection="rowSelectionTree">
+          <a-table defaultExpandAllRows :pagination="false" size="small" :columns="columnsTree" :dataSource="dataTree" :rowSelection="rowSelectionTree">
+              <!-- <span slot="tags" slot-scope="tags">
+                <a-checkbox></a-checkbox>
+              </span> -->
               <template slot="tags" slot-scope="text, record, index">
+                <!-- <a-switch defaultChecked @change='onChangeSwitch(text,record)'/> -->
+                <!-- <a-switch size="small" @change='onChangeSwitch'/> -->
                 <a-checkbox v-model="record.enable"  @click="onChangeClick" @change='onChangeSwitch(text, record, index)'></a-checkbox>
+                <!-- <editable-cell :text="text" @change="onCellChange(record.key, 'name')"/> -->
               </template>
               <span slot="action" slot-scope="text, record">
                 <a href="javascript:;">{{record.edit}}</a>
                 <a-divider type="vertical" />
                 <a href="javascript:;">{{record.del}}</a>
               </span>
-          </a-table> -->
-          <template>
-            <div>
-              <div :style="{ borderBottom: '1px solid #E9E9E9' }">
-                <a-checkbox
-                  :indeterminate="indeterminate"
-                  @change="onCheckAllChange"
-                  :checked="checkAll"
-                >
-                  Check all
-                </a-checkbox>
-              </div>
-              <br />
-              <a-checkbox-group :options="plainOptions" v-model="checkedList" @change="onChange" />
-            </div>
-          </template>
+          </a-table>
       <div slot="footer" class="dialog-footer">
         <a-button @click.native="dialogFormVisibleData=false">取消</a-button>
         <a-button type="primary" @click.native="dialogFormVisibleData=false">确认</a-button>
@@ -477,10 +468,6 @@ const rowSelectionTree = {
   },
 };
 
-//多选初始化数组
-const plainOptions = ['Apple', 'Pear', 'Orange']
-const defaultCheckedList = ['Apple', 'Orange']
-
 export default {
   //分页触发
       watch:{
@@ -508,12 +495,6 @@ export default {
         return data;
       };
     return {
-      //多选
-      checkedList: defaultCheckedList,
-      indeterminate: true,
-      checkAll: false,
-      plainOptions,
-
       //按钮显示隐藏
       isShowButton:{},
       //按钮
@@ -739,18 +720,6 @@ export default {
     }
   },
   methods: {
-    //多选
-    onChange (checkedList) {
-      this.indeterminate = !!checkedList.length && (checkedList.length < plainOptions.length)
-      this.checkAll = checkedList.length === plainOptions.length
-    },
-    onCheckAllChange (e) {
-      Object.assign(this, {
-        checkedList: e.target.checked ? plainOptions : [],
-        indeterminate: false,
-        checkAll: e.target.checked,
-      })
-    },
         //分页操作
     onShowSizeChange(current, pageSize) {
         console.log('111',current, pageSize);

@@ -5,8 +5,8 @@
         
     <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
-          <a-button type="primary" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
-        <a-button type="primary" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>     
+          <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
+        <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>     
           <!-- <a-button  v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button> -->
           <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
           <!-- <a-button type="primary" @click="Refresh">刷新</a-button> -->
@@ -14,7 +14,7 @@
           <!-- <a-button type="primary" @click="allotMent">分配权限</a-button> -->
       <!-- <a-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">{{button.batchRemove}}</a-button> -->
       <el-form-item style="float: right;">
-          <a-button type="primary" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
+          <a-button type="primary" v-if="isShowButton.query" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
         </el-form-item>
         <el-form-item style="float: right;">
           <a-input-group compact>
@@ -77,9 +77,9 @@
           <template slot="action" slot-scope="text, record">
             <!-- <a href="javascript:;" @click="allotButton(record.Key)">分配按钮</a>
             <a-divider type="vertical" />           -->
-            <a href="javascript:;" @click="onEdit(record)">{{record.Edit}}</a>
-            <a-divider type="vertical" />
-            <a href="javascript:;" @click="onDelete(record)">{{record.Del}}</a>
+            <a href="javascript:;" v-if="isShowButton.edit" @click="onEdit(record)">{{record.Edit}}</a>
+            <a-divider type="vertical" v-if="isShowButton.del" />
+            <a href="javascript:;" v-if="isShowButton.del" @click="onDelete(record)">{{record.Del}}</a>
           </template>
         </a-table>
 
@@ -360,7 +360,9 @@ export default {
         return data;
       };
     return {
-                  //按钮
+      //按钮显示隐藏
+      isShowButton:{},
+      //按钮
       ButtonIcons:{},
       ButtonNames:{},
       buttonList:[],
@@ -714,6 +716,51 @@ export default {
         if (res.IsSuccess == true) {
           this.total = res.Data.Count;
           this.dataList = res.Data;
+
+          //初始化按钮
+            this.isShowButton = {
+              add:false,
+              Refresh:false,
+              edit:false,
+              del:false,
+              dels:false,
+              query:false,  
+            };
+            //获取多菜单按钮
+            const paraId = {
+              MenuId:19,
+            };
+            this.para.Code = "GetYsMenuButton";
+            this.para.Data = JSON.stringify(paraId);
+            handlePost(this.para).then(res => {
+              if (res.IsSuccess == true) {
+                const buttonAr = res.Data[0].ButtonIds;
+                buttonAr.forEach((i)=>{
+                  switch(i){
+                    case 1:
+                    this.isShowButton.add = true;
+                    break;                   
+                    case 38:
+                    this.isShowButton.Refresh = true;
+                    break;                   
+                    case 39:
+                    this.isShowButton.edit = true;
+                    break;                   
+                    case 40:
+                    this.isShowButton.del = true;
+                    break;                   
+                    case 43:
+                    this.isShowButton.dels = true;
+                    break;                   
+                    case 45:
+                    this.isShowButton.query = true;
+                    break;                   
+                  }
+                  // if(typeof i == 'null'){
+                })
+              }
+            });
+
         }
       });
 
