@@ -8,8 +8,8 @@
           <!-- <a-button  v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button>
           <a-button type="primary" @click="handleAdd">{{button.add}}</a-button>
           <a-button type="primary" :loading="loadingRefresh" @click="Refresh">刷新</a-button>   -->
-          <a-button type="primary" @click="handleAdd" :icon="ButtonIcons.add">添加</a-button>
-        <a-button type="primary"  :loading="loadingRefresh" :icon="ButtonIcons.refresh" @click="Refresh">刷新</a-button>
+                <a-button type="primary" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
+        <a-button type="primary" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>     
                   
           <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
           <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
@@ -29,7 +29,7 @@
       </a-button> -->
 
       <el-form-item style="float: right;">
-          <a-button type="primary" @click="getKeyList">查询</a-button>
+          <a-button type="primary" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
         </el-form-item>
         <el-form-item style="float: right;">
           <a-input-group compact>

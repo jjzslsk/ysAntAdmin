@@ -3,74 +3,50 @@
     <el-card class="box-card">
       <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
-        {{buttonList}}
-        <hr>
-         所有按钮信息：{{GetYsMenuButtonsData}} -->
-          <a-button type="primary" @click="GetYsMenuButtons">获取所有菜单按钮</a-button>
+        <!-- <a-button v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button> -->
+        <!-- <a-button type="primary" class="addButtonClassName" :icon="ButtonIcons.edit" @click="handleAdd">编辑</a-button> -->
+        <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
+        <a-button type="primary" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
+        <a-button type="primary" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>
+        <a-button type="danger" @click="start" :icon="buttonList[4].Icon" :disabled="!hasSelected" :loading="loading">{{buttonList[4].Name}}
+          <template v-if="hasSelected">{{`(${selectedRowKeys.length})`}}</template>
+        </a-button>
 
-          2{{isShowButton.add}}2
+        <el-form-item style="float: right;">
+          <a-button type="primary" :icon="buttonList[4].Icon" @click="getKeyList">查询</a-button>
+        </el-form-item>
 
-
-        <!-- <el-button v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</el-button> -->
-        <!-- <a-button type="primary" @click="handleAdd">{{button.add}}</a-button>
-        <a-button type="primary" :loading="loadingRefresh" @click="Refresh">刷新</a-button>-->
-        <a-button type="primary" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].label}}</a-button>
-        <a-button type="primary" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].label}}</a-button>
-        <!-- <a-button type="primary" @click="start" :icon="ButtonIcons.del" :disabled="!hasSelected" :loading="loading">批量删除</a-button> -->
-        <!-- <a-button type="primary" @click="handleEdit">编辑</a-button> -->
-        <!-- <el-form-item> -->
-        <!-- <a-button type="primary" @click="allotButton">获取菜单按钮</a-button> -->
-        <!-- </el-form-item> -->
-        <!-- <el-form-item>
-          <a-button type="primary" @click="SetButton">设置按钮</a-button>
-        </el-form-item>-->
-        <!-- <el-form-item>
-          <a-button type="primary" @click="allotIcon">图标</a-button>
-        </el-form-item>-->
-        <!-- <a-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">{{button.batchRemove}}</a-button> -->
-        <!-- <div style="margin-bottom: 16px">
-          <a-button
-            type="primary"
-            @click="start"
-            :disabled="!hasSelected"
-            :loading="loading"
-          >
-            Reload
-          </a-button>
-          <span style="margin-left: 8px">
-            <template v-if="hasSelected">
-              {{`Selected ${selectedRowKeys.length} items`}}
-            </template>
-          </span>
-        </div>-->
-        <!-- <el-form-item style="float: right;"> -->
-        <!-- <a-button type="primary" @click="getKeyList">查询</a-button> -->
-        <!-- <a-button type="primary" @click="getQueryList">1查询</a-button> -->
-        <!-- </el-form-item> -->
-        <!-- <el-form-item style="float: right;">
+        <el-form-item style="float: right;">
           <a-input-group compact>
-            <a-select  @change="this.handleSelectChange" defaultValue="菜单名称" style="width: 40%">
-                <a-select-option value='Id'>Id</a-select-option>
-                <a-select-option value='Name'>菜单名称</a-select-option>
-                <a-select-option value='Pid'>上级菜单</a-select-option>
-                <a-select-option value='Url'>链接地址</a-select-option>
-                <a-select-option value='Param'>页面标识</a-select-option>
-                <a-select-option value='Icon'>图标</a-select-option>
-                <a-select-option value='Sort'>排序</a-select-option>
+            <a-select @change="this.handleSelectChange" defaultValue="按钮名称" style="width: 40%">
+              <!-- <a-select-option value='Id'>Id</a-select-option> -->
+              <a-select-option value="Icon">图标</a-select-option>
+              <a-select-option value="ClassName">样式</a-select-option>
+              <a-select-option value="Name">按钮名称</a-select-option>
             </a-select>
-          <a-input style="width: 60%" defaultValue="" v-model="filters.data"/>
-        </a-input-group>
-        </el-form-item>-->
+            <a-input style="width: 60%" defaultValue v-model="filters.data"/>
+          </a-input-group>
+        </el-form-item>
       </el-form>
 
       <!--列表-->
+      <!-- <a-table defaultExpandAllRows :pagination="false" size="small" :columns="columnsTree" :dataSource="dataTree" :rowSelection="rowSelectionTree">
+          <span slot="tags" slot-scope="tags">
+            <a-checkbox></a-checkbox>
+          </span>
+          <span slot="action" slot-scope="text, record">
+            <a href="javascript:;">{{record.edit}}</a>
+            <a-divider type="vertical" />
+            <a href="javascript:;">{{record.del}}</a>
+          </span>
+      </a-table>-->
       <!-- <el-table @row-dblclick='Rowdblclick' stripe :data="dataList" highlight-current-row @selection-change="selsChange" style="width: 100%;">
             <el-table-column v-for="item in tableLabel" :key="item.Label" :label="item.Label" :prop="item.prop" :width='item.width' :type='item.type'>
             </el-table-column>
             <el-table-column label="操作" width="100" fixed="right">
               <template slot-scope="scope">
-                <el-button type="text" @click="handleEdit(scope.$index, scope.row)">{{button.edit}}</el-button>
-                <el-button type="text" @click="handleDel(scope.$index, scope.row)">{{button.del}}</el-button>
+                <el-button type="text"  @click="handleEdit(scope.$index, scope.row)">{{button.edit}}</el-button>
+                <el-button type="text"  @click="handleDel(scope.$index, scope.row)">{{button.del}}</el-button>
               </template>
             </el-table-column>
       </el-table>-->
@@ -81,14 +57,11 @@
       </el-pagination>
       </el-col>-->
       <a-table
-        style="margin-top:2rem"
-        defaultExpandAllRows
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         :pagination="false"
-        :columns="columnsTree"
         :dataSource="dataList"
+        :columns="columns"
       >
-        <!-- <a slot="name" slot-scope="text" href="javascript:;">{{text}}</a> -->
-        <!-- <span slot="customTitle"><a-icon type="smile-o" /> Name</span> -->
         <div
           slot="filterDropdown"
           slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters }"
@@ -105,8 +78,8 @@
           <a-button @click="() => handleReset(clearFilters)">取消</a-button>
         </div>
         <a-icon
-          slot="filterIcon"
           class="aIcon"
+          slot="filterIcon"
           slot-scope="filtered"
           type="tag"
           :style="{ color: filtered ? '#108ee9' : '#aaa' }"
@@ -134,16 +107,13 @@
         </template>
 
         <template slot="statu" slot-scope="text,record">
-          <a-badge v-if="record.Show==='√'" status="success" text="正常"/>
-          <a-badge v-if="record.Show==='X'" status="error" text="隐藏"/>
+          <a-badge v-if="record.Isvisiable == true" status="success" text="正常"/>
+          <a-badge v-if="record.Isvisiable == false" status="error" text="隐藏"/>
         </template>
-
         <template slot="action" slot-scope="text, record">
-          <a href="javascript:;" @click="allotButton(record.Key)">分配按钮</a>
+          <a href="javascript:;" @click="onEdit(record)">编辑</a>
           <a-divider type="vertical"/>
-          <a href="javascript:;" @click="onEdit(record)">{{record.Edit}}</a>
-          <a-divider type="vertical"/>
-          <a href="javascript:;" @click="onDelete(record)">{{record.Del}}</a>
+          <a href="javascript:;" @click="onDelete(record)">删除</a>
         </template>
       </a-table>
 
@@ -919,158 +889,54 @@
       </a-modal>
 
       <!--按钮-->
-      <a-modal
-        title="分配按钮"
-        :width="800"
-        class="amodalButton"
-        v-model="dialogFormVisibleButton"
-        @ok="handleOkButton"
-        @click="allotIcon"
-      >
-
-          <!-- <a-button type="primary" @click="GetYsMenuButton()">获取单个菜单按钮</a-button> -->
-          <!-- <a-button type="primary" @click="GetYsMenuButtons">获取所有菜单按钮</a-button> -->
-          <!-- <a-button type="primary" @click="SetButton">设置按钮</a-button> -->
-          <!-- {{buttonKey}}编辑ID : -->
-          {{GetYsMenuButtonInfo.Name}}：
-          <!-- <span v-for="i in GetYsMenuButtonInfo" :key="i.Id"> -->
-          <!-- 为"{{i.Name}}"分配按钮 -->
-          <!-- </span> -->
-
-          <!-- <hr>
-          ==============
-          选中： {{checkedList}}
-          {{selButtons}}
-          <hr>
-          ==============
-          <hr>
-            所有按钮信息：{{GetYsMenuButtonsData}} -->
-          <!-- <template>
-        <a-transfer
-          :dataSource="mockData"
-          :filterOption="filterOption"
-          :targetKeys="targetKeys"
-          @change="handleChange"
-          :render="item=>item.title"
-        >
-        </a-transfer>
-          </template>-->
-          <!-- ==============
-          <hr>
-         获取操作按钮数据，已改为多选内容： {{ButtonData}} -->
-         <!-- <template v-for="item in GetYsMenuButtonsData" > -->
-          <a-form-item  :labelCol="{ span: 3 }">
-
-                <!-- <a-checkbox
-                 :indeterminate="indeterminate"
-                 @change="onCheckAllChange"
-                  :checked="checkAll" >
-                  全选
-                  </a-checkbox> -->
-
-
-                <a-checkbox-group
-                  :options="ButtonData"
-                  v-model='checkedList'
-                  @change="onChangeCheckbox"
-                />
-
-
-          </a-form-item>
-         <!-- </template> -->
-
-
+      <el-dialog title="添加" :visible.sync="dialogFormVisibleButton" :close-on-click-modal="false">
+        <div style="text-align: center" class="transferBox">
+          <el-transfer
+            style="text-align: left; display: inline-block"
+            v-model="value3"
+            filterable
+            filter-placeholder="请输入搜索内容"
+            :left-default-checked="[2, 3]"
+            :right-default-checked="[1]"
+            :render-content="renderFunc"
+            :titles="['所有菜单', '已有菜单']"
+            :format="{
+              noChecked: '${total}',
+              hasChecked: '${checked}/${total}'
+            }"
+            @change="handleChange"
+            :data="data"
+          >
+            <a-button class="transfer-footer" slot="left-footer" size="small">操作</a-button>
+            <a-button class="transfer-footer" slot="right-footer" size="small">操作</a-button>
+          </el-transfer>
+        </div>
         <div slot="footer" class="dialog-footer">
           <a-button @click.native="dialogFormVisibleButton=false">取消</a-button>
-          <a-button type="primary" @click="allotMenuButton">确认</a-button>
+          <a-button type="primary" @click.native="dialogFormVisibleButton=false">确认</a-button>
         </div>
-      </a-modal>
+      </el-dialog>
 
-      <!-- <a-modal class="amodalButton" title="分配按钮" v-model="dialogFormVisibleButton" @ok="handleOkButton" @click="allotMenuButton">
-      <template>
-        <a-transfer
-          :titles="['未选按钮', '已选按钮']"
-          :dataSource="mockData"
-          :filterOption="filterOption"
-          :targetKeys="targetKeys"
-          @change="handleChange"
-          :render="item=>item.title"
-        >
-        </a-transfer>
-      </template>
-
-      <div slot="footer" class="dialog-footer">
-        <a-button @click.native="dialogFormVisibleButton=false">取消</a-button>
-        <a-button type="primary" @click="allotMenuButton">确认</a-button>
-      </div>
-      </a-modal>-->
       <!--添加界面-->
       <a-modal title="添加按钮" @ok="handleOkAdd" @click="createData" v-model="dialogFormVisibleAdd">
         <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
-          <!-- <a-form-item label='菜单名称' :labelCol="{ span: 5 }" :wrapperCol="{ span: 12 }">
-          <a-input v-decorator="['note',{rules: [{ required: true, message: 'Please input your note!' }]} ]" />
-        </a-form-item>
-
-        <a-form-item
-            label='上级菜单'
-            :labelCol="{ span: 5 }"
-            :wrapperCol="{ span: 12 }"
-          >
-            <a-select
-              v-decorator="[
-                'gender',
-                {rules: [{ required: true, message: 'Please select your gender!' }]}
-              ]"
-              placeholder='Select a option and change input text above'
-              @change="this.handleSelectChange"
-            >
-              <a-select-option value='male'>male</a-select-option>
-              <a-select-option value='female'>female</a-select-option>
-            </a-select>
-          </a-form-item>-->
-          <el-form-item label="菜单名称:" prop="Name">
+          <el-form-item label="按钮名称:" prop="Name">
             <el-input v-model="editForm.Name" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="参数:" prop="Param">
-            <el-input v-model="editForm.Param" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="备注:" prop="Memo">
-            <el-input v-model="editForm.Memo" auto-complete="off"></el-input>
+          <el-form-item label="样式:" prop="ClassName">
+            <el-input v-model="editForm.ClassName" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="图标:" prop>
             <el-input placeholder="请输入内容" v-model="editForm.Icon" class="input-with-select">
               <el-button slot="append" icon="el-icon-search" @click="allotIcon"></el-button>
             </el-input>
           </el-form-item>
-          <el-form-item label="上级菜单:" prop="Pid">
-            <el-select v-model="editForm.Pid" placeholder="请选择">
-              <el-option
-                v-for="item in ListsuperiorMenu"
-                :key="item.Id"
-                :label="item.Name"
-                :value="item.Id"
-              ></el-option>
-            </el-select>
-            <!-- {{editForm.Pid}} -->
+          <el-form-item label="是否显示:">
+            <a-switch @change="aSwitch" v-model="editForm.Isvisiable"/>
           </el-form-item>
-          <el-form-item label="链接地址:">
-            <el-input v-model="editForm.Url" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="排序:">
-            <el-input-number v-model="editForm.Sort"></el-input-number>
-          </el-form-item>
-          <a-row>
-            <a-col :span="12">
-              <el-form-item label="显示菜单:">
-                <a-switch @change="aSwitch" v-model="editForm.Isvisiable"/>
-              </el-form-item>
-            </a-col>
-            <a-col :span="12">
-              <el-form-item label="是否启用:">
-                <a-switch @change="aState" v-model="editForm.State"/>
-              </el-form-item>
-            </a-col>
-          </a-row>
+          <!-- <el-form-item label="排序:">
+          <el-input-number v-model="editForm.Sort"></el-input-number>
+          </el-form-item>-->
         </el-form>
         <div slot="footer" class="dialog-footer">
           <a-button @click.native="dialogFormVisibleAdd=false">{{button.cancel}}</a-button>
@@ -1081,57 +947,31 @@
       <!--编辑界面-->
       <a-modal title="编辑按钮" @ok="handleOkEdit" @click="updateData" v-model="dialogFormVisibleEdit">
         <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
-          <el-form-item label="菜单名称:" prop="Name">
+          <el-form-item label="按钮名称:" prop="Name">
             <el-input v-model="editForm.Name" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="样式:" prop="Classname">
+            <el-input v-model="editForm.Classname" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="图标:" prop>
             <el-input placeholder="请输入内容" v-model="editForm.Icon" class="input-with-select">
               <el-button slot="append" icon="el-icon-search" @click="allotIcon"></el-button>
             </el-input>
           </el-form-item>
-          <el-form-item label="参数:" prop="Param">
-            <el-input v-model="editForm.Param" auto-complete="off"></el-input>
+          <el-form-item label="是否显示:">
+            <a-switch @change="aSwitch" v-model="editForm.Isvisiable"/>
           </el-form-item>
-          <el-form-item label="备注:" prop="Memo">
-            <el-input v-model="editForm.Memo" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="上级菜单:" prop="Pid">
-            <el-select v-model="editForm.Pid" placeholder="请选择">
-              <el-option
-                v-for="item in ListsuperiorMenu"
-                :key="item.Id"
-                :label="item.Name"
-                :value="item.Id"
-              ></el-option>
-            </el-select>
-            <!-- {{editForm.Pid}} -->
-          </el-form-item>
-          <el-form-item label="链接地址:">
-            <el-input v-model="editForm.Url" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="排序:">
-            <el-input-number v-model="editForm.Sort"></el-input-number>
-          </el-form-item>
-          <a-row>
-            <a-col :span="12">
-              <el-form-item label="显示菜单:">
-                <a-switch @change="aSwitch" v-model="editForm.Isvisiable"/>
-              </el-form-item>
-            </a-col>
-            <a-col :span="12">
-              <el-form-item label="是否启用:">
-                <a-switch @change="aState" v-model="editForm.State"/>
-              </el-form-item>
-            </a-col>
-          </a-row>
+          <!-- <el-form-item label="排序:">
+          <el-input-number v-model="editForm.Sort"></el-input-number>
+          </el-form-item>-->
         </el-form>
         <div slot="footer" class="dialog-footer">
           <a-button @click.native="dialogFormVisibleEdit=false">{{button.cancel}}</a-button>
           <a-button type="primary" @click="updateData">{{button.modify}}</a-button>
         </div>
       </a-modal>
-      <a-divider orientation="left">菜单规则</a-divider>
-      <p>规则通常对应一个控制器的方法,同时左侧的菜单栏数据也从规则中体现,通常建议通过命令行进行生成规则节点</p>
+      <a-divider orientation="left">按钮规则</a-divider>
+      <p>添加按钮组，对每个按钮进行标识</p>
       <a-divider dashed/>
     </el-card>
   </section>
@@ -1142,153 +982,157 @@
 //   ...script
 // };
 import store from "@/store/index.js"; //引入本地存储
+import util from "@/utils/table.js";
 import { paraHelper } from "@/utils/para.js"; //请求参数格式
 import { handlePost, handleGet } from "@/api/apihelper.js";
 
-// 多选
-// const plainOptions = ['查询','新增', '删除','导入','修改', '批量删除','5','6']
-const plainOptions = [
-  { label: "查询", value: 1 },
-  { label: "新增", value: 2 },
-  { label: "新增", value: 3 },
-  { label: "新增", value: 5 },
-  { label: "删除", value: 6 }
-];
-
-// const plainOptions = ['1',2, 3,'4','修改', '批量删除','5','6']
-const defaultCheckedList = [];
-
-//表头部
-const columnsTree = [
-  // {
-  //   title: '菜单名称',
-  //   Key: 'Name',
-  //   dataIndex: 'Name',
-  //   scopedSlots: { customRender: 'name' },
-  //   width: 160
-  // }
+//列表
+const dataButton = [
   {
-    title: "名称",
-    dataIndex: "Name",
-    key: "Name",
-    width: 180,
-    scopedSlots: {
-      filterDropdown: "filterDropdown",
-      filterIcon: "filterIcon",
-      customRender: "customRender"
-    },
-    onFilter: (value, record) =>
-      record.name.toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          this.$refs.searchInput.focus();
-        });
-      }
-    }
+    key: "1",
+    name: "John Brown",
+    age: 32,
+    address: "New York No. 1 Lake Park"
   },
   {
-    title: "图标",
-    Key: "Icon",
-    dataIndex: "Icon",
-    scopedSlots: { customRender: "Icon" }
+    key: "2",
+    name: "Joe Black",
+    age: 42,
+    address: "London No. 1 Lake Park"
   },
   {
-    title: "标记",
-    Key: "Code",
-    dataIndex: "Code"
+    key: "3",
+    name: "Jim Green",
+    age: 32,
+    address: "Sidney No. 1 Lake Park"
   },
   {
-    title: "链接地址",
-    Key: "Url",
-    dataIndex: "Url"
-  },
-  {
-    title: "显示状态",
-    dataIndex: "Show",
-    key: "Show",
-    scopedSlots: { customRender: "statu" }
-  },
-  ,
-  {
-    title: "排序",
-    Key: "Sort",
-    dataIndex: "Sort"
-  },
-  {
-    title: "操作",
-    Key: "action",
-    dataIndex: "action",
-    scopedSlots: { customRender: "action" },
-    width: 200
+    key: "4",
+    name: "Jim Red",
+    age: 32,
+    address: "London No. 2 Lake Park"
   }
 ];
 
-//表主体数据
-// const dataTree = [{
-//   key: 1,
-//   name: '系统设置',
-//   icon:'icon',
-//   code:'Button',
-//   url:'sys/ButtonList',
-//   sort:'1',
-//   edit:'编辑',
-//   del:'删除',
-//   show:'√',
-//   children: [{
-//     key: 11,
-//     name: '导航菜单',
-//     icon:'icon',
-//     code:'Button',
-//     url:'sys/ButtonList',
-//     sort:'1',
-//     edit:'编辑',
-//     del:'删除',
-//     show:'√',
-//   }, {
-//     key: 12,
-//     name: '用户管理',
-//     icon:'icon',
-//     code:'Button',
-//     url:'sys/ButtonList',
-//     sort:'1',
-//     edit:'编辑',
-//     del:'删除',
-//     show:'√',
-//   }, {
-//     key: 13,
-//     name: '部门管理',
-//     icon:'icon',
-//     code:'Button',
-//     url:'sys/ButtonList',
-//     sort:'1',
-//     edit:'编辑',
-//     del:'删除',
-//     show:'√',
-//   }],
-// }, {
-//   key: 2,
-//   name: '财务管理',
-//   icon:'icon',
-//   code:'Button',
-//   url:'sys/ButtonList',
-//   sort:'1',
-//   edit:'编辑',
-//   del:'删除',
-//   show:'√',
-//   children: [{
-//     key: 22,
-//     name: '奖金明细',
-//     icon:'icon',
-//     code:'Button',
-//     url:'sys/ButtonList',
-//     sort:'1',
-//     edit:'编辑',
-//     del:'删除',
-//     show:'x',
-//   }
-//   ]
-// }];
+const columnsTree = [
+  ,
+  //   {
+  //   dataIndex: 'name',
+  //   key: 'name',
+  //   slots: { title: 'customTitle' },
+  // }
+  {
+    title: "菜单名称",
+    key: "name",
+    dataIndex: "name"
+  },
+  {
+    title: "图标",
+    key: "icon",
+    dataIndex: "icon"
+  },
+  {
+    title: "标记",
+    key: "code",
+    dataIndex: "code"
+  },
+  {
+    title: "链接地址",
+    key: "url",
+    dataIndex: "url"
+  },
+  {
+    title: "是否显示",
+    key: "show",
+    dataIndex: "show",
+    scopedSlots: { customRender: "tags" }
+  },
+  {
+    title: "排序",
+    key: "sort",
+    dataIndex: "sort"
+  },
+  {
+    title: "操作",
+    key: "action",
+    dataIndex: "action",
+    scopedSlots: { customRender: "action" }
+  }
+];
+
+const dataTree = [
+  {
+    key: 1,
+    name: "系统设置",
+    icon: "icon",
+    code: "Button",
+    url: "sys/ButtonList",
+    sort: "1",
+    age: 60,
+    edit: "编辑",
+    del: "删除",
+    children: [
+      {
+        key: 11,
+        name: "导航菜单",
+        icon: "icon",
+        code: "Button",
+        url: "sys/ButtonList",
+        sort: "1",
+        age: 42,
+        edit: "编辑",
+        del: "删除"
+      },
+      {
+        key: 12,
+        name: "用户管理",
+        icon: "icon",
+        code: "Button",
+        url: "sys/ButtonList",
+        sort: "1",
+        age: 30,
+        edit: "编辑",
+        del: "删除",
+        tags: ["nice", "developer", "111"]
+      },
+      {
+        key: 13,
+        name: "部门管理",
+        icon: "icon",
+        code: "Button",
+        url: "sys/ButtonList",
+        sort: "1",
+        age: 72,
+        edit: "编辑",
+        del: "删除"
+      }
+    ]
+  },
+  {
+    key: 2,
+    name: "财务管理",
+    icon: "icon",
+    code: "Button",
+    url: "sys/ButtonList",
+    sort: "1",
+    age: 32,
+    edit: "编辑",
+    del: "删除",
+    children: [
+      {
+        key: 22,
+        name: "奖金明细",
+        icon: "icon",
+        code: "Button",
+        url: "sys/ButtonList",
+        sort: "1",
+        age: 42,
+        edit: "编辑",
+        del: "删除"
+      }
+    ]
+  }
+];
 
 const rowSelectionTree = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -1307,30 +1151,38 @@ const rowSelectionTree = {
 };
 
 export default {
+  watch: {
+    pageSize(val) {
+      console.log("pageSize", val);
+    },
+    current(val) {
+      console.log("current", val);
+      this.page = val;
+      this.getDataList();
+    }
+  },
   data() {
+    // 穿梭框
+    const generateData = _ => {
+      const data = [];
+
+      for (let i = 1; i <= 10; i++) {
+        data.push({
+          key: i,
+          label: `备选项 ${i}`,
+          disabled: i % 4 === 0
+        });
+      }
+      return data;
+    };
+
     return {
-      isShowButton:{
-        add:true,
-        del:true,
-      },
       //按钮
-      ButtonData: [],
       ButtonIcons: {},
       ButtonNames: {},
       buttonList: [],
-      selButtons:[],
-      // 多选
-      checkedList: defaultCheckedList,
-      // checkedList: [],
 
-      indeterminate: true,
-      checkAll: false,
-      plainOptions,
-      // checkedLists: [],
-
-      searchText: "",
-      //初始化搜索字段
-      selectValue: "Name",
+      buttonClassName: "",
       //批量选择
       selectedRowKeys: [], // Check here to configure the default column
       selectedRows: [],
@@ -1338,20 +1190,78 @@ export default {
       loadingRefresh: false,
       //分页
       current: 1,
-
-      //按钮KEY
-      buttonKey: "",
-      //菜单按钮
-      GetYsMenuButtonData: [], //获取单按钮
-      GetYsMenuButtonInfo: '', //获取单按钮
-      GetYsMenuButtonsData: [], //获取多按钮
-      selectValue: "Name",
+      //列表
+      dataButton,
+      searchText: "",
+      columns: [
+        {
+          title: "按钮名称",
+          dataIndex: "Name",
+          key: "Name",
+          scopedSlots: {
+            filterDropdown: "filterDropdown",
+            filterIcon: "filterIcon",
+            customRender: "customRender"
+          },
+          onFilter: (value, record) =>
+            record.name.toLowerCase().includes(value.toLowerCase()),
+          onFilterDropdownVisibleChange: visible => {
+            if (visible) {
+              setTimeout(() => {
+                this.$refs.searchInput.focus();
+              });
+            }
+          }
+        },
+        {
+          title: "图标",
+          dataIndex: "Icon",
+          key: "Icon",
+          scopedSlots: { customRender: "Icon" }
+        },
+        {
+          title: "样式",
+          dataIndex: "Classname",
+          key: "Classname"
+        },
+        {
+          title: "显示状态",
+          dataIndex: "Isvisiable",
+          key: "Isvisiable",
+          scopedSlots: { customRender: "statu" }
+        },
+        {
+          title: "操作",
+          Key: "action",
+          dataIndex: "action",
+          scopedSlots: { customRender: "action" },
+          width: 200
+        }
+        // {
+        //   title: 'Address',
+        //   dataIndex: 'address',
+        //   key: 'address',
+        //   filters: [{
+        //     text: 'London',
+        //     value: 'London',
+        //   }, {
+        //     text: 'New York',
+        //     value: 'New York',
+        //   }],
+        //   onFilter: (value, record) => record.address.indexOf(value) === 0,
+        // }
+      ],
       //穿梭框
-      dataListButton: [], //按钮列表数组
-
-      mockData: [],
-      targetKeys: [],
-
+      data: generateData(),
+      value3: [1],
+      value4: [1],
+      renderFunc(h, option) {
+        return (
+          <span>
+            {option.key} - {option.label}
+          </span>
+        );
+      },
       //搜索
       input3: "",
       input4: "",
@@ -1359,35 +1269,33 @@ export default {
       select: "",
 
       // tree列表
-      // dataTree,
+      dataTree,
       columnsTree,
       rowSelectionTree,
 
       bllCode: {
         //接口标识，由后端提供
-        getButton: "GetListYsdatabaseYsButton",
-        add: "AddYsdatabaseYsMenu", //添加
-        edit: "UpdateYsdatabaseYsMenu", //修改
-        del: "DelYsdatabaseYsMenu", //删除
-        getList: "GetListYsdatabaseYsMenu", //获取列表
-        getObj: "GetYsdatabaseYsMenu", //获取对象（单个）
+        add: "AddYsdatabaseYsButton", //添加
+        edit: "UpdateYsdatabaseYsButton", //修改
+        del: "DelYsdatabaseYsButton", //删除
+        getList: "GetListYsdatabaseYsButton", //获取列表
+        getObj: "GetYsdatabaseYsButton", //获取对象（单个）
         getRolesList: "GetListYsdatabaseYsRole" //获取角色
       },
       tableLabel: [
         { type: "selection", width: "50" },
         { Label: "ID", prop: "Id", width: "50", type: "index" },
-        { Label: "名称", prop: "Name" },
-        { Label: "上级菜单", prop: "Pid", width: "80" },
-        { Label: "链接地址", prop: "Url" },
-        { Label: "页面标识", prop: "Param", width: "150" },
-        { Label: "图标", prop: "Icon", width: "50" },
-        { Label: "排序", prop: "Sort", width: "50" }
+        { Label: "图标", prop: "Icon", width: "100" },
+        { Label: "按钮名称", prop: "Name", width: "200" },
+        // { Label: "权限标识", prop: "Url"},
+        // { Label: "排序", prop: "Sort", width: "50" },
+        { Label: "说明", prop: "beizhu" }
         // {Label:'是否管理后台',prop:"shifouguanlihoutai",width:'150'},
         // {Label:'是否需要登录',prop:"shifouxuyaodenglu",width:'150'},
         // {Label:'创建时间',prop:"beizhu",width:'150'},
         // {Label:'备注',prop:"beizhu",width:'150'},
       ],
-      filtersName: "菜单名称",
+      filtersName: "按钮名称",
       button: {
         query: "查询",
         add: "添加",
@@ -1412,16 +1320,20 @@ export default {
       dialogFormVisibleIcon: false,
       dialogFormVisibleAdd: false,
       dialogFormVisibleEdit: false,
+      filters: {},
       ListsuperiorMenu: [],
       dataList: [], //主页数据
+      //分页初始化
       total: 0,
       page: 1,
+      size: 10,
+
       sels: [], // 列表选中列
       editFormRules: {
         Name: [
           {
             required: true,
-            message: "菜单名称必填",
+            message: "名称必填",
             trigger: "blur"
           }
         ],
@@ -1457,19 +1369,13 @@ export default {
         lianjie: "",
         shifouxianshi: "",
         paixu: "",
-        tubiao: "",
-        Isvisiable: ""
+        tubiao: ""
       },
-
+      //初始化搜索字段
+      selectValue: "Name",
       filterdataListData: [],
-      //查询条件
-      filters: {},
       ids: [],
-      //分页初始化
-      total: 0,
       page: 1,
-      size: 10,
-
       addFormVisible: false, // 添加界面是否显示
       addFormRules: {
         name: [
@@ -1479,71 +1385,8 @@ export default {
             trigger: "blur"
           }
         ]
-      },
-
-      mockDatas: [
-        { chosen: true, key: "0", title: "添加" },
-        {
-          chosen: false,
-          key: "1",
-          title: "编辑"
-        },
-        { chosen: true, key: "2", title: "删除" },
-        {
-          chosen: false,
-          key: "3",
-          title: "查询"
-        },
-        { chosen: true, key: "4", title: "重设" },
-        {
-          chosen: false,
-          key: "5",
-          title: "导入"
-        },
-        {
-          chosen: false,
-          key: "8",
-          title: "导出"
-        },
-        { chosen: true, key: "6", title: "导出" },
-        {
-          chosen: false,
-          key: "7",
-          title: "批量删除"
-        },
-        {
-          chosen: false,
-          key: "9",
-          title: "批量添加"
-        }
-      ]
+      }
     };
-  },
-  selectedKeys: [],
-  selectedRowKeys: [], // Check here to configure the default column
-  loading: false,
-  computed: {
-    hasSelected() {
-      return this.selectedRowKeys.length > 0;
-    }
-  },
-
-  watch: {
-    checkedKeys(val) {
-      console.log("onCheck", val);
-    },
-    filterText(val) {
-      this.$refs.tree2.filter(val);
-    },
-
-    pageSize(val) {
-      console.log("pageSize", val);
-    },
-    current(val) {
-      console.log("current", val);
-      this.page = val;
-      this.getDataList();
-    }
   },
   computed: {
     hasSelected() {
@@ -1554,40 +1397,127 @@ export default {
     // 图标选择
     onsomething(event) {
       console.log(event);
-      this.editForm.Icon = event.target.parentElement.className;
-      console.log(this.editForm.Icon);
+      // this.editForm.Icon = event.target.parentElement.className
+      this.editForm.Icon = event.target.className;
+      // console.log (this.editForm.Icon)
       this.dialogFormVisibleIcon = false;
     },
-    // 多选框
-    onChangeCheckbox(checkedList, checkedValues) {//单选
-      this.checkedLists = checkedList
-      console.log("checked = ", checkedList, checkedValues);
-      this.indeterminate =
-        !!checkedList.length && checkedList.length < this.ButtonData.length;
-      this.checkAll = checkedList.length === this.ButtonData.length;
-    },
-    onCheckAllChange(e) {//全选
-      // console.log (this.checkedLists)
-      Object.assign(this, {
-        checkedList: e.target.checked ? this.ButtonData : [],
-        indeterminate: false,
-        checkAll: e.target.checked
+    // getIconDefaultevent(event){
+    //    this.buttonClassName = event.srcElement.classList[0]
+    //    if (this.buttonClassName == 'addButtonClassName'){
+    //      this.dataList.map ((car)=>{
+    //      if(car.Name == '添加'){
+    //      this.ButtonIcons.add = car.Icon
+    //      };
+    //    })
+    //    }
+    // },
+
+    //  linIcon(){
+
+    //批量选择
+    start() {
+      this.loading = true;
+      // ajax request after empty completing
+      this.$confirm("确认执行删除操作吗？", "提示", {
+        type: "warning",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      }).then(() => {
+        setTimeout(() => {
+          this.loading = false;
+          // this.selectedRowKeys = [];
+
+          // this.idData = this.sels.map(item => item.id).toString();//转换为字符串
+          // var Ids = this.sels.map(item => item.Id);
+          const paraId = {
+            Ids: this.selectedRows
+          };
+          this.para.Code = this.bllCode.del;
+          this.para.Data = JSON.stringify(paraId);
+          handlePost(this.para).then(res => {
+            if (res.IsSuccess == true) {
+              this.getDataList();
+              this.$message({
+                message: "删除成功！",
+                type: "success"
+              });
+              this.selectedRowKeys = [];
+            } else {
+              this.$message({
+                message: res.Code + ":" + res.Message,
+                type: "warning"
+              });
+            }
+          });
+        }, 1000);
       });
     },
-    //分页操作
-    onShowSizeChange(current, pageSize) {
-      console.log("111", current, pageSize);
-      // this.page = val;
-      this.page = current;
-      this.size = pageSize;
-      this.getDataList();
+    onSelectChange(selectedRowKeys, selectedRows) {
+      this.selectedRows = [];
+      console.log("selectedRowKeys changed: ", selectedRowKeys, selectedRows);
+      this.selectedRowKeys = selectedRowKeys;
+      selectedRows.forEach(car => {
+        this.selectedRows.push(car.Id);
+      });
+      console.log(this.selectedRows);
     },
-    //搜索
-    handleSelectChange(value) {
-      this.selectValue = value;
-      // this.form.setFieldsValue({
-      //   note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
-      // })
+    //是否显示
+    aSwitch(checked) {
+      this.editForm.Isvisiable = checked;
+    },
+    // 显示编辑界面
+    onEdit(row) {
+      // ----------
+      this.dialogStatus = "update";
+      this.dialogFormVisibleEdit = true;
+      this.editForm = {};
+      const paraId = {
+        Id: row.Id
+      };
+      this.para.Code = "GetYsdatabaseYsButton";
+      this.para.Data = JSON.stringify(paraId);
+      handlePost(this.para).then(res => {
+        if (res.IsSuccess == true) {
+          this.editForm = Object.assign({}, res.Data);
+        } else {
+          this.$message({
+            message: res.Code + ":" + res.Message,
+            type: "warning"
+          });
+        }
+      });
+    },
+    //删除
+    onDelete(data) {
+      console.log(data);
+      this.$confirm("确认删除该记录吗?", "提示", {
+        type: "warning",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+        .then(() => {
+          const paraId = {
+            Id: data.Id
+          };
+          this.para.Code = "DelYsdatabaseYsButton";
+          this.para.Data = JSON.stringify(paraId);
+          handlePost(this.para).then(res => {
+            if (res.IsSuccess == true) {
+              this.getDataList();
+              this.$message({
+                message: "删除成功！",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.Code + ":" + res.Message,
+                type: "warning"
+              });
+            }
+          });
+        })
+        .catch(() => {});
     },
     //列表查询
     handleSearch(selectedKeys, confirm) {
@@ -1599,92 +1529,15 @@ export default {
       clearFilters();
       this.searchText = "";
     },
-    start() {
-      this.loading = true;
-      // ajax request after empty completing
-      setTimeout(() => {
-        this.loading = false;
-        this.selectedRowKeys = [];
-      }, 1000);
+    //窗口事件
+    handleOk() {
+      this.dialogFormVisibleIcon = false;
     },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
+    handleOkEdit() {
+      this.dialogFormVisibleEdit = false;
     },
-    //
-    handleChangePid(value) {
-      console.log(`selected ${value}`);
-    },
-    onDelete(data) {
-      console.log(data);
-      this.$confirm("确认删除该记录吗?", "提示", {
-        type: "warning",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
-      })
-        .then(() => {
-          const paraId = {
-            Id: data.Key
-          };
-          this.para.Code = this.bllCode.del;
-          this.para.Data = JSON.stringify(paraId);
-          handlePost(this.para).then(res => {
-            if (res.IsSuccess == true) {
-              this.getDataList();
-              this.$message({
-                message: "删除成功！",
-                type: "success"
-              });
-            }
-          });
-        })
-        .catch(() => {});
-      // const dataSource = [...this.dataSource]
-      // this.dataSource = dataSource.filter(item => item.key !== key)
-    },
-    //
-
-    // 显示编辑界面
-    onEdit(row) {
-      // ----------
-      this.dialogStatus = "update";
-      this.dialogFormVisibleEdit = true;
-      this.editForm = {};
-      const paraId = {
-        Id: row.Key
-      };
-      this.para.Code = "GetYsdatabaseYsMenu";
-      this.para.Data = JSON.stringify(paraId);
-      handlePost(this.para).then(res => {
-        if (res.IsSuccess == true) {
-          this.editForm = Object.assign({}, res.Data);
-          // this.dataList = res.Data;
-          // -------------
-          //获取上级菜单
-          let paert = {
-            IsList: true
-          };
-          this.para.Data = JSON.stringify(paert);
-          this.para.Code = "GetListYsdatabaseYsMenu";
-          handlePost(this.para).then(res => {
-            if (res.IsSuccess == true) {
-              this.ListsuperiorMenu = res.Data.List;
-              let top = {
-                Id: 0,
-                Name: "无"
-              };
-              this.ListsuperiorMenu.push(top);
-            }
-          });
-        }
-      });
-    },
-    //搜索
-    handleSelectChange(value) {
-      this.selectValue = value;
-      // this.form.setFieldsValue({
-      //   note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
-      // })
+    handleOkAdd() {
+      this.dialogFormVisibleAdd = false;
     },
     //刷新页面
     Refresh() {
@@ -1697,38 +1550,37 @@ export default {
         this.getDataList();
       }, 1000);
     },
+    //穿梭框
+    handleChange(value, direction, movedKeys) {
+      console.log(value, direction, movedKeys);
+    },
     //图标
     allotIcon() {
       this.dialogFormVisibleIcon = true;
     },
-    handleOk() {
-      this.dialogFormVisibleIcon = false;
-    },
-    handleOkEdit() {
-      this.dialogFormVisibleEdit = false;
-    },
-    handleOkAdd() {
-      this.dialogFormVisibleAdd = false;
-    },
-    handleOkButton() {
-      this.dialogFormVisibleButton = false;
-    },
-    allotButton(data) {
-      this.GetYsMenuButtonData = [];
-      this.GetYsMenuButtonsData = [];
-      this.buttonKey = data;
+    allotButton() {
       this.dialogFormVisibleButton = true;
-      this.GetYsMenuButton();//获取单个
     },
-    //
-
-    //是否显示
-    aSwitch(checked) {
-      this.editForm.Isvisiable = checked;
-    },
-    //是否启用
-    aState(checked) {
-      this.editForm.State = checked;
+    //行点击事件
+    Rowdblclick(row) {
+      this.dialogStatus = "update";
+      this.dialogFormVisibleEdit = true;
+      this.editForm = {};
+      const paraId = {
+        Id: row.Id
+      };
+      this.para.Code = "GetYsdatabaseYsButton";
+      this.para.Data = JSON.stringify(paraId);
+      handlePost(this.para).then(res => {
+        if (res.IsSuccess == true) {
+          this.editForm = Object.assign({}, res.Data);
+        } else {
+          this.$message({
+            message: res.Code + ":" + res.Message,
+            type: "warning"
+          });
+        }
+      });
     },
     //加载按钮
     loadButton(data) {
@@ -1771,66 +1623,60 @@ export default {
       this.page = val;
       this.getDataList();
     },
-
-    //转按钮列表对象值
-    carButton() {
-      var buttonkeyMap = {
-        Id: "value",
-        Name: "label"
-      };
-
-      for (var i = 0; i < this.ButtonData.length; i++) {
-        var obj = this.ButtonData[i];
-        for (var key in obj) {
-          var newKey = buttonkeyMap[key];
-          if (newKey) {
-            obj[newKey] = obj[key];
-            delete obj[key];
-          }
-        }
-      }
+    //分页操作
+    onShowSizeChange(current, pageSize) {
+      console.log("111", current, pageSize);
+      // this.page = val;
+      this.page = current;
+      this.size = pageSize;
+      this.getDataList();
     },
-
-        //转按钮列表对象值
-    carButtons() {
-      var buttonkeyMap = {
-        Id: "value",
-        ButtonIds: "label"
-      };
-
-      for (var i = 0; i < this.GetYsMenuButtonsData.length; i++) {
-        var obj = this.GetYsMenuButtonsData[i];
-        for (var key in obj) {
-          var newKey = buttonkeyMap[key];
-          if (newKey) {
-            obj[newKey] = obj[key];
-            delete obj[key];
-          }
-        }
-      }
+    //搜索
+    handleSelectChange(value) {
+      this.selectValue = value;
+      // this.form.setFieldsValue({
+      //   note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
+      // })
     },
-
     // 获取列表
     getDataList() {
-      
-      //获取操作按钮
       const paras = {};
       this.para.Code = "GetListYsdatabaseYsButton";
       this.para.Data = JSON.stringify(paras);
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
           this.buttonList = res.Data.List;
-          this.ButtonData = res.Data.List;
-          this.carButton()//转按钮列表对象值
+          this.buttonList.map(car => {
+            if (car.Name == "添加") {
+              this.ButtonIcons.add = car.Icon;
+              this.ButtonNames.add = car.Name;
+            }
+            if (car.Name == "编辑") {
+              this.ButtonIcons.edit = car.Icon;
+              this.ButtonNames.edit = car.Name;
+            }
+            if (car.Name == "批量删除") {
+              this.ButtonIcons.del = car.Icon;
+              this.ButtonNames.del = car.Name;
+            }
+            if (car.Name == "刷新") {
+              this.ButtonIcons.refresh = car.Icon;
+              this.ButtonNames.refresh = car.Name;
+            }
+            if (car.Name == "查询") {
+              this.ButtonIcons.query = car.Icon;
+              this.ButtonNames.query = car.Name;
+            }
+          });
         }
-        //-------------------------------------
 
+        this.selectedRowKeys = [];
         var dataSource = this.selectValue;
         const paraId = [
           {
             Page: this.page,
             Data: this.filters.data,
-            Size: 10
+            Size: this.size
           }
         ];
 
@@ -1853,180 +1699,15 @@ export default {
         this.para.Data = JSON.stringify(paraId[0]);
         handlePost(this.para).then(res => {
           if (res.IsSuccess == true) {
-            // this.total = res.Data.Count;
-            this.dataList = res.Data;
-            // this.getIcon()
-
-            //获取多菜单按钮
-            const paraId = {
-              MenuId:2,
-            };
-            this.para.Code = "GetYsMenuButton";
-            this.para.Data = JSON.stringify(paraId);
-            handlePost(this.para).then(res => {
-              if (res.IsSuccess == true) {
-                this.GetYsMenuButtonsData = res.Data;
-                const buttonAr = res.Data[0].ButtonIds;
-                buttonAr.forEach((i)=>{
-                  console.log ('iii',i)
-                  if(i === 1){
-                    this.isShowButton.add = true
-                  }
-                  if(i === 1){
-                    this.isShowButton.add = true
-                  }
-                  if(i === 1){
-                    this.isShowButton.add = true
-                  }
-                  if(i === 1){
-                    this.isShowButton.add = true
-                  }
-                  if(i === 1){
-                    this.isShowButton.add = true
-                  }
-                })
-                
-                // this.carButtons()
-              }
-            });
-
-
-          }
-        });
-      });
-    },
-    // 查询列表
-    getQueryList() {
-      const paraId = {
-        Id: 1
-      };
-
-      this.para.Code = "GetYsdatabaseYsMenu";
-      this.para.Data = JSON.stringify(paraId);
-      handlePost(this.para).then(res => {
-        if (res.IsSuccess == true) {
-          this.dataList = res.Data;
-        }
-      });
-    },
-
-    GetYsMenuButton() {
-      //编辑获取单菜单按钮
-      this.checkedList = [];
-      const paraId = {
-        MenuId: this.buttonKey
-      };
-      this.para.Code = "GetYsMenuButton";
-      this.para.Data = JSON.stringify(paraId);
-      handlePost(this.para).then(res => {
-        this.GetYsMenuButtonInfo = ''
-        this.GetYsMenuButtonInfo = res.Data[0]
-        if (res.IsSuccess == true) {
-          if (res.Data[0].ButtonIds.length > 0) {
-            this.GetYsMenuButtonData = res.Data[0].ButtonIds;
-            this.checkedList = this.GetYsMenuButtonData;
-          }
-
-          
-        }
-      });
-    },
-        //提交按钮
-    allotMenuButton() {
-      this.$confirm("确认为该菜单分配按钮吗?", "提示", {
-        type: "warning",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
-      }).then(() => {
-        const paraId = [
-          {
-            MenuId: this.buttonKey,
-            ButtonIds: this.checkedList
-          }
-        ];
-        this.para.Code = "SetYsMenuButton";
-        this.para.Data = JSON.stringify(paraId);
-        handlePost(this.para).then(res => {
-          if (res.IsSuccess == true) {
-            this.dialogFormVisibleButton = false;
+            this.total = res.Data.Count;
+            this.dataList = res.Data.List;
+          } else {
             this.$message({
-              message: "分配按钮-成功！",
-              type: "success"
+              message: res.Code + ":" + res.Message,
+              type: "warning"
             });
           }
         });
-      });
-    },
-
-    GetYsMenuButtons() {
-      //获取多菜单按钮
-      const paraId = {
-        // MenuId:this.sels[0].Key,
-      };
-      this.para.Code = "GetYsMenuButton";
-      this.para.Data = JSON.stringify(paraId);
-      handlePost(this.para).then(res => {
-        if (res.IsSuccess == true) {
-          this.GetYsMenuButtonsData = res.Data;
-          // this.carButtons()
-        }
-      });
-    },
-    //穿梭框
-    getMock() {
-      const targetKeys = [];
-      const mockData = [];
-      console.log("1111", this.mockDatas);
-      // console.log ('this.GetYsMenuButtonData.length:',this.GetYsMenuButtonData)
-
-      for (let i = 0; i < this.mockDatas.length; i++) {
-        // console.log (this.GetYsMenuButtonData[i])
-        // console.log ('iiiiiii',this.mockDatas[i])
-        const data = {
-          key: this.mockDatas[i].key,
-          title: this.mockDatas[i].title,
-          chosen: this.mockDatas[i].chosen
-        };
-        if (data.chosen) {
-          targetKeys.push(data.key);
-        }
-        mockData.push(data);
-      }
-      this.mockData = mockData;
-
-      this.targetKeys = targetKeys;
-    },
-    filterOption(inputValue, option) {
-      return option.description.indexOf(inputValue) > -1;
-    },
-    handleChange(targetKeys, direction, moveKeys) {
-      console.log(targetKeys, direction, moveKeys);
-      this.targetKeys = targetKeys;
-    },
-    // 设置按钮
-    SetButton() {
-      const paraId = [
-        {
-          MenuId: 2,
-          ButtonIds: [1,38]
-        },
-        {
-          MenuId: 17,
-          ButtonIds: [1,38]          
-        },
-      ];
-      this.para.Code = "SetYsMenuButton";
-      this.para.Data = JSON.stringify(paraId);
-      console.log("menuuu", this.para);
-      handlePost(this.para).then(res => {
-        if (res.IsSuccess == true) {
-          console.log("ButtonIds", res);
-          this.dialogFormVisibleButton = false;
-          this.$message({
-            message: "分配按钮-成功！",
-            type: "success"
-          });
-        }
       });
     },
 
@@ -2060,34 +1741,24 @@ export default {
         })
         .catch(() => {});
     },
-
-    //双击编辑
-    Rowdblclick(val) {
-      this.currentRow = val;
-      this.getDataList();
-      this.dialogFormVisibleEdit = true;
-      this.editForm = Object.assign({}, this.currentRow);
-    },
-
     // 显示编辑界面
     handleEdit(index, row) {
       this.dialogStatus = "update";
       this.dialogFormVisibleEdit = true;
-      // this.$refs["editForm"].resetFields(); //重置editForm
-      (this.editForm = {}), (this.editForm = Object.assign({}, row));
-      let paert = {
-        Pid: -1
+      this.editForm = {};
+      const paraId = {
+        Id: row.Id
       };
-      this.para.Data = JSON.stringify(paert);
-      this.para.Code = this.bllCode.getList;
+      this.para.Code = "GetYsdatabaseYsButton";
+      this.para.Data = JSON.stringify(paraId);
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
-          this.ListsuperiorMenu = res.Data.List;
-          let top = {
-            Id: 0,
-            Name: "无"
-          };
-          this.ListsuperiorMenu.push(top);
+          this.editForm = Object.assign({}, res.Data);
+        } else {
+          this.$message({
+            message: res.Code + ":" + res.Message,
+            type: "warning"
+          });
         }
       });
     },
@@ -2098,13 +1769,10 @@ export default {
       this.dialogFormVisibleAdd = true;
       // this.$refs["editForm"].resetFields(); //重置editForm
       this.editForm = {
-        Isvisiable: true,
-        State: true,
-        Sort: 1
+        Isvisiable: true
       };
-
       let paert = {
-        IsList: true
+        Pid: -1
       };
       this.para.Data = JSON.stringify(paert);
       this.para.Code = this.bllCode.getList;
@@ -2117,6 +1785,11 @@ export default {
             Name: "无"
           };
           this.ListsuperiorMenu.push(top);
+        } else {
+          this.$message({
+            message: res.Code + ":" + res.Message,
+            type: "warning"
+          });
         }
       });
     },
@@ -2184,7 +1857,6 @@ export default {
                 } else {
                   this.$refs["editForm"].resetFields();
                   this.dialogFormVisibleAdd = false;
-
                   this.$message({
                     message: res.Code + ":" + res.Message,
                     type: "warning"
@@ -2199,7 +1871,6 @@ export default {
     // 全选单选多选
     selsChange(sels) {
       this.sels = sels;
-      console.log(this.sels);
     },
     // 批量删除
     batchRemove() {
@@ -2228,9 +1899,10 @@ export default {
     }
   },
   mounted() {
-    this.getMock();
     this.loadButton(store.getters.interfaces); //按权限加载按钮
     this.getDataList();
+
+    // this.getIconDefaultevent();
   }
 };
 </script>
@@ -2283,7 +1955,7 @@ export default {
   /* padding: 10px 0 0; */
 }
 .anticons-list li .anticon {
-  font-size: 24px;
+  font-size: 26px;
   /* margin: 12px 0 8px; */
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: -webkit-transform 0.3s ease-in-out;

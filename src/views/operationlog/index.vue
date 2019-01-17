@@ -62,14 +62,13 @@
           
             <a-row>
           <a-col :span="24" :style="{ textAlign: 'right' }">
-            <a-button :icon="ButtonIcons.query" type='primary' htmlType='submit'>查询</a-button>
-            <a-button :loading="loadingRefresh" type='primary' :icon="ButtonIcons.refresh" @click="Refresh">
-              刷新
-            </a-button>
-            <a-button :icon="ButtonIcons.del" type="danger" :disabled="!hasSelected" :loading="loading" @click="start">
-              <template v-if="hasSelected">{{`(${selectedRowKeys.length})`}}</template>
-              批量删除
-            </a-button>
+
+
+        <a-button type="primary" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
+        <a-button type="primary" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>     
+        <a-button type="danger" @click="start" :icon="buttonList[4].Icon" :disabled="!hasSelected" :loading="loading">{{buttonList[4].Name}}
+          <template v-if="hasSelected">{{`(${selectedRowKeys.length})`}}</template>
+        </a-button>
             <!-- <a :style="{ marginLeft: '8px', fontSize: '12px' }" @click="toggle">
               Collapse <a-icon :type="expand ? 'up' : 'down'" />
             </a> -->
@@ -343,6 +342,7 @@ export default {
       };
     return {
                    //按钮
+      buttonList:[],
       ButtonIcons:{},
       ButtonNames:{},
                   columns: [
