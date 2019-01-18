@@ -235,16 +235,21 @@
               </span>
           </a-table> -->
           <template>
+            {{checkedList}}
+                <br>
+
             <!-- <a-form-item v-for="i in GetYsMenuButtonsData" 
           :key="i.value" :label="i.Name" :labelCol="{ span: 3 }"> -->
             <a-form-item v-for="i in jurisdiction" :label='i.label' :key="i.Id" :labelCol="{ span: 3 }">
-              <!-- {{i}} -->
+              {{i}}
                 <!-- <a-checkbox :indeterminate="indeterminate" @click="allClik(i.all)" @change="onCheckAllChange" :checked="checkAll">
                   全选
                 </a-checkbox> -->
-                <a-checkbox-group :options="i.all" v-model="i.part" @change="onChange(i.all,i.part,i.Id,i)" />
+                <a-checkbox-group :options="i.all" :defaultValue="i.part" v-model="i.part" @change="onChange(i.all,i.part,i.Id)" />
+              <hr>
             </a-form-item>
-            <!-- {{jurisdiction}} -->
+
+
           </template>
       <div slot="footer" class="dialog-footer">
         <a-button @click.native="dialogFormVisibleData=false">取消</a-button>
@@ -752,15 +757,11 @@ export default {
   },
   methods: {
     //多选
-    onChange (all,part,Id,i) {
-      // console.log ('all:',all)
-      // console.log ('part:',part)
-      // console.log ('Id:',Id)
-      // console.log ('i:',i)
-      // const parts = this.jurisdiction.find((index)=>{
-      //     return index.Id === Id
-      // })
-      console.log ('ssss:',this.jurisdiction)
+    onChange (all,part,Id) {
+      console.log ('多选:',all,part,Id)
+      this.alls = all
+      this.indeterminate = !!part.length && (part.length < all.length)
+      this.checkAll = part.length === this.alls.length
     },
     onCheckAllChange (e) {//全选
     console.log ('eeee',e)

@@ -242,7 +242,7 @@
   <!-- </a-row> -->
 
         <a-modal title="分配角色" class="amodalButton" v-model="dialogFormVisibleRoles" @ok="dialogFormVisibleRoles = true" @click="dialogFormVisibleRoles = true">
-      <!-- <template>
+      <template>
         <a-transfer
           :titles="['未选角色', '已选角色']"
           :dataSource="mockData"
@@ -252,26 +252,7 @@
           :render="item=>item.title"
         >
         </a-transfer>
-      </template> -->
-
-                <a-form-item  :labelCol="{ span: 3 }">
-
-                <!-- <a-checkbox
-                 :indeterminate="indeterminate"
-                 @change="onCheckAllChange"
-                  :checked="checkAll" >
-                  全选
-                  </a-checkbox> -->
-
-
-                <a-checkbox-group
-                  :options="options"
-                  v-model="value"
-                  @change="onChangeCheckbox"
-                />
-
-
-          </a-form-item>
+      </template>
 
       <div slot="footer" class="dialog-footer">
         <a-button @click.native="dialogFormVisibleRoles=false">取消</a-button>
@@ -281,7 +262,7 @@
 
         <!--二维权限-->
     <a-modal class="allotMent" title="分配权限" @ok="handleOkData" @click="allotMent" v-model="dialogFormVisibleData">
-          <!-- <a-table defaultExpandAllRows :pagination="false" size="small" :columns="columnsTree" :dataSource="dataTree" :rowSelection="rowSelectionTree">
+          <a-table defaultExpandAllRows :pagination="false" size="small" :columns="columnsTree" :dataSource="dataTree" :rowSelection="rowSelectionTree">
               <span slot="tags" slot-scope="tags">
                 <a-checkbox></a-checkbox>
               </span>
@@ -290,21 +271,7 @@
                 <a-divider type="vertical" />
                 <a href="javascript:;">{{record.del}}</a>
               </span>
-          </a-table> -->
-
-          <template>
-            <!-- <a-form-item v-for="i in GetYsMenuButtonsData" 
-          :key="i.value" :label="i.Name" :labelCol="{ span: 3 }"> -->
-            <a-form-item v-for="i in jurisdiction" :label='i.label' :key="i.Id" :labelCol="{ span: 3 }">
-              <!-- {{i}} -->
-                <!-- <a-checkbox :indeterminate="indeterminate" @click="allClik(i.all)" @change="onCheckAllChange" :checked="checkAll">
-                  全选
-                </a-checkbox> -->
-                <a-checkbox-group :options="i.all" v-model="i.part" @change="onChange(i.all,i.part,i.Id,i)" />
-            </a-form-item>
-            <!-- {{jurisdiction}} -->
-          </template>
-
+          </a-table>
       <div slot="footer" class="dialog-footer">
         <a-button @click.native="dialogFormVisibleData=false">取消</a-button>
         <a-button type="primary" @click.native="dialogFormVisibleData=false">确认</a-button>
@@ -563,15 +530,6 @@ import util from "@/utils/table.js";
 import { handlePost, handleGet } from "@/api/apihelper.js";
 import { paraHelper } from "@/utils/para.js"; //请求参数格式
 
-const defaultCheckedList = [];
-
-const options = [
-  { label: 'Apple', value: 'Apple' },
-  { label: 'Pear', value: 'Pear' },
-  { label: 'Orange', value: 'Orange' },
-]
-const plainOptions = ['Apple', 'Pear', 'Orange']
-
 const columnsTree= [
 //   {
 //   dataIndex: 'name',
@@ -749,20 +707,6 @@ const treeData = [{
 export default {
   data() {
     return {
-      plainOptions,
-      options,
-      value: [],
-      ButtonData: [],
-      // 多选
-      checkedList: defaultCheckedList,
-      //模拟权限数组
-      jurisdiction:[
-        {Id:1, label:'导航菜单', all:["添加","删除",'编辑','批量删除','查询'],part:["添加","删除"]},
-        {Id:2, label:'部门管理', all:["添加","删除",'编辑','批量删除','查询'],part:["添加","删除",'编辑']},
-        {Id:3, label:'用户管理', all:["添加","删除",'编辑','批量删除','查询'],part:["添加","删除",'编辑']},
-        {Id:4, label:'角色管理', all:["添加","删除",'编辑','批量删除','查询'],part:["添加","删除",'编辑']},
-        {Id:5, label:'菜单按钮', all:["添加","删除",'编辑','批量删除','查询'],part:["添加","删除",'编辑']},
-      ],
       //按钮显示隐藏
       isShowButton:{},
       //按钮
@@ -1084,26 +1028,7 @@ export default {
     }
   },
   methods: {
-        // 多选框
-    onChangeCheckbox(checkedList, checkedValues) {//单选
-      // this.checkedLists = checkedList
-      // console.log("checked = ", checkedList, checkedValues);
-      // this.indeterminate =
-      //   !!checkedList.length && checkedList.length < this.ButtonData.length;
-      // this.checkAll = checkedList.length === this.ButtonData.length;
-    },
-    //多选
-    onChange (all,part,Id,i) {
-      // console.log ('all:',all)
-      // console.log ('part:',part)
-      // console.log ('Id:',Id)
-      // console.log ('i:',i)
-      // const parts = this.jurisdiction.find((index)=>{
-      //     return index.Id === Id
-      // })
-      console.log ('ssss:',this.jurisdiction)
-    },
-    //分页操作
+            //分页操作
     onShowSizeChange(current, pageSize) {
         console.log('111',current, pageSize);
         // this.page = val;
