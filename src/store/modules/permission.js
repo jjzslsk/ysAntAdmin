@@ -31,6 +31,8 @@ import joinsource from '@/views/joinsource/index'
 import systableconfig from '@/views/systableconfig/index'
 import systemsetup from '@/views/systemsetup/index'
 import errorPage from '@/views/errorPage/404'
+import test from '@/views/test/index'
+
 
 //财务管理
 import bonusdetailed from '@/views/errorPage/404'
@@ -99,6 +101,8 @@ function loadLayout(name) {
     return recommendedmembers
   } else if (name == 'proxysetting') {
     return proxysetting
+  } else if (name == 'test') {
+    return test
   } else {
     return errorPage
   }
