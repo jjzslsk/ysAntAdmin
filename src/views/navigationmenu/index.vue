@@ -994,7 +994,7 @@
       </div>
       </a-modal>-->
       <!--添加界面-->
-      <a-modal title="添加按钮" @ok="handleOkAdd" @click="createData" v-model="dialogFormVisibleAdd">
+      <a-modal :afterClose='afterCloseModal' title="添加按钮" @ok="handleOkAdd" @click="createData" v-model="dialogFormVisibleAdd">
         <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
           <!-- <a-form-item label='菜单名称' :labelCol="{ span: 5 }" :wrapperCol="{ span: 12 }">
           <a-input v-decorator="['note',{rules: [{ required: true, message: 'Please input your note!' }]} ]" />
@@ -1068,7 +1068,7 @@
       </a-modal>
 
       <!--编辑界面-->
-      <a-modal title="编辑按钮" @ok="handleOkEdit" @click="updateData" v-model="dialogFormVisibleEdit">
+      <a-modal :afterClose='afterCloseModal' title="编辑按钮" @ok="handleOkEdit" @click="updateData" v-model="dialogFormVisibleEdit">
         <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
           <el-form-item label="菜单名称:" prop="Name">
             <el-input v-model="editForm.Name" auto-complete="off"></el-input>
@@ -1279,6 +1279,31 @@ const columnsTree = [
 //   ]
 // }];
 
+const dataTrees = [{
+  key: 1,
+   Name: "系统设置", 
+   Icon: "anticon anticon-tool",
+   Code: "sys",
+   Url: "sys_manage",
+  Sort: "0",
+    Show: "√",
+     Edit: "编辑",
+     Del: "删除",
+     children:
+         [
+          { key: 3, Name: "操作按钮", Icon: "anticon anticon-inbox", Code: "button", Url: "/views/button/index", chidren: null,Edit: "编辑", Del: "删除", },
+          { key: 17, Name: "角色管理", Icon: "anticon anticon-desktop", Code: "rolemanagement", Url: "/views/rolemanagement/index", chidren: null,Edit: "编辑", Del: "删除", }, 
+          { key: 18, Name: "用户管理", Icon: "anticon anticon-user", Code: "usermanagement", Url: "/views/usermanagement/index", chidren: null,Edit: "编辑", Del: "删除", },
+          { key: 19, Name: "部门管理", Icon: "anticon anticon-solution", Code: "divisionmanage", Url: "/views/divisionmanage/index", chidren: null,Edit: "编辑", Del: "删除", },
+          { key: 20, Name: "数据字典", Icon: "anticon anticon-exception", Code: "datadictionary", Url: "/views/datadictionary/index", chidren: null,Edit: "编辑", Del: "删除", }, 
+          { key: 21, Name: "参数设置", Icon: "anticon anticon-save", Code: "systemsetup", Url: "/views/systemsetup/index", chidren: null,Edit: "编辑", Del: "删除", }, 
+          { key: 38, Name: "操作日志", Icon: "anticon anticon-export", Code: "operationlog", Url: "/views/operationlog/index", chidren: null,Edit: "编辑", Del: "删除", }, 
+          { key: 40, Name: "系统配置", Icon: "anticon anticon-setting", Code: "configure", Url: "/views/configure/index", chidren: null,Edit: "编辑", Del: "删除", },
+          { key: 2, Name: "导航菜单", Icon: "anticon anticon-database", Code: "navigationmenu", Url: "/views/navigationmenu/index", chidren: null,Edit: "编辑", Del: "删除", }
+              ]
+              }
+              ];
+
 const rowSelectionTree = {
   onChange: (selectedRowKeys, selectedRows) => {
     console.log(
@@ -1296,6 +1321,7 @@ const rowSelectionTree = {
 };
 
 export default {
+  inject:['reload'],
   data() {
     return {
       //按钮显示隐藏
@@ -1347,6 +1373,7 @@ export default {
 
       // tree列表
       // dataTree,
+      dataTrees,
       columnsTree,
       rowSelectionTree,
 
@@ -1538,11 +1565,13 @@ export default {
     }
   },
   methods: {
+    //刷新页面
+    afterCloseModal (){
+      this.reload();
+    },
     // 图标选择
     onsomething(event) {
-      console.log(event);
-      this.editForm.Icon = event.target.parentElement.className;
-      console.log(this.editForm.Icon);
+      this.editForm.Icon = event.toElement.className;
       this.dialogFormVisibleIcon = false;
     },
     // 多选框
@@ -2230,8 +2259,9 @@ export default {
     this.getMock();
     this.loadButton(store.getters.interfaces); //按权限加载按钮
     this.getDataList();
-  }
+    }
 };
+
 </script>
 <style scoped>
 .panel-heading {

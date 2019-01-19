@@ -5,7 +5,7 @@
   <div id="app">
         <!--登入动画-->
     <transition name="rotate-fall">
-    <router-view  class="app-router-view"></router-view>
+    <router-view v-if="isRouterAlive" class="app-router-view"></router-view>
     </transition>
 
   <!-- <body class="hold-transition skin-blue sidebar-mini">
@@ -39,11 +39,25 @@ import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
 import { mainSidebar,contentWrapper,mainFooter,controlSidebar,headerTop } from './components/Modular/'
 export default {
   name: 'App',
+  provide(){
+    return{
+      reload:this.reload
+    }
+  },
   data () {
       return {
         locale: zhCN,
+        isRouterAlive:true
       }
     },
+    methods:{
+      reload(){
+      this.isRouterAlive = false;
+      this.$nextTick(function(){
+        this.isRouterAlive = true;
+      })
+    }
+    }
   //   components: {
   //     headerTop,
   //   mainSidebar,
