@@ -2,6 +2,50 @@
   <section class="app-container">
     <el-card class="box-card">
 
+          <!-- 部门树形 -->
+  <el-col style="height:;width:18rem;position: relative;z-index: 99;">
+  <el-card class="box-card" style="height: 62.8rem;">
+  <!-- <div slot="header" class="clearfix">
+    <el-input
+      placeholder="快速查找部门"
+      v-model="filterText">
+    </el-input>
+    <el-button style="float: right; padding: 3px 0" type="text"></el-button>
+  </div> -->
+  <dir style="margin:0 auto;padding-inline-start: 0px;padding-bottom:1rem;">
+          <a-button size="small" type="primary" @click="handleAddType">添加</a-button>
+          <a-button size="small" type="primary" @click="handleEditType">编辑</a-button>
+          <a-button size="small" type="primary" @click="handleDelType">删除</a-button>
+  </dir>
+
+  <div class="text item">
+    <template>
+      <a-table :bordered='false' :pagination='false' :columns="columnsData" :dataSource="DataSource" size="small" />
+      
+      <!-- <a-tree
+      defaultExpandAll
+        @select="onSelect"
+        :treeData="treeData"
+      /> -->
+
+    </template>
+
+    <!-- <el-tree
+      class="filter-tree"
+      :data="menus"
+      :props="defaultProps"
+      default-expand-all
+      node-key="value"
+      :highlight-current='true'
+      :filter-node-method="filterNode"
+      @node-click='changeClick'
+      ref="tree2">
+    </el-tree> -->
+
+    </div>
+    </el-card>
+    </el-col>
+
     <!-- <el-col class="UserTable"> -->
       <a-row>
             <!--工具条-->
