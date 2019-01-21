@@ -34,11 +34,11 @@
         <el-form-item style="float: right;">
           <a-input-group compact>
             <a-select  @change="this.handleSelectChange" defaultValue="名称" style="width: 40%">
-                <a-select-option value='Id'>Id</a-select-option>
+                <!-- <a-select-option value='Id'>Id</a-select-option> -->
                 <a-select-option value='Name'>名称</a-select-option>
                 <a-select-option value='Username'>账号</a-select-option>
                 <a-select-option value='Mobile'>电话</a-select-option>
-                <a-select-option value='Memo'>备注</a-select-option>
+                <!-- <a-select-option value='Memo'>备注</a-select-option> -->
                 <!-- <a-select-option value='Name'>名称</a-select-option> -->
             </a-select>
           <a-input style="width: 60%" defaultValue="" v-model="filters.data"/>
