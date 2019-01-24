@@ -5,6 +5,9 @@
         
     <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
+        所有部门列表：{{departments}}
+        <hr>
+        cascaderList树{{cascaderList}}
           <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
         <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>     
           <!-- <a-button  v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button> -->
@@ -187,12 +190,16 @@
         <el-form-item label="部门名称:" prop="Name">
           <el-input v-model="editForm.Name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="上级部门:">
+        <el-form-item label="上级部门:">{{editForm.Pid}}
             <el-select v-model="editForm.Pid" placeholder="请选择">
                 <el-option v-for="item in departments" :key="item.Name" :label="item.Name" :value="item.Id">
                   {{item.Name}}</el-option>
             </el-select>
         </el-form-item>
+        <el-form-item label="上级部门1:">
+            <a-cascader :options="cascaderList" changeOnSelect @change="onChangeCascader" placeholder="请选择上级部门" />
+        </el-form-item>
+        
         <el-form-item label="排序:">
           <el-input-number v-model="editForm.Sort"></el-input-number>
         </el-form-item>
@@ -360,6 +367,25 @@ export default {
         return data;
       };
     return {
+      cascaderList:[],
+      //多级选择
+      optionsCascader: [
+        {
+        value: '1',
+        label: 'IT部',
+        children: [
+          {value: '2', label: '代维部'},
+          {value: '3', label: '代维部1',}
+          ],
+      },
+       {
+        value: '3',
+        label: '销售部',
+        children: [
+          {value: '4',label: '市场部'},
+          {value: '5',label: '市场部1'}
+          ],
+      }],
       //按钮显示隐藏
       isShowButton:{},
       //按钮
@@ -528,6 +554,12 @@ export default {
     };
   },
   methods: {
+    //多级选择
+    onChangeCascader(value) {
+      console.log(value);
+    },
+
+
         //列表查询
     handleSearch (selectedKeys, confirm) {
       confirm()
@@ -707,7 +739,8 @@ export default {
       const paraId = {
         Page: this.page,
         Name: this.filters.data,
-        Size: 10
+        Size: 10,
+        // IsSel:false
       };
       // this.dataList = [];
       this.para.Code = 'GetTreeYsdatabaseYsDepartment';
@@ -715,7 +748,9 @@ export default {
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
           this.total = res.Data.Count;
+          this.cascaderList = res.Data;
           this.dataList = res.Data;
+          // this.carButton()//转列表对象值
 
           //初始化按钮
             this.isShowButton = {
@@ -829,6 +864,8 @@ export default {
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
           this.departments = res.Data.List;
+          const paraList = {Pid: 0,Name: "一级部门",Id:0}
+          this.departments.push (paraList)
         }else {
                   this.$message({
                     message: res.Code + ':' + res.Message,
@@ -836,6 +873,27 @@ export default {
                   });
                 }
       });
+
+
+
+    },
+        //转列表对象值
+    carButton() {
+      var buttonkeyMap = {
+        Key: "value",
+        title: "label"
+      };
+
+      for (var i = 0; i < this.cascaderList.length; i++) {
+        var obj = this.cascaderList[i];
+        for (var key in obj) {
+          var newKey = buttonkeyMap[key];
+          if (newKey) {
+            obj[newKey] = obj[key];
+            delete obj[key];
+          }
+        }
+      }
     },
     // 编辑
     updateData() {
@@ -946,7 +1004,8 @@ export default {
     this.loadButton(store.getters.interfaces); //按权限加载按钮
     this.getDataList();
   }
-};
+  }
+
 </script>
 <style scoped>
 .panel-heading {

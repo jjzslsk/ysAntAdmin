@@ -3,9 +3,15 @@
     <el-card class="box-card">
       <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
+        <!-- ::{{allotButtons}} -->
+        <a-button style="margin-right:.3rem" v-for="index in allotButtons" :key="index.Id"  type="primary" >{{index.Name}}</a-button>
+        <!-- <a-button style="margin-right:.3rem" type="primary">123</a-button> -->
         <!-- <a-button v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button> -->
         <!-- <a-button type="primary" class="addButtonClassName" :icon="ButtonIcons.edit" @click="handleAdd">编辑</a-button> -->
-        <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
+        
+        <!-- 拥有的：{{buttonAr}} -->
+        <hr>
+        <!-- 全部的：{{buttonList}} -->
         <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
         <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>
         <a-button type="danger" v-if="isShowButton.dels" @click="start" :icon="buttonList[4].Icon" :disabled="!hasSelected" :loading="loading">{{buttonList[4].Name}}
@@ -21,7 +27,7 @@
             <a-select @change="this.handleSelectChange" defaultValue="按钮名称" style="width: 40%">
               <!-- <a-select-option value='Id'>Id</a-select-option> -->
               <a-select-option value="Icon">图标</a-select-option>
-              <a-select-option value="ClassName">样式</a-select-option>
+              <a-select-option value="ClassName">标识</a-select-option>
               <a-select-option value="Name">按钮名称</a-select-option>
             </a-select>
             <a-input style="width: 60%" defaultValue v-model="filters.data"/>
@@ -61,6 +67,7 @@
         :pagination="false"
         :dataSource="dataList"
         :columns="columns"
+        @onSelect='onSelectTable'
       >
         <div
           slot="filterDropdown"
@@ -923,7 +930,7 @@
           <el-form-item label="按钮名称:" prop="Name">
             <el-input v-model="editForm.Name" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="样式:" prop="ClassName">
+          <el-form-item label="标识:" prop="ClassName">
             <el-input v-model="editForm.ClassName" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="图标:" prop>
@@ -950,7 +957,7 @@
           <el-form-item label="按钮名称:" prop="Name">
             <el-input v-model="editForm.Name" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="样式:" prop="Classname">
+          <el-form-item label="标识:" prop="Classname">
             <el-input v-model="editForm.Classname" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="图标:" prop>
@@ -1183,6 +1190,9 @@ export default {
       ButtonIcons: {},
       ButtonNames: {},
       buttonList: [],
+      buttonAr:[],
+      allotButtons:[],
+
 
       buttonClassName: "",
       //批量选择
@@ -1222,7 +1232,7 @@ export default {
           scopedSlots: { customRender: "Icon" }
         },
         {
-          title: "样式",
+          title: "标识",
           dataIndex: "Classname",
           key: "Classname"
         },
@@ -1561,7 +1571,15 @@ export default {
       this.dialogFormVisibleIcon = true;
     },
     allotButton() {
-      this.dialogFormVisibleButton = true;
+      this.allotButtons = []
+          this.buttonAr.Data[0].ButtonIds.map((car)=>{
+          const allotButton = this.buttonList.find((i)=>{
+            return i.Id === car
+          })
+          this.allotButtons.push(allotButton)
+          console.log ('allotButtons::',this.allotButtons)
+
+        })
     },
     //行点击事件
     Rowdblclick(row) {
@@ -1721,8 +1739,9 @@ export default {
             this.para.Data = JSON.stringify(paraId);
             handlePost(this.para).then(res => {
               if (res.IsSuccess == true) {
-                const buttonAr = res.Data[0].ButtonIds;
-                buttonAr.forEach((i)=>{
+                this.buttonAr = res;
+                const getButtons = res.Data[0].ButtonIds;
+                getButtons.forEach((i)=>{
                   switch(i){
                     case 1:
                     this.isShowButton.add = true;
@@ -1743,9 +1762,11 @@ export default {
                     this.isShowButton.query = true;
                     break;                   
                   }
-                  // if(typeof i == 'null'){
                 })
+
+    this.allotButton()
               }
+
             });
 
 
@@ -1758,6 +1779,37 @@ export default {
         });
       });
     },
+
+    onSelectTable(){
+      alert (1)
+    },
+
+    //默认点击事件
+    defaultClick(index){
+      console.log (index)
+      switch(index.Classname){
+            case 'add':
+            this.handleAdd()
+            (function(index){
+              alert (index)
+            }(index.Classname))
+            // returnData()
+            break;
+            case 'edit':
+            // this.handleAdd()
+            break;
+            case 'refresh':
+            this.Refresh()
+            break;
+            case 'search':
+            this.getKeyList()
+            break;
+            case 'del':
+            this.start()
+            break;
+                 
+          }
+},
 
     // 删除
     handleDel(index, row) {

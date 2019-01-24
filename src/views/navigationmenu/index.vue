@@ -128,7 +128,7 @@
         </template>
 
         <template slot="action" slot-scope="text, record">
-          <a href="javascript:;" @click="allotButton(record.Key)">分配按钮</a>
+          <a href="javascript:;" @click="allotButton(record.key)">分配按钮</a>
           <a-divider v-if="isShowButton.edit"  type="vertical"/>
           <a v-if="isShowButton.edit" href="javascript:;" @click="onEdit(record)">{{record.Edit}}</a>
           <a-divider v-if="isShowButton.del"  type="vertical"/>
@@ -1151,7 +1151,7 @@ const defaultCheckedList = [];
 const columnsTree = [
   // {
   //   title: '菜单名称',
-  //   Key: 'Name',
+  //   key: 'Name',
   //   dataIndex: 'Name',
   //   scopedSlots: { customRender: 'name' },
   //   width: 160
@@ -1178,18 +1178,18 @@ const columnsTree = [
   },
   {
     title: "图标",
-    Key: "Icon",
+    key: "Icon",
     dataIndex: "Icon",
     scopedSlots: { customRender: "Icon" }
   },
   {
     title: "标记",
-    Key: "Code",
+    key: "Code",
     dataIndex: "Code"
   },
   {
     title: "链接地址",
-    Key: "Url",
+    key: "Url",
     dataIndex: "Url"
   },
   {
@@ -1201,12 +1201,12 @@ const columnsTree = [
   ,
   {
     title: "排序",
-    Key: "Sort",
+    key: "Sort",
     dataIndex: "Sort"
   },
   {
     title: "操作",
-    Key: "action",
+    key: "action",
     dataIndex: "action",
     scopedSlots: { customRender: "action" },
     width: 200
@@ -1640,7 +1640,7 @@ export default {
       })
         .then(() => {
           const paraId = {
-            Id: data.Key
+            Id: data.key
           };
           this.para.Code = this.bllCode.del;
           this.para.Data = JSON.stringify(paraId);
@@ -1667,7 +1667,7 @@ export default {
       this.dialogFormVisibleEdit = true;
       this.editForm = {};
       const paraId = {
-        Id: row.Key
+        Id: row.key
       };
       this.para.Code = "GetYsdatabaseYsMenu";
       this.para.Data = JSON.stringify(paraId);
@@ -1989,7 +1989,7 @@ export default {
     GetYsMenuButtons() {
       //获取多菜单按钮
       const paraId = {
-        // MenuId:this.sels[0].Key,
+        // MenuId:this.sels[0].key,
       };
       this.para.Code = "GetYsMenuButton";
       this.para.Data = JSON.stringify(paraId);

@@ -224,24 +224,11 @@
 
         <!--二维权限-->
     <a-modal class="allotMent" title="分配权限" @ok="handleOkData" @click="allotMent" v-model="dialogFormVisibleData">
-          <!-- <a-table defaultExpandAllRows :pagination="false" size="small" :columns="columnsTree" :dataSource="dataTree" :rowSelection="rowSelectionTree">
-              <template slot="tags" slot-scope="text, record, index">
-                <a-checkbox v-model="record.enable"  @click="onChangeClick" @change='onChangeSwitch(text, record, index)'></a-checkbox>
-              </template>
-              <span slot="action" slot-scope="text, record">
-                <a href="javascript:;">{{record.edit}}</a>
-                <a-divider type="vertical" />
-                <a href="javascript:;">{{record.del}}</a>
-              </span>
-          </a-table> -->
+        <a-button type="primary" @click="getRole" >获取</a-button>
+        <a-button type="primary" @click="setRole" >设置</a-button>
+      
           <template>
-            <!-- <a-form-item v-for="i in GetYsMenuButtonsData" 
-          :key="i.value" :label="i.Name" :labelCol="{ span: 3 }"> -->
             <a-form-item v-for="i in jurisdiction" :label='i.label' :key="i.Id" :labelCol="{ span: 3 }">
-              <!-- {{i}} -->
-                <!-- <a-checkbox :indeterminate="indeterminate" @click="allClik(i.all)" @change="onCheckAllChange" :checked="checkAll">
-                  全选
-                </a-checkbox> -->
                 <a-checkbox-group :options="i.all" v-model="i.part" @change="onChange(i.all,i.part,i.Id,i)" />
             </a-form-item>
             <!-- {{jurisdiction}} -->
@@ -751,6 +738,64 @@ export default {
     }
   },
   methods: {
+    getRole(){
+      this.$confirm("确认为该菜单分配按钮吗?", "提示", {
+        type: "warning",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      }).then(() => {
+        const paraId = [
+          {
+            Id: 1,
+            Power: [{
+              MenuId: 19,	//菜单id
+              Buttons: [1,38,39]	//按钮id数组
+            }]
+          }
+        ];
+        this.para.Code = "GetYsRolePower";
+        this.para.Data = JSON.stringify(paraId);
+        handlePost(this.para).then(res => {
+          if (res.IsSuccess == true) {
+            this.dialogFormVisibleData = false;
+            this.getDataList()
+            this.$message({
+              message: "分配按钮成功！",
+              type: "success"
+            });
+          }
+        });
+      });
+    },
+    setRole(){
+      this.$confirm("确认为该菜单分配按钮吗?", "提示", {
+        type: "warning",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      }).then(() => {
+        const paraId = [
+          {
+            Id: 10,
+            Power: [{
+              MenuId: 19,	//菜单id
+              Buttons: [1,38,39]	//按钮id数组
+            }]
+          }
+        ];
+        this.para.Code = "SetYsRolePower";
+        this.para.Data = JSON.stringify(paraId[0]);
+        handlePost(this.para).then(res => {
+          if (res.IsSuccess == true) {
+            this.dialogFormVisibleData = false;
+            this.getDataList()
+            this.$message({
+              message: "分配成功！",
+              type: "success"
+            });
+          }
+        });
+      });
+    },
     //多选
     onChange (all,part,Id,i) {
       // console.log ('all:',all)

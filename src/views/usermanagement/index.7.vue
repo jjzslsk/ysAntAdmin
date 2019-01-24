@@ -1,6 +1,7 @@
 <template>
   <section class="app-container">
     <el-card class="box-card">
+      
         
     <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
@@ -9,7 +10,7 @@
           <a-button type="primary" :loading="loadingRefresh" @click="Refresh">刷新</a-button>   -->
         <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
         <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>     
-        <a-button type="primary"  @click="exportData">导出</a-button>     
+        <a-button type="primary"  @click="exportDataInfo">导出</a-button>     
                   
           <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
           <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
@@ -311,7 +312,28 @@
       </div>
     </a-modal>
 
-    
+            <!--导出界面-->
+    <a-modal class="allotMent" title="导出内容" @ok="handleOkData" @click="exportData" v-model="dialogFormVisibleExport">
+      <template>
+        <div>
+          <div :style="{ borderBottom: '1px solid #E9E9E9' }">
+            <a-checkbox
+              :indeterminate="indeterminateExport"
+              @change="onCheckAllChangeExport"
+              :checked="checkAllExport"
+            >
+              Check all
+            </a-checkbox>
+          </div>
+          <br />
+          <a-checkbox-group :options="plainOptions" v-model="checkedList" @change="onChange" />
+        </div>
+      </template>
+      <div slot="footer" class="dialog-footer">
+        <a-button @click.native="dialogFormVisibleExport=false">取消</a-button>
+        <a-button type="primary" @click.native="dialogFormVisibleExport=false">确认</a-button>
+      </div>
+    </a-modal>
 
     <!--添加界面-->
     <a-modal title="添加用户" @ok="dialogFormVisibleAdd = true" @click="createData" v-model="dialogFormVisibleAdd">
@@ -565,6 +587,9 @@ import util from "@/utils/table.js";
 import { handlePost, handleGet } from "@/api/apihelper.js";
 import { paraHelper } from "@/utils/para.js"; //请求参数格式
 
+const plainOptionsExpotr = ['Apple', 'Pear', 'Orange']
+const defaultCheckedListExpotr = ['Apple', 'Orange']
+
 const defaultCheckedList = [];
 
 const options = [
@@ -751,6 +776,12 @@ const treeData = [{
 export default {
   data() {
     return {
+      //导出
+      checkedListExport: defaultCheckedListExport,
+      indeterminateExport: true,
+      checkAllExport: false,
+      plainOptionsExport,
+
       plainOptions,
       options,
       value: [],
@@ -953,6 +984,7 @@ export default {
       dialogFormVisibleAdd: false,
       dialogFormVisibleEdit: false,
       dialogFormVisibleData:false,
+      dialogFormVisibleExport:false,
       dialogFormVisibleButton:false,
       dialogFormVisibleRoles:false,
       filters: {},
@@ -1086,6 +1118,22 @@ export default {
     }
   },
   methods: {
+    //选择导出字段
+    onChangeExpart (checkedList) {
+      this.indeterminateExpart = !!checkedList.length && (checkedList.length < plainOptionsExpart.length)
+      this.checkAllExpart = checkedList.length === plainOptionsExpart.length
+    },
+    onCheckAllChange (e) {
+      Object.assign(this, {
+        checkedListExpart: e.target.checked ? plainOptionsExpart : [],
+        indeterminateExpart: false,
+        checkAllExpart: e.target.checked,
+      })
+    },
+    //打开导出窗口
+    exportDataInfo(){
+      
+    },
     //导出
     exportData(){
       const paraId = {
@@ -1349,6 +1397,7 @@ export default {
     },
     handleOkData(){
       this.dialogFormVisibleData = false;
+      this.dialogFormVisibleExport = false;
     },
         //刷新页面
     Refresh() {
