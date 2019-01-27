@@ -110,7 +110,7 @@
       </el-pagination>
     </el-col> -->
 
-        <a-table :scroll="{ x: 1300 }" :pagination='false' :dataSource="users" :columns="columns">
+        <a-table @click="expandRowByClick()" :scroll="{ x: 1300 }" :pagination='false' :dataSource="users" :columns="columns">
     <div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters }" class='custom-filter-dropdown'>
       <a-input
         ref="searchInput"
@@ -153,7 +153,7 @@
           </template>
 
           <!-- <p slot="expandedRowRender" slot-scope="record" style="margin: 0">{{record.description}}:</p> -->
-                <div
+      <!-- <div
         slot="expandedRowRender"
         slot-scope="record"
         style="margin: 0">
@@ -223,7 +223,7 @@
           </a-col>
 
         </a-row>
-      </div>
+      </div> -->
 
   </a-table>
 
@@ -523,7 +523,7 @@
       </el-form>
 
           </a-tab-pane>
-          <a-tab-pane tab="联系方式" key="20">
+          <a-tab-pane tab="联系方式" key="2">
             <el-form label-width="100px">
               <el-form-item label="姓名:" prop="">
                 <el-input auto-complete="off"></el-input>
@@ -541,6 +541,78 @@
                 <el-input type="textarea" v-model="editForm.Memo"></el-input>
               </el-form-item>
             </el-form>
+          </a-tab-pane>
+
+          <a-tab-pane tab="详情" key="3">
+            <h1>123</h1>
+                  <div>
+        <a-row
+          :gutter="24">
+          <a-col :span="12">
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>用户管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >123</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>菜单管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >123</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >导入</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>权限管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >123</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>测试权限</span>
+            </a-col>
+            <a-col :span="20" style="margin-bottom: 12px;" >-</a-col>
+          </a-col>
+
+                    <a-col :span="12">
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>角色管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >123</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>会员管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >123</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>测试权限：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;" >-</a-col>
+          </a-col>
+
+        </a-row>
+      </div>
           </a-tab-pane>
         </a-tabs>
 
@@ -1086,6 +1158,10 @@ export default {
     }
   },
   methods: {
+    //expandRowByClick
+    expandRowByClick(){
+      console.log (1)
+    },
     //导出
     exportData(){
       const paraId = {

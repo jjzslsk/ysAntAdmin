@@ -3,9 +3,26 @@
     <el-card class="box-card">
       <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
+          <!-- <a-button  v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button>
+          <a-button type="primary" @click="handleAdd">{{button.add}}</a-button>
+          <a-button type="primary" :loading="loadingRefresh" @click="Refresh">刷新</a-button> -->
         <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
         <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>       
-
+          <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
+          <!-- <a-button type="primary" @click="allotMent">分配权限</a-button> -->
+          <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
+      <!-- <a-button
+        type="danger"
+        @click="start"
+        :disabled="!hasSelected"
+        :loading="loading"
+        :icon="ButtonIcons.del"
+      >
+        批量删除
+        <template v-if="hasSelected">
+          {{`(${selectedRowKeys.length})`}}
+        </template>
+      </a-button> -->
       <el-form-item style="float: right;">
           <a-button v-if="isShowButton.query" type="primary" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
         </el-form-item>
@@ -22,6 +39,25 @@
         </el-form-item>
       </el-form>
 
+    <!--列表--> 
+          <!-- <el-table @row-dblclick='Rowdblclick' stripe :data="dataList" highlight-current-row @selection-change="selsChange" style="width: 100%;">
+            <el-table-column v-for="item in tableLabel" :key="item.Label" :label="item.Label" :prop="item.prop" :width='item.width' :type='item.type'>
+            </el-table-column>
+            <el-table-column label="操作" width="180" fixed="right">
+              <template slot-scope="scope">
+                <el-button type="text" size="mini" @click="allotMent(scope.$index, scope.row)">分配权限</el-button>
+                <el-button type="text" size="mini" @click="handleEdit(scope.$index, scope.row)">{{button.edit}}</el-button>
+                <el-button type="text" ssize="mini" @click="handleDel(scope.$index, scope.row)">{{button.del}}</el-button>
+              </template>
+            </el-table-column>
+          </el-table> -->
+
+          <!-- 分页 -->
+        <!-- <el-col :span="24" class="toolbar">
+      <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total"
+        style="float:right;">
+      </el-pagination>
+    </el-col> -->
 
         <a-table :pagination='false' :dataSource="dataList" :columns="columns">
     <div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters }" class='custom-filter-dropdown'>
@@ -55,8 +91,77 @@
             <a href="javascript:;" v-if="isShowButton.del" @click="onDelete(record)">详情</a>
           </template>
 
+      <!-- <div
+        slot="expandedRowRender"
+        slot-scope="record"
+        style="margin: 0">
+        <a-row
+          :gutter="24">
+          <a-col :span="12">
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>用户管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >{{ record.description }}</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>菜单管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >{{ record.description }}</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >导入</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>权限管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >{{ record.description }}</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>测试权限</span>
+            </a-col>
+            <a-col :span="20" style="margin-bottom: 12px;" >-</a-col>
+          </a-col>
 
+                    <a-col :span="12">
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>角色管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >{{ record.description }}</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>会员管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >{{ record.description }}</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>测试权限：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;" >-</a-col>
+          </a-col>
 
+        </a-row>
+      </div> -->
 
   </a-table>
 
@@ -70,29 +175,28 @@
 
 
 
+        <!--图标-->
+    <!-- <a-modal title="添加图标" @ok="handleOk" @click="allotIcon" v-model="dialogFormVisibleIcon" >
+
+      <div slot="footer" class="dialog-footer">
+        <a-button @click.native="dialogFormVisibleIcon=false">取消</a-button>
+        <a-button type="primary" @click.native="dialogFormVisibleIcon=false">确认</a-button>
+      </div>
+    </a-modal> -->
+
         <!--二维权限-->
     <a-modal class="allotMent" title="分配权限" @ok="handleOkData" @click="allotMent" v-model="dialogFormVisibleData">
         <a-button type="primary" @click="getRole" >获取</a-button>
         <a-button type="primary" @click="setRole" >设置</a-button>
         <!-- {{}} -->
         获取到权限数组:{{userRole}}
-
-        <!-- 导航菜单：{{treeData}} -->
-
-          <template>
-            <a-tree
-              checkable
-              @expand="onExpand"
-              :expandedKeys="expandedKeys"
-              :autoExpandParent="autoExpandParent"
-              v-model="checkedKeys"
-              @select="onSelect"
-              :selectedKeys="selectedKeys"
-              :treeData="treeData123"
-            />
-          </template>
       
-
+          <template>
+            <a-form-item v-for="i in jurisdiction" :label='i.label' :key="i.Id" :labelCol="{ span: 3 }">
+                <a-checkbox-group :options="i.all" v-model="i.part" @change="onChange(i.all,i.part,i.Id,i)" />
+            </a-form-item>
+            <!-- {{jurisdiction}} -->
+          </template>
       <div slot="footer" class="dialog-footer">
         <a-button @click.native="dialogFormVisibleData=false">取消</a-button>
         <a-button type="primary" @click.native="dialogFormVisibleData=false">确认</a-button>
@@ -198,30 +302,6 @@ import store from "@/store/index.js"; //引入本地存储
 import util from "@/utils/table.js";
 import { paraHelper } from "@/utils/para.js"; //请求参数格式
 import { handlePost, handleGet } from "@/api/apihelper.js";
-
-//树形选择
-
-const treeData123 = [{
-  title: '系统配置',
-  key: '0-0',
-  children: [{
-    title: '导航菜单',
-    key: '0-0-0',
-    children: [
-      { title: '添加', key: '0-0-0-0' },
-      { title: 'del', key: '0-0-0-1' },
-      { title: 'edit', key: '0-0-0-2' },
-    ],
-  }, {
-    title: '操作按钮',
-    key: '0-0-1',
-    children: [
-      { title: 'add', key: '0-0-1-0' },
-      { title: 'DEL', key: '0-0-1-1' },
-      { title: 'DEIT', key: '0-0-1-2' },
-    ],
-  }],
-}, ]
 
 const columnsTree = [
 //   {
@@ -398,16 +478,24 @@ export default {
         return data;
       };
     return {
-
-      //树形选择
-      expandedKeys: ['0-0-0', '0-0-1'],
-      autoExpandParent: true,
-      checkedKeys: ['0-0-0'],
-      selectedKeys: [],
-      treeData123,
-
       //获取到权限数组
       userRole:[],
+
+      //模拟权限数组
+      jurisdiction:[
+        {Id:1, label:'导航菜单', all:["添加","删除",'编辑','批量删除','查询'],part:["添加","删除"]},
+        {Id:2, label:'部门管理', all:["添加","删除",'编辑','批量删除','查询'],part:["添加","删除",'编辑']},
+        {Id:3, label:'用户管理', all:["添加","删除",'编辑','批量删除','查询'],part:["添加","删除",'编辑']},
+        {Id:4, label:'角色管理', all:["添加","删除",'编辑','批量删除','查询'],part:["添加","删除",'编辑']},
+        {Id:5, label:'菜单按钮', all:["添加","删除",'编辑','批量删除','查询'],part:["添加","删除",'编辑']},
+      ],
+      //多选
+      checkedList: defaultCheckedList,
+      indeterminate: true,
+      checkAll: false,
+      plainOptions,
+      alls:[],//全选
+
       //按钮显示隐藏
       isShowButton:{},
       //按钮
@@ -633,32 +721,7 @@ export default {
       return this.selectedRowKeys.length > 0
     }
   },
-
-
-  watch: {
-    checkedKeys(val) {
-      console.log('onCheck', val)
-    }
-  },
-
   methods: {
-      //树形选择
-      onExpand (expandedKeys) {
-      console.log('onExpand', expandedKeys)
-      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-      // or, you can remove all expanded children keys.
-      this.expandedKeys = expandedKeys
-      this.autoExpandParent = false
-    },
-    onCheck (checkedKeys) {
-      console.log('onCheck', checkedKeys)
-      this.checkedKeys = checkedKeys
-    },
-    onSelect (selectedKeys, info) {
-      console.log('onSelect', info)
-      this.selectedKeys = selectedKeys
-    },
-
     getRole(i){
       this.userRole = []
         const paraId = [
@@ -721,6 +784,35 @@ export default {
           }
         });
       });
+    },
+    //多选
+    onChange (all,part,Id,i) {
+      // console.log ('all:',all)
+      // console.log ('part:',part)
+      // console.log ('Id:',Id)
+      // console.log ('i:',i)
+      // const parts = this.jurisdiction.find((index)=>{
+      //     return index.Id === Id
+      // })
+      console.log ('ssss:',this.jurisdiction)
+    },
+    onCheckAllChange (e) {//全选
+    console.log ('eeee',e)
+      const plains = this.alls.map((i)=>{
+        return i
+      })
+      Object.assign(this, {
+        // checkedList: e.target.checked ? plainOptions : [],
+        checkedList: e.target.checked ? plains : [],
+        indeterminate: false,
+        checkAll: e.target.checked,
+      })
+      console.log ('ppp',plains)
+    },
+    //全选点击事件
+    allClik(all){
+      this.alls = all
+      console.log (all)
     },
         //分页操作
     onShowSizeChange(current, pageSize) {
@@ -903,18 +995,6 @@ export default {
       console.log (i.Id)
       this.getRole(i.Id)
       this.dialogFormVisibleData = true;
-
-      // const paraId = {}; 
-      // this.para.Code = 'GetListYsdatabaseYsMenu';
-      // this.para.Data = JSON.stringify(paraId);
-      // handlePost(this.para).then(res => {
-      //   if (res.IsSuccess == true) {
-      //     this.treeData = res.Data
-      //     console.log ('res',this.treeData)
-
-      //   }
-      // });
-
     },
     //行点击事件
     Rowdblclick(row) {

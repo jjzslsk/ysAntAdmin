@@ -3,18 +3,17 @@
     <el-card class="box-card">
       <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
-        <!-- ::{{allotButtons}} -->
-        <!-- <hr> -->
-        <span v-for="index in allotButtons" :key="index.Id">
-        <a-button style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
-        </span>
+        ::{{allotButtons}}
+        <hr>
+        <a-button style="margin-right:.3rem" v-for="index in allotButtons" :key="index.Id" @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        <!-- <a-button style="margin-right:.3rem" type="primary">123</a-button> -->
         <!-- <a-button v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button> -->
         <!-- <a-button type="primary" class="addButtonClassName" :icon="ButtonIcons.edit" @click="handleAdd">编辑</a-button> -->
         <!-- <hr>
         按钮筛选后allotButtons：{{allotButtons}}
         <hr>
-        拥有的buttonAr：{{buttonAr}}
-        <hr> -->
+        拥有的buttonAr：{{buttonAr}} -->
+        <!-- <hr> -->
         <!-- this.buttonAr.Data[0]:{{buttonAr.Data}} -->
         <!-- <hr>
         <hr>
@@ -25,19 +24,19 @@
         <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>
         <a-button type="danger" v-if="isShowButton.dels" @click="start" :icon="buttonList[2].Icon" :disabled="!hasSelected" :loading="loading">{{buttonList[2].Name}}
           <template v-if="hasSelected">{{`(${selectedRowKeys.length})`}}</template>
-        </a-button> -->
+        </a-button>
 
         <el-form-item style="float: right;">
-          <a-button type="primary" icon="anticon anticon-search" @click="getKeyList">查询</a-button>
-        </el-form-item>
+          <a-button type="primary" v-if="isShowButton.query" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
+        </el-form-item> -->
 
         <el-form-item style="float: right;">
           <a-input-group compact>
             <a-select @change="this.handleSelectChange" defaultValue="按钮名称" style="width: 40%">
               <!-- <a-select-option value='Id'>Id</a-select-option> -->
-              <a-select-option value="Name">按钮名称</a-select-option>
               <a-select-option value="Icon">图标</a-select-option>
               <a-select-option value="ClassName">标识</a-select-option>
+              <a-select-option value="Name">按钮名称</a-select-option>
             </a-select>
             <a-input style="width: 60%" defaultValue v-model="filters.data"/>
           </a-input-group>
@@ -126,11 +125,10 @@
           <a-badge v-if="record.Isvisiable == true" status="success" text="正常"/>
           <a-badge v-if="record.Isvisiable == false" status="error" text="隐藏"/>
         </template>
-        <template  slot="action" slot-scope="text, record">
-          <span  v-for="index in allotButtons" :key="index.Id">
-          <a href="javascript:;" v-if="index.Classname==='edit'"  @click="onEdit(record.Id)">{{index.Name}}</a>
-          <a href="javascript:;" v-if="index.Classname==='del'"  @click="onDelete(record)">{{index.Name}}</a>
-          </span>
+        <template slot="action" slot-scope="text, record">
+          <a href="javascript:;" v-if="isShowButton.edit" @click="onEdit(record)">编辑</a>
+          <a-divider type="vertical"/>
+          <a href="javascript:;" v-if="isShowButton.del"  @click="onDelete(record)">删除</a>
         </template>
       </a-table>
 
@@ -1495,7 +1493,7 @@ export default {
       this.dialogFormVisibleEdit = true;
       this.editForm = {};
       const paraId = {
-        Id: row
+        Id: row.Id
       };
       this.para.Code = "GetYsdatabaseYsButton";
       this.para.Data = JSON.stringify(paraId);
@@ -1739,8 +1737,8 @@ export default {
             this.isShowButton = {
               add:false,
               Refresh:false,
-              edit:true,
-              del:true,
+              edit:false,
+              del:false,
               dels:false,
               query:false,  
             };
@@ -1803,6 +1801,13 @@ export default {
       switch(index.Classname){
             case 'add':
             this.handleAdd()
+            (function(index){
+              alert (index)
+            }(index.Classname))
+            // returnData()
+            break;
+            case 'edit':
+            // this.handleAdd()
             break;
             case 'refresh':
             this.Refresh()
@@ -1812,9 +1817,6 @@ export default {
             break;
             case 'del':
             this.start()
-            break;
-            case 'edit':
-            this.onEdit(this.selectedRows[0])
             break;
                  
           }
