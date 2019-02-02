@@ -5,70 +5,7 @@
       <el-form :inline="true" :model="filters" @submit.native.prevent>
         <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].label}}</a-button>
         <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].label}}</a-button>
-        <!-- <a-button type="primary" @click="start" :icon="ButtonIcons.del" :disabled="!hasSelected" :loading="loading">批量删除</a-button> -->
-        <!-- <a-button type="primary" @click="handleEdit">编辑</a-button> -->
-        <!-- <el-form-item> -->
-        <!-- <a-button type="primary" @click="allotButton">获取菜单按钮</a-button> -->
-        <!-- </el-form-item> -->
-        <!-- <el-form-item>
-          <a-button type="primary" @click="SetButton">设置按钮</a-button>
-        </el-form-item>-->
-        <!-- <el-form-item>
-          <a-button type="primary" @click="allotIcon">图标</a-button>
-        </el-form-item>-->
-        <!-- <a-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">{{button.batchRemove}}</a-button> -->
-        <!-- <div style="margin-bottom: 16px">
-          <a-button
-            type="primary"
-            @click="start"
-            :disabled="!hasSelected"
-            :loading="loading"
-          >
-            Reload
-          </a-button>
-          <span style="margin-left: 8px">
-            <template v-if="hasSelected">
-              {{`Selected ${selectedRowKeys.length} items`}}
-            </template>
-          </span>
-        </div>-->
-        <!-- <el-form-item style="float: right;"> -->
-        <!-- <a-button type="primary" @click="getKeyList">查询</a-button> -->
-        <!-- <a-button type="primary" @click="getQueryList">1查询</a-button> -->
-        <!-- </el-form-item> -->
-        <!-- <el-form-item style="float: right;">
-          <a-input-group compact>
-            <a-select  @change="this.handleSelectChange" defaultValue="菜单名称" style="width: 40%">
-                <a-select-option value='Id'>Id</a-select-option>
-                <a-select-option value='Name'>菜单名称</a-select-option>
-                <a-select-option value='Pid'>上级菜单</a-select-option>
-                <a-select-option value='Url'>链接地址</a-select-option>
-                <a-select-option value='Param'>页面标识</a-select-option>
-                <a-select-option value='Icon'>图标</a-select-option>
-                <a-select-option value='Sort'>排序</a-select-option>
-            </a-select>
-          <a-input style="width: 60%" defaultValue="" v-model="filters.data"/>
-        </a-input-group>
-        </el-form-item>-->
       </el-form>
-
-      <!--列表-->
-      <!-- <el-table @row-dblclick='Rowdblclick' stripe :data="dataList" highlight-current-row @selection-change="selsChange" style="width: 100%;">
-            <el-table-column v-for="item in tableLabel" :key="item.Label" :label="item.Label" :prop="item.prop" :width='item.width' :type='item.type'>
-            </el-table-column>
-            <el-table-column label="操作" width="100" fixed="right">
-              <template slot-scope="scope">
-                <el-button type="text" @click="handleEdit(scope.$index, scope.row)">{{button.edit}}</el-button>
-                <el-button type="text" @click="handleDel(scope.$index, scope.row)">{{button.del}}</el-button>
-              </template>
-            </el-table-column>
-      </el-table>-->
-      <!-- 分页 -->
-      <!-- <el-col :span="24" class="toolbar">
-      <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total"
-        style="float:right;">
-      </el-pagination>
-      </el-col>-->
       <a-table
         style="margin-top:2rem"
         defaultExpandAllRows
@@ -136,7 +73,7 @@
         </template>
       </a-table>
 
-      <a-pagination
+      <!-- <a-pagination
         style="margin-top:2rem;text-align: right;"
         showSizeChanger
         showQuickJumper
@@ -144,7 +81,7 @@
         :total="total"
         :showTotal="(total, range) => ` 共${total}条记录 第 ${range[0]}/${range[1]}页` "
         @showSizeChange="onShowSizeChange"
-      />
+      /> -->
 
       <!--图标-->
       <a-modal title="添加图标" @ok="handleOk" @click="allotIcon" v-model="dialogFormVisibleIcon">

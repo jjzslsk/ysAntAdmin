@@ -2,6 +2,10 @@
   <section class="app-container">
     <el-card class="box-card">
 
+      {{}}
+          <a-button size="small" type="primary" @click="getType">getType</a-button>
+      
+
           <!-- 部门树形 -->
   <el-col style="height:;width:18rem;position: relative;z-index: 99;">
   <el-card class="box-card" style="height: 62.8rem;">
@@ -52,7 +56,7 @@
       <el-form style="overflow: hidden;" :inline="true" :model="filters" @submit.native.prevent>
       
       <el-form-item style="float: right;">
-          <a-button type="primary" v-if="isShowButton.querys" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
+          <a-button type="primary"  @click="getKeyList">查询</a-button>
         </el-form-item>
         <el-form-item style="float: right;">
           <a-input-group compact>
@@ -61,6 +65,7 @@
                 <a-select-option value='Sort'>排序</a-select-option>
                 <a-select-option value='Param'>参数</a-select-option>
                 <a-select-option value='Name'>名称</a-select-option>
+                <a-select-option value='PId'>父编号</a-select-option>
             </a-select>
           <a-input style="width: 60%" defaultValue="" v-model="filters.data"/>
         </a-input-group>
@@ -84,34 +89,6 @@
 
     <el-card class="box-card" >
 
-    <!-- <el-table @row-dblclick='Rowdblclick' :data="users" highlight-current-row @selection-change="selsChange" style="width: 100%;">
-      <el-table-column type="selection" width="55">
-      </el-table-column>
-      <el-table-column type="index" width="60">
-      </el-table-column>
-      <el-table-column prop="Id" label="Id" width="60">
-      </el-table-column>
-      <el-table-column prop="Name" label="名称" width="120">
-      </el-table-column>
-      <el-table-column prop="Param" label="参数" width="120">
-      </el-table-column>
-      <el-table-column prop="Sort" label="排序" width="120">
-      </el-table-column>
-      <el-table-column prop="Memo" label="备注" min-width="100">
-      </el-table-column>
-      <el-table-column label="操作" fixed="right">
-        <template slot-scope="scope">
-          <a @click="handleEdit(scope.$index, scope.row)">编辑</a>
-          <a @click="handleDel(scope.$index, scope.row)">删除</a>
-        </template>
-      </el-table-column>
-    </el-table> -->
-
-      <!--工具条-->
-    <!-- <el-col :span="24" class="toolbar"><el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total"
-        style="float:right;">
-      </el-pagination>
-    </el-col> -->
 
         <a-table :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}" :pagination='false' :dataSource="dataList" :columns="columns">
     <div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters }" class='custom-filter-dropdown'>
@@ -241,9 +218,9 @@
     <!--添加界面-->
     <a-modal title="添加字典" @ok="dialogFormVisibleAdd = true" @click="createData" v-model="dialogFormVisibleAdd">
       <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
-        <!-- <el-form-item label="父编号:" prop="PId">
-          <el-input-number v-model="editForm.PId" auto-complete="off"></el-input-number>
-        </el-form-item> -->
+        <el-form-item label="父编号:" prop="PId">
+          <el-input v-model="editForm.PId" auto-complete="off"></el-input>
+        </el-form-item>
         <el-form-item label="名称:" prop="Name">
           <el-input v-model="editForm.Name" auto-complete="off"></el-input>
         </el-form-item>
@@ -270,9 +247,9 @@
     <!--编辑界面-->
     <a-modal title="编辑字典" @ok="dialogFormVisibleEdit = true" @click="updateData" v-model="dialogFormVisibleEdit">
       <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
-        <!-- <el-form-item label="父编号:" prop="PId">
-          <el-input-number v-model="editForm.PId" auto-complete="off"></el-input-number>
-        </el-form-item> -->
+        <el-form-item label="父编号:" prop="PId">
+          <el-input v-model="editForm.PId" auto-complete="off"></el-input>
+        </el-form-item>
         <el-form-item label="名称:" prop="Name">
           <el-input v-model="editForm.Name" auto-complete="off"></el-input>
         </el-form-item>
@@ -297,7 +274,7 @@
     </a-modal>
 
         <!--添加类型-->
-    <a-modal title="添加类型" @ok="dialogFormVisibleAddType = true" @click="createData" v-model="dialogFormVisibleAddType">
+    <a-modal title="添加类型" @ok="dialogFormVisibleAddType = true" @click="addType" v-model="dialogFormVisibleAddType">
       <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
         <el-form-item label="类别名称:" prop="Name">
           <el-input v-model="editForm.Name" auto-complete="off"></el-input>
@@ -314,7 +291,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="dialogFormVisibleAddType=false">取消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="dialogFormVisibleAddType=false">添加</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="addType">添加</el-button>
         <el-button v-else type="primary" @click="dialogFormVisibleAddType=false">修改</el-button>
       </div>
     </a-modal>
@@ -624,6 +601,11 @@ export default {
         key: 'Sort',
       },
       {
+        title: '父编号',
+        dataIndex: 'Pid',
+        key: 'Pid',
+      },
+      {
         title: '备注',
         dataIndex: 'Memo',
         key: 'Memo',
@@ -882,6 +864,60 @@ export default {
     }
   },
   methods: {
+    getType(){
+            const Pid ={
+              PId:0,
+            }
+            // const paraObj = Object.assign(Pid);
+            this.para.Data = JSON.stringify(Pid);
+            this.para.Code = 'GetYsdatabaseYsDictionary';
+            handlePost(this.para).then(res => {
+              if (res.IsSuccess == true) {
+                console.log ('sssssssssssss',res)
+              }else {
+                  this.$message({
+                    message: res.Code + ':' + res.Message,
+                    type: "warning"
+                  });
+                }
+            });
+    },
+    addType(){
+        this.$refs.editForm.validate(valid => {
+        if (valid) {
+          this.$confirm("确认提交吗？", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            const Pid ={
+              Pid:0,
+            }
+            const paraObj = Object.assign({}, this.editForm,Pid);
+            // console.log (paraObj)
+            this.para.Data = JSON.stringify(paraObj);
+            this.para.Code = 'AddYsdatabaseYsDictionary';
+            console.log(this.para);
+            handlePost(this.para).then(res => {
+              if (res.IsSuccess == true) {
+                this.$refs["editForm"].resetFields();
+                this.dialogFormVisibleAddType = false;
+                this.getDataList();
+                this.$message({
+                  message: "添加成功！",
+                  type: "success"
+                });
+              }else {
+                  this.$message({
+                    message: res.Code + ':' + res.Message,
+                    type: "warning"
+                  });
+                }
+            });
+          });
+        }
+      });
+    },
         //分页操作
     onShowSizeChange(current, pageSize) {
         console.log('111',current, pageSize);
@@ -967,7 +1003,13 @@ export default {
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
       this.dialogFormVisibleEdit = true;
-      this.editForm = Object.assign({}, res.Data);
+      const Para = {
+        PId : String(res.Data.Pid)
+      }
+      console.log ('ppp',Para)
+      // const resData = res.Data
+      // delete resData.Pid
+      this.editForm = Object.assign({}, res.Data,Para);
         }else {
                   this.$message({
                     message: res.Code + ':' + res.Message,
@@ -1360,10 +1402,8 @@ export default {
     handleAddType() {
       this.dialogStatus = "create";
       this.dialogFormVisibleAddType = true;
-      this.editForm = {
-        Issuper: true,
-        State: true
-      };
+      this.editForm = {};
+
     },
     // 显示编辑类型
     handleEditType(index, row) {

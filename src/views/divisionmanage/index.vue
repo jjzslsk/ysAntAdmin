@@ -5,9 +5,9 @@
         
     <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
-        所有部门列表：{{departments}}
+        <!-- 所有部门列表：{{departments}} -->
         <hr>
-        cascaderList树{{cascaderList}}
+        <!-- cascaderList树{{cascaderList}} -->
           <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
         <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>     
           <!-- <a-button  v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button> -->
@@ -86,13 +86,13 @@
           </template>
         </a-table>
 
-            <a-pagination style="margin-top:2rem;text-align: right;" 
-    showSizeChanger
-     showQuickJumper 
-     v-model="current" 
-     :total="total"
-     :showTotal="(total, range) => ` 共${total}条记录 第 ${range[0]}/${range[1]}页` "
-      @showSizeChange="onShowSizeChange" />
+            <!-- <a-pagination style="margin-top:2rem;text-align: right;" 
+              showSizeChanger
+              showQuickJumper 
+              v-model="current" 
+              :total="total"
+              :showTotal="(total, range) => ` 共${total}条记录 第 ${range[0]}/${range[1]}页` "
+                @showSizeChange="onShowSizeChange" /> -->
 
     
 

@@ -481,7 +481,79 @@
     </a-modal>
 
     <!--编辑界面-->
-    <a-modal title="编辑用户" @ok="dialogFormVisibleEdit = true" @click="updateData" v-model="dialogFormVisibleEdit">
+    <a-modal :width="920" title="编辑用户" @ok="dialogFormVisibleEdit = true" @click="updateData" v-model="dialogFormVisibleEdit">
+
+      <div>
+        <a-row
+          :gutter="24">
+          <a-col :span="12" >
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>用户管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >123</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>菜单管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >123</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >导入</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>权限管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >123</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>测试权限</span>
+            </a-col>
+            <a-col :span="20" style="margin-bottom: 12px;" >-</a-col>
+          </a-col>
+
+
+
+                    <a-col :span="12" style="float: right;">
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>角色管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >123</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>会员管理：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
+              <a-tag color="cyan" >123</a-tag>
+              <a-tag color="cyan" >查询</a-tag>
+              <a-tag color="cyan" >详情</a-tag>
+              <a-tag color="cyan" >修改</a-tag>
+              <a-tag color="cyan" >删除</a-tag>
+            </a-col>
+            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
+              <span>测试权限：</span>
+            </a-col>
+            <a-col :lg="20" :md="24" style="margin-bottom: 12px;" >-</a-col>
+          </a-col>
+
+        </a-row>
+      </div>
+
       <template>
         <a-tabs @change="callback" type="card">
           <a-tab-pane tab="基本信息" key="1">
@@ -545,74 +617,7 @@
 
           <a-tab-pane tab="详情" key="3">
             <h1>123</h1>
-                  <div>
-        <a-row
-          :gutter="24">
-          <a-col :span="12">
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>用户管理：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
-              <a-tag color="cyan" >123</a-tag>
-              <a-tag color="cyan" >查询</a-tag>
-              <a-tag color="cyan" >详情</a-tag>
-              <a-tag color="cyan" >修改</a-tag>
-              <a-tag color="cyan" >删除</a-tag>
-            </a-col>
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>菜单管理：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
-              <a-tag color="cyan" >123</a-tag>
-              <a-tag color="cyan" >查询</a-tag>
-              <a-tag color="cyan" >详情</a-tag>
-              <a-tag color="cyan" >修改</a-tag>
-              <a-tag color="cyan" >导入</a-tag>
-            </a-col>
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>权限管理：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
-              <a-tag color="cyan" >123</a-tag>
-              <a-tag color="cyan" >查询</a-tag>
-              <a-tag color="cyan" >详情</a-tag>
-              <a-tag color="cyan" >删除</a-tag>
-            </a-col>
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>测试权限</span>
-            </a-col>
-            <a-col :span="20" style="margin-bottom: 12px;" >-</a-col>
-          </a-col>
-
-                    <a-col :span="12">
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>角色管理：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
-              <a-tag color="cyan" >123</a-tag>
-              <a-tag color="cyan" >查询</a-tag>
-              <a-tag color="cyan" >详情</a-tag>
-              <a-tag color="cyan" >修改</a-tag>
-              <a-tag color="cyan" >删除</a-tag>
-            </a-col>
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>会员管理：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
-              <a-tag color="cyan" >123</a-tag>
-              <a-tag color="cyan" >查询</a-tag>
-              <a-tag color="cyan" >详情</a-tag>
-              <a-tag color="cyan" >修改</a-tag>
-              <a-tag color="cyan" >删除</a-tag>
-            </a-col>
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>测试权限：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;" >-</a-col>
-          </a-col>
-
-        </a-row>
-      </div>
+      
           </a-tab-pane>
         </a-tabs>
 
@@ -1471,12 +1476,10 @@ export default {
     //   this.selectedKeys = selectedKeys
     // },
     onSelect (selectedKeys, info) {
-      console.log('selected', selectedKeys, info)
-      // console.log ('nooooooo',info.node.title)
-      // console.log ('nooooooo',info.node.$options.propsData.dataRef.Key)
-      this.TreeId = info.node.dataRef.Key
+      console.log('selected::', selectedKeys, info)
+      this.TreeId = selectedKeys[0]
       console.log ('nooooooo',this.TreeId)
-      this.getTreeList(info.node.dataRef.Key)
+      this.getTreeList(this.TreeId)
 
     },
     //
@@ -1737,6 +1740,7 @@ export default {
     },
     // 按部门查询
     getTreeList(data) {
+      console.log ('ddddd:',data)
       //取列表
       var numberData = parseInt (data)
       if(data.length < 1){
@@ -1768,44 +1772,18 @@ export default {
           if (res.IsSuccess == true) {
             this.total = res.Data.Count;
             this.users = res.Data.List;
-          }
+          }else {
+                  this.$message({
+                    message: res.Code + ':' + '该部门用户'+res.Message,
+                    type: "warning"
+                  });
+                }
 
 
         })
       }
     },
-    //
-    
-    //闭包
-    // getMenuName() {
-    //         var menus  = this.dataList
-    //         var Key = 1
-    //         var name = "" ;
-    //         for (var i = 0; i < menus.length; i++) {
-    //           if (menus[i].Key == Key) {
-    //             name = menus[i].Name;
-    //             break;
-    //           }
-    //           else {
-    //             (function () {
-    //               var m = arguments[0];
-    //               var menuKey = arguments[1];
-    //               for (var j = 0; j < m.length; j++) {
-    //                 if (m[j].Key == menuKey) {
-    //                   name = m[j].Name;
-    //                   break;
-    //                 }
-    //                 else if (m[j].children != null && m[j].children.length > 0) {
-    //                   arguments.callee(m[j].children, val);//递归匿名方法
-    //                 }
-    //               }
-    //             })(menus[i].children, Key);
-    //           }
-    //         }
-    //         return name;
-    //         // return alert (name)
-    //         //
-    //       },
+
     // 删除
     handleDel(index, row) {
       this.$confirm("确认删除该记录吗?", "提示", {

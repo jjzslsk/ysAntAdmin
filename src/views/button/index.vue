@@ -3,38 +3,15 @@
     <el-card class="box-card">
       <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
-        <!-- ::{{allotButtons}} -->
-        <!-- <hr> -->
         <span v-for="index in allotButtons" :key="index.Id">
         <a-button style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
         </span>
-        <!-- <a-button v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button> -->
-        <!-- <a-button type="primary" class="addButtonClassName" :icon="ButtonIcons.edit" @click="handleAdd">编辑</a-button> -->
-        <!-- <hr>
-        按钮筛选后allotButtons：{{allotButtons}}
-        <hr>
-        拥有的buttonAr：{{buttonAr}}
-        <hr> -->
-        <!-- this.buttonAr.Data[0]:{{buttonAr.Data}} -->
-        <!-- <hr>
-        <hr>
-        列表按钮buttonList：{{buttonList}}
-        <hr>
-        列表按钮dataList：{{dataList}} -->
-        <!-- <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
-        <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>
-        <a-button type="danger" v-if="isShowButton.dels" @click="start" :icon="buttonList[2].Icon" :disabled="!hasSelected" :loading="loading">{{buttonList[2].Name}}
-          <template v-if="hasSelected">{{`(${selectedRowKeys.length})`}}</template>
-        </a-button> -->
-
         <el-form-item style="float: right;">
           <a-button type="primary" icon="anticon anticon-search" @click="getKeyList">查询</a-button>
         </el-form-item>
-
         <el-form-item style="float: right;">
           <a-input-group compact>
             <a-select @change="this.handleSelectChange" defaultValue="按钮名称" style="width: 40%">
-              <!-- <a-select-option value='Id'>Id</a-select-option> -->
               <a-select-option value="Name">按钮名称</a-select-option>
               <a-select-option value="Icon">图标</a-select-option>
               <a-select-option value="ClassName">标识</a-select-option>
@@ -43,34 +20,6 @@
           </a-input-group>
         </el-form-item>
       </el-form>
-
-      <!--列表-->
-      <!-- <a-table defaultExpandAllRows :pagination="false" size="small" :columns="columnsTree" :dataSource="dataTree" :rowSelection="rowSelectionTree">
-          <span slot="tags" slot-scope="tags">
-            <a-checkbox></a-checkbox>
-          </span>
-          <span slot="action" slot-scope="text, record">
-            <a href="javascript:;">{{record.edit}}</a>
-            <a-divider type="vertical" />
-            <a href="javascript:;">{{record.del}}</a>
-          </span>
-      </a-table>-->
-      <!-- <el-table @row-dblclick='Rowdblclick' stripe :data="dataList" highlight-current-row @selection-change="selsChange" style="width: 100%;">
-            <el-table-column v-for="item in tableLabel" :key="item.Label" :label="item.Label" :prop="item.prop" :width='item.width' :type='item.type'>
-            </el-table-column>
-            <el-table-column label="操作" width="100" fixed="right">
-              <template slot-scope="scope">
-                <el-button type="text"  @click="handleEdit(scope.$index, scope.row)">{{button.edit}}</el-button>
-                <el-button type="text"  @click="handleDel(scope.$index, scope.row)">{{button.del}}</el-button>
-              </template>
-            </el-table-column>
-      </el-table>-->
-      <!-- 分页 -->
-      <!-- <el-col :span="24" class="toolbar">
-      <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total"
-        style="float:right;">
-      </el-pagination>
-      </el-col>-->
       <a-table
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         :pagination="false"
@@ -117,8 +66,6 @@
         </template>
 
         <template slot="Icon" slot-scope="text,record">
-          <!-- <a-badge v-if="record.Isvisiable == true" status="success" text="正常" /> -->
-          <!-- {{record}} -->
           <i :class="record.Icon"></i>
         </template>
 
@@ -1194,8 +1141,6 @@ export default {
     };
 
     return {
-      //按钮显示隐藏
-      isShowButton:{},
       //按钮
       ButtonIcons: {},
       ButtonNames: {},
@@ -1679,28 +1624,6 @@ export default {
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
           this.buttonList = res.Data.List;
-          // this.buttonList.map(car => {
-          //   if (car.Name == "添加") {
-          //     this.ButtonIcons.add = car.Icon;
-          //     this.ButtonNames.add = car.Name;
-          //   }
-          //   if (car.Name == "编辑") {
-          //     this.ButtonIcons.edit = car.Icon;
-          //     this.ButtonNames.edit = car.Name;
-          //   }
-          //   if (car.Name == "批量删除") {
-          //     this.ButtonIcons.del = car.Icon;
-          //     this.ButtonNames.del = car.Name;
-          //   }
-          //   if (car.Name == "刷新") {
-          //     this.ButtonIcons.refresh = car.Icon;
-          //     this.ButtonNames.refresh = car.Name;
-          //   }
-          //   if (car.Name == "查询") {
-          //     this.ButtonIcons.query = car.Icon;
-          //     this.ButtonNames.query = car.Name;
-          //   }
-          // });
         }
 
         this.selectedRowKeys = [];
@@ -1735,15 +1658,6 @@ export default {
             this.total = res.Data.Count;
             this.dataList = res.Data.List;
 
-            //初始化按钮
-            this.isShowButton = {
-              add:false,
-              Refresh:false,
-              edit:true,
-              del:true,
-              dels:false,
-              query:false,  
-            };
             //获取多菜单按钮
             const paraId = {
               MenuId:3,
@@ -1753,36 +1667,9 @@ export default {
             handlePost(this.para).then(res => {
               if (res.IsSuccess == true) {
                 this.buttonAr = res;
-                const getButtons = res.Data[0].ButtonIds;
-                getButtons.forEach((i)=>{
-                  switch(i){
-                    case 1:
-                    this.isShowButton.add = true;
-                    break;                   
-                    case 38:
-                    this.isShowButton.Refresh = true;
-                    break;                   
-                    case 39:
-                    this.isShowButton.edit = true;
-                    break;                   
-                    case 40:
-                    this.isShowButton.del = true;
-                    break;                   
-                    case 43:
-                    this.isShowButton.dels = true;
-                    break;                   
-                    case 45:
-                    this.isShowButton.query = true;
-                    break;                   
-                  }
-                })
-
-    this.allotButton()
+                this.allotButton()
               }
-
             });
-
-
           } else {
             this.$message({
               message: res.Code + ":" + res.Message,
@@ -1814,7 +1701,14 @@ export default {
             this.start()
             break;
             case 'edit':
+            if(this.selectedRowKeys >0){
             this.onEdit(this.selectedRows[0])
+            }else {
+          this.$message({
+            message: '请选择一个需要编辑的按钮',
+            type: "warning"
+          });
+        }
             break;
                  
           }
