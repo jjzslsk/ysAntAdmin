@@ -55,9 +55,18 @@
             <!--工具条-->
       <el-form style="overflow: hidden;" :inline="true" :model="filters" @submit.native.prevent>
       
-      <el-form-item style="float: right;">
+<!-- allotButtons:过滤好的 {{allotButtons}}
+        <hr>
+        buttonList全部:{{buttonList}}
+        <hr>
+        buttonAr拥有的：{{buttonAr}} -->
+        <span v-for="index in allotButtons" :key="index.Id">
+        <a-button style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        </span> 
+
+      <!-- <el-form-item style="float: right;">
           <a-button type="primary"  @click="getKeyList">查询</a-button>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item style="float: right;">
           <a-input-group compact>
             <a-select  @change="this.handleSelectChange" defaultValue="名称" style="width: 40%">
@@ -117,9 +126,10 @@
          <a-badge v-if="record.State == false" status="error" text="停用" />
     </template>
     <template slot="action" slot-scope="text, record">
-            <a href="javascript:;" v-if="isShowButton.edit" @click="onEdit(record)">编辑</a>
-            <a-divider type="vertical" v-if="isShowButton.del" />
-            <a href="javascript:;" v-if="isShowButton.del" @click="onDelete(record)">删除</a>
+            <span  v-for="index in allotButtons" :key="index.Id">
+          <a href="javascript:;" v-if="index.Classname==='edit'"  @click="onEdit(record.Id)">{{index.Name}}</a>
+          <a href="javascript:;" v-if="index.Classname==='del'"  @click="onDelete(record)">{{index.Name}}</a>
+          </span>
           </template>
   </a-table>
 
@@ -552,9 +562,12 @@ export default {
       //按钮显示隐藏
       isShowButton:{},
       //按钮
-      ButtonIcons:{},
-      ButtonNames:{},
-      buttonList:[],
+      ButtonData:[],
+      ButtonIcons: {},
+      ButtonNames: {},
+      buttonList: [],
+      buttonAr:[],
+      allotButtons:[],
       //初始化搜索字段
       selectValue:'Name',
 
@@ -864,6 +877,53 @@ export default {
     }
   },
   methods: {
+      allotButton() {
+      this.allotButtons = []
+      var ButtonDatas = [];
+      this.buttonAr.Data[0].ButtonIds.map((car)=>{//拥有的按钮ID集
+      const allotButton = this.buttonList.find((i)=>{//和全部的筛选对象
+        return i.Id === car
+      })
+        ButtonDatas.push(allotButton)
+    })
+    console.log ('ButtonDatas00000::',ButtonDatas)
+    this.allotButtons = ButtonDatas.filter((e)=>{
+            return e
+          })
+            console.log ('eeeeeeeee',this.allotButtons)
+    },
+        //默认点击事件
+    defaultClick(index){
+      console.log (index)
+      switch(index.Classname){
+            case 'add':
+            this.handleAdd()
+            break;
+            case 'refresh':
+            this.Refresh()
+            break;
+            case 'search':
+            this.getKeyList()
+            break;
+            case 'del':
+            this.start()
+            break;
+            case 'export':
+            this.exportData()
+            break;
+            case 'edit':
+            if(this.selectedRowKeys >0){
+            this.onEdit(this.selectedRows[0])
+            }else {
+          this.$message({
+            message: '请选择一个需要编辑的按钮',
+            type: "warning"
+          });
+        }
+            break;
+                 
+          }
+},
     getType(){
             const Pid ={
               PId:0,
@@ -996,7 +1056,7 @@ export default {
       this.dialogStatus = "update";
       this.editForm = {};
       const paraId = {
-        Id: row.Id,
+        Id: row,
       }; 
       this.para.Code = 'GetYsdatabaseYsDictionary';
       this.para.Data = JSON.stringify(paraId);
@@ -1273,15 +1333,6 @@ export default {
           this.total = res.Data.Count;
           this.dataList = res.Data.List;
 
-                    //初始化按钮
-            this.isShowButton = {
-              add:false,
-              Refresh:false,
-              edit:false,
-              del:false,
-              dels:false,
-              query:false,  
-            };
             //获取多菜单按钮
             const paraId = {
               MenuId:20,
@@ -1290,40 +1341,13 @@ export default {
             this.para.Data = JSON.stringify(paraId);
             handlePost(this.para).then(res => {
               if (res.IsSuccess == true) {
-                const buttonAr = res.Data[0].ButtonIds;
-                buttonAr.forEach((i)=>{
-                  switch(i){
-                    case 1:
-                    this.isShowButton.add = true;
-                    break;                   
-                    case 38:
-                    this.isShowButton.Refresh = true;
-                    break;                   
-                    case 39:
-                    this.isShowButton.edit = true;
-                    break;                   
-                    case 40:
-                    this.isShowButton.del = true;
-                    break;                   
-                    case 43:
-                    this.isShowButton.dels = true;
-                    break;                   
-                    case 45:
-                    this.isShowButton.query = true;
-                    break;                   
-                  }
-                  // if(typeof i == 'null'){
-                })
+                this.buttonAr = res;
+                this.allotButton()
               }
-            });
+            }); 
 
 
-        }else {
-                  this.$message({
-                    message: res.Code + ':' + res.Message,
-                    type: "warning"
-                  });
-                }
+        }
       });
       });
 

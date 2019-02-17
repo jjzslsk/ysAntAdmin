@@ -2,12 +2,15 @@
   <section class="app-container">
     <el-card class="box-card">
       <!--工具条-->
+      <!-- buttonList::{{buttonList}} -->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
         <span v-for="index in allotButtons" :key="index.Id">
-        <a-button style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        <a-button :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
         </span>
         <el-form-item style="float: right;">
-          <a-button type="primary" icon="anticon anticon-search" @click="getKeyList">查询</a-button>
+        <span v-for="index in allotButtons" :key="index.Id">
+          <a-button v-if="index.Classname==='search'" :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        </span>
         </el-form-item>
         <el-form-item style="float: right;">
           <a-input-group compact>
@@ -1361,6 +1364,15 @@ export default {
     }
   },
   methods: {
+     setClass(index) {
+      if(index === 'edit'){
+      return 'p1'
+      }
+      if(index === 'search'){
+      return 'p1'
+      }
+
+    },
     // 图标选择
     onsomething(event) {
       console.log(event);
@@ -1525,6 +1537,7 @@ export default {
     allotIcon() {
       this.dialogFormVisibleIcon = true;
     },
+    //过滤按钮
     allotButton() {
       this.allotButtons = []
       var ButtonDatas = [];
@@ -1668,6 +1681,7 @@ export default {
               if (res.IsSuccess == true) {
                 this.buttonAr = res;
                 this.allotButton()
+                this.setClass()
               }
             });
           } else {
@@ -2061,4 +2075,11 @@ export default {
 .aIcon {
   top: -0.6rem;
 }
+/* ----------------条件绑定 */
+.p1 {
+        display: none;
+    }
+    .p {
+        color: blue
+    }
 </style>

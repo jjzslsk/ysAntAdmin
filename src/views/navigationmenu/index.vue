@@ -3,8 +3,16 @@
     <el-card class="box-card">
       <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
-        <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].label}}</a-button>
-        <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].label}}</a-button>
+        <!-- allotButtons:过滤好的 {{allotButtons}}
+        <hr>
+        buttonList全部:{{buttonList}}
+        <hr>
+        buttonAr拥有的：{{buttonAr}} -->
+        <span v-for="index in allotButtons" :key="index.Id">
+        <a-button  :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.label}}</a-button>
+        </span>
+        <!-- <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].label}}</a-button>
+        <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].label}}</a-button> -->
       </el-form>
       <a-table
         style="margin-top:2rem"
@@ -65,11 +73,16 @@
         </template>
 
         <template slot="action" slot-scope="text, record">
-          <a href="javascript:;" @click="allotButton(record.key)">分配按钮</a>
-          <a-divider v-if="isShowButton.edit"  type="vertical"/>
-          <a v-if="isShowButton.edit" href="javascript:;" @click="onEdit(record)">{{record.Edit}}</a>
-          <a-divider v-if="isShowButton.del"  type="vertical"/>
-          <a v-if="isShowButton.del" href="javascript:;" @click="onDelete(record)">{{record.Del}}</a>
+          <a href="javascript:;" @click="allotButtonInfo(record.key)">分配按钮</a>
+          <!-- <a-divider   type="vertical"/>
+          <a  href="javascript:;" @click="onEdit(record)">{{record.Edit}}</a>
+          <a-divider  type="vertical"/>
+          <a  href="javascript:;" @click="onDelete(record)">{{record.Del}}</a> -->
+
+          <span  v-for="index in allotButtons" :key="index.Id">
+          <a href="javascript:;" v-if="index.Classname==='edit'"  @click="onEdit(record)">{{index.label}}</a>
+          <a href="javascript:;" v-if="index.Classname==='del'"  @click="onDelete(record)">{{index.label}}</a>
+          </span>
         </template>
       </a-table>
 
@@ -1261,14 +1274,13 @@ export default {
   inject:['reload'],
   data() {
     return {
-      //按钮显示隐藏
-      isShowButton:{},
       //按钮
-      ButtonData: [],
+      ButtonData:[],
       ButtonIcons: {},
       ButtonNames: {},
       buttonList: [],
-      selButtons:[],
+      buttonAr:[],
+      allotButtons:[],
       // 多选
       checkedList: defaultCheckedList,
       // checkedList: [],
@@ -1502,6 +1514,56 @@ export default {
     }
   },
   methods: {
+    setClass(index) {
+      if(index === 'edit'||index === 'del'||index === 'search' ){
+      return 'p1'
+      }
+    },
+    //过滤按钮
+    allotButton() {
+      this.allotButtons = []
+      var ButtonDatas = [];
+      this.buttonAr.Data[0].ButtonIds.map((car)=>{//拥有的按钮ID集
+      const allotButton = this.buttonList.find((i)=>{//和全部的筛选对象
+        return i.value === car
+      })
+        ButtonDatas.push(allotButton)
+    })
+    console.log ('ButtonDatas::',ButtonDatas)
+    this.allotButtons = ButtonDatas.filter((e)=>{
+            return e
+          })
+            console.log ('eeeeeeeee',this.allotButtons) 
+    },
+        //默认点击事件
+    defaultClick(index){
+      console.log (index)
+      switch(index.Classname){
+            case 'add':
+            this.handleAdd()
+            break;
+            case 'refresh':
+            this.Refresh()
+            break;
+            case 'search':
+            this.getKeyList()
+            break;
+            case 'del':
+            this.start()
+            break;
+            case 'edit':
+            if(this.selectedRowKeys >0){
+            this.onEdit(this.selectedRows[0])
+            }else {
+          this.$message({
+            message: '请选择一个需要编辑的按钮',
+            type: "warning"
+          });
+        }
+            break;
+                 
+          }
+},
     //刷新页面
     afterCloseModal (){
       this.reload();
@@ -1666,7 +1728,7 @@ export default {
     handleOkButton() {
       this.dialogFormVisibleButton = false;
     },
-    allotButton(data) {
+    allotButtonInfo(data) {
       this.GetYsMenuButtonData = [];
       this.GetYsMenuButtonsData = [];
       this.buttonKey = data;
@@ -1809,15 +1871,6 @@ export default {
             this.dataList = res.Data;
             // this.getIcon()
 
-            //初始化按钮
-            this.isShowButton = {
-              add:false,
-              Refresh:false,
-              edit:false,
-              del:false,
-              dels:false,
-              query:false,  
-            };
             //获取多菜单按钮
             const paraId = {
               MenuId:2,
@@ -1826,37 +1879,26 @@ export default {
             this.para.Data = JSON.stringify(paraId);
             handlePost(this.para).then(res => {
               if (res.IsSuccess == true) {
-                this.GetYsMenuButtonsData = res.Data;
-                const buttonAr = res.Data[0].ButtonIds;
-                buttonAr.forEach((i)=>{
-                  switch(i){
-                    case 1:
-                    this.isShowButton.add = true;
-                    break;                   
-                    case 38:
-                    this.isShowButton.Refresh = true;
-                    break;                   
-                    case 39:
-                    this.isShowButton.edit = true;
-                    break;                   
-                    case 40:
-                    this.isShowButton.del = true;
-                    break;                   
-                    case 43:
-                    this.isShowButton.dels = true;
-                    break;                   
-                    case 45:
-                    this.isShowButton.query = true;
-                    break;                   
-                  }
-                  // if(typeof i == 'null'){
-                })
+                this.buttonAr = res;
+                this.allotButton()
+                this.setClass()
+
               }
+            });
+          } else {
+            this.$message({
+              message: res.Code + ":" + res.Message,
+              type: "warning"
+            });
+          }
             });
 
 
-          }
-        });
+
+
+
+ 
+
       });
     },
     // 查询列表
@@ -2352,4 +2394,12 @@ export default {
 .aIcon {
   top: -0.6rem;
 }
+
+/* ----------------条件绑定 */
+.p1 {
+        display: none;
+    }
+    .p {
+        color: blue
+    }
 </style>

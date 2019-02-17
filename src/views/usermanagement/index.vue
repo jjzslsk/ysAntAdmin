@@ -7,9 +7,18 @@
           <!-- <a-button  v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button>
           <a-button type="primary" @click="handleAdd">{{button.add}}</a-button>
           <a-button type="primary" :loading="loadingRefresh" @click="Refresh">刷新</a-button>   -->
-        <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
+        <!-- <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
         <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>     
-        <a-button type="primary"  @click="exportData">导出</a-button>     
+        <a-button type="primary"  @click="exportData">导出</a-button> -->
+
+        <!-- allotButtons:过滤好的 {{allotButtons}}
+        <hr>
+        buttonList全部:{{buttonList}}
+        <hr>
+        buttonAr拥有的：{{buttonAr}} -->
+        <span v-for="index in allotButtons" :key="index.Id">
+        <a-button style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        </span>     
                   
           <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
           <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
@@ -110,7 +119,7 @@
       </el-pagination>
     </el-col> -->
 
-        <a-table @click="expandRowByClick()" :scroll="{ x: 1300 }" :pagination='false' :dataSource="users" :columns="columns">
+        <a-table @click="expandRowByClick()" :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}" :scroll="{ x: 1300 }" :pagination='false' :dataSource="users" :columns="columns">
     <div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters }" class='custom-filter-dropdown'>
       <a-input
         ref="searchInput"
@@ -146,10 +155,12 @@
             <!-- <a href="javascript:;" @click="allotMent(record)">权限</a> -->
             <!-- <a-divider type="vertical" /> -->
             <!-- <a href="javascript:;" @click="allotRoles(record)">角色</a> -->
+            <a href="javascript:;"  @click="onEdit(record)">详情</a>
             <!-- <a-divider type="vertical" /> -->
-            <a href="javascript:;" v-if="isShowButton.edit" @click="onEdit(record)">编辑</a>
-            <!-- <a-divider type="vertical" /> -->
-            <a href="javascript:;" v-if="isShowButton.del" @click="onDelete(record)">删除</a>
+            <span  v-for="index in allotButtons" :key="index.Id">
+          <a href="javascript:;" v-if="index.Classname==='edit'"  @click="onEdit(record.Id)">{{index.Name}}</a>
+          <a href="javascript:;" v-if="index.Classname==='del'"  @click="onDelete(record)">{{index.Name}}</a>
+          </span>
           </template>
 
           <!-- <p slot="expandedRowRender" slot-scope="record" style="margin: 0">{{record.description}}:</p> -->
@@ -845,9 +856,12 @@ export default {
       //按钮显示隐藏
       isShowButton:{},
       //按钮
-      ButtonIcons:{},
-      ButtonNames:{},
-      buttonList:[],
+      ButtonData:[],
+      ButtonIcons: {},
+      ButtonNames: {},
+      buttonList: [],
+      buttonAr:[],
+      allotButtons:[],
       //初始化搜索字段
       selectValue:'Name',
             //批量选择
@@ -921,7 +935,7 @@ export default {
         Key: 'action',
         dataIndex: 'action',
         scopedSlots: { customRender: 'action' },
-        width: 100
+        width: 130
       }, 
       // {
       //   title: 'Address',
@@ -1163,6 +1177,53 @@ export default {
     }
   },
   methods: {
+        allotButton() {
+      this.allotButtons = []
+      var ButtonDatas = [];
+      this.buttonAr.Data[0].ButtonIds.map((car)=>{//拥有的按钮ID集
+      const allotButton = this.buttonList.find((i)=>{//和全部的筛选对象
+        return i.Id === car
+      })
+        ButtonDatas.push(allotButton)
+    })
+    console.log ('ButtonDatas00000::',ButtonDatas)
+    this.allotButtons = ButtonDatas.filter((e)=>{
+            return e
+          })
+            console.log ('eeeeeeeee',this.allotButtons)
+    },
+        //默认点击事件
+    defaultClick(index){
+      console.log (index)
+      switch(index.Classname){
+            case 'add':
+            this.handleAdd()
+            break;
+            case 'refresh':
+            this.Refresh()
+            break;
+            case 'search':
+            this.getKeyList()
+            break;
+            case 'del':
+            this.start()
+            break;
+            case 'export':
+            this.exportData()
+            break;
+            case 'edit':
+            if(this.selectedRowKeys >0){
+            this.onEdit(this.selectedRows[0])
+            }else {
+          this.$message({
+            message: '请选择一个需要编辑的按钮',
+            type: "warning"
+          });
+        }
+            break;
+                 
+          }
+},
     //expandRowByClick
     expandRowByClick(){
       console.log (1)
@@ -1283,7 +1344,7 @@ export default {
       this.disabledMima = true;
       this.editForm = {};
       const paraId = {
-        Id: row.Id,
+        Id: row,
       }; 
             this.para.Code = 'GetYsdatabaseYsAdmin';
       this.para.Data = JSON.stringify(paraId);
@@ -1656,15 +1717,6 @@ export default {
                   console.log("roles:", this.roles);
 
 
-            //初始化按钮
-            this.isShowButton = {
-              add:false,
-              Refresh:false,
-              edit:false,
-              del:false,
-              dels:false,
-              query:false,  
-            };
             //获取多菜单按钮
             const paraId = {
               MenuId:18,
@@ -1673,32 +1725,10 @@ export default {
             this.para.Data = JSON.stringify(paraId);
             handlePost(this.para).then(res => {
               if (res.IsSuccess == true) {
-                const buttonAr = res.Data[0].ButtonIds;
-                buttonAr.forEach((i)=>{
-                  switch(i){
-                    case 1:
-                    this.isShowButton.add = true;
-                    break;                   
-                    case 38:
-                    this.isShowButton.Refresh = true;
-                    break;                   
-                    case 39:
-                    this.isShowButton.edit = true;
-                    break;                   
-                    case 40:
-                    this.isShowButton.del = true;
-                    break;                   
-                    case 43:
-                    this.isShowButton.dels = true;
-                    break;                   
-                    case 45:
-                    this.isShowButton.query = true;
-                    break;                   
-                  }
-                  // if(typeof i == 'null'){
-                })
+                this.buttonAr = res;
+                this.allotButton()
               }
-            });
+            }); 
 
 
                 }
