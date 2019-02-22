@@ -63,28 +63,33 @@
 
               <a-row>
                 <a-col :span="24" :style="{ textAlign: 'right' }">
-                  <!-- <a-button
-                    type="primary"
-                    @click="getKeyList"
-                  >刷新</a-button> -->
                   <a-button
                     type="primary"
+                    v-if="isShowButton.query"
+                    :icon="buttonList[5].Icon"
+                    @click="getKeyList"
+                  >{{buttonList[5].Name}}</a-button>
+                  <a-button
+                    type="primary"
+                    v-if="isShowButton.Refresh"
                     :loading="loadingRefresh"
+                    :icon="buttonList[1].Icon"
                     @click="Refresh"
                   >{{buttonList[1].Name}}</a-button>
-                  <a-button @click="clickDel">
-                    保留时间
-                  </a-button>
                   <a-button
                     type="danger"
+                    v-if="isShowButton.dels"
                     @click="start"
+                    :icon="buttonList[4].Icon"
                     :disabled="!hasSelected"
                     :loading="loading"
                   >
-                    删除
+                    {{buttonList[4].Name}}
                     <template v-if="hasSelected">{{`(${selectedRowKeys.length})`}}</template>
                   </a-button>
-                  
+                  <!-- <a-button type="danger" @click="clickDel">
+                    删除
+                  </a-button> -->
                 </a-col>
               </a-row>
             </a-form>
@@ -111,20 +116,21 @@
     </a-modal>
 
     <!--编辑界面-->
-    <a-modal title="删除日志" @ok="handleOkEdit" @click="updateData" v-model="dialogFormVisibleEdit">
+    <a-modal title="编辑角色" @ok="handleOkEdit" @click="updateData" v-model="dialogFormVisibleEdit">
       <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="日志保留时间:">
-          <a-select defaultValue="lucy" style="width: 300px" @change="handleChangeSelect">
-            <a-select-option value="jack">保留近一周</a-select-option>
-            <a-select-option value="lucy">保留近一个月</a-select-option>
-            <a-select-option value="disabled">保留近三个月</a-select-option>
-            <a-select-option value="Yiminghe" disabled>不保留，全部删除</a-select-option>
-          </a-select>
+        <el-form-item label="角色名称:" prop="Name">
+          <el-input v-model="editForm.Name" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="排序:">
+          <el-input-number v-model="editForm.Sort"></el-input-number>
+        </el-form-item>
+        <el-form-item label="备注:" prop="Memo">
+          <el-input v-model="editForm.Memo" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <a-button @click.native="dialogFormVisibleEdit=false">取消</a-button>
-        <a-button type="primary" @click="updateData">确定</a-button>
+        <a-button @click.native="dialogFormVisibleEdit=false">{{button.cancel}}</a-button>        
+        <a-button type="primary" @click="updateData">{{button.modify}}</a-button>
       </div>
     </a-modal>
 
@@ -428,17 +434,14 @@ export default {
     }
   },
   methods: {
-    handleChangeSelect(value) {
-      console.log(`selected ${value}`);
-    },
     handleOkEdit() {
       this.dialogFormVisibleEdit = false;
     },
-    clickDel(row) {
-      // ----------
-      this.dialogStatus = "update";
-      this.dialogFormVisibleEdit = true;
-    },
+    // clickDel(row) {
+    //   // ----------
+    //   this.dialogStatus = "update";
+    //   this.dialogFormVisibleEdit = true;
+    // },
     // 编辑
     updateData() {
       this.dialogFormVisibleEdit = false;

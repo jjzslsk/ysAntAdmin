@@ -1,9 +1,7 @@
 <template>
   <section class="app-container">
     <el-card class="box-card">
-
-      {{}}
-          <a-button size="small" type="primary" @click="getType">getType</a-button>
+          <!-- <a-button size="small" type="primary" @click="getType">getType</a-button> -->
       
 
           <!-- 部门树形 -->
@@ -60,13 +58,18 @@
         buttonList全部:{{buttonList}}
         <hr>
         buttonAr拥有的：{{buttonAr}} -->
-        <span v-for="index in allotButtons" :key="index.Id">
-        <a-button style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        <span class="aBut">
+        <span  v-for="index in allotButtons" :key="index.Id">
+        <a-button :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        </span>
         </span> 
 
-      <!-- <el-form-item style="float: right;">
-          <a-button type="primary"  @click="getKeyList">查询</a-button>
-        </el-form-item> -->
+      <el-form-item style="float: right;">
+        <span v-for="index in allotButtons" :key="index.Id">
+          <a-button v-if="index.Classname==='search'" :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        </span>
+        </el-form-item>
+        
         <el-form-item style="float: right;">
           <a-input-group compact>
             <a-select  @change="this.handleSelectChange" defaultValue="名称" style="width: 40%">
@@ -877,6 +880,15 @@ export default {
     }
   },
   methods: {
+    setClass(index) {
+      if(index === 'edit'){
+      return 'p1'
+      }
+      if(index === 'search'){
+      return 'p1'
+      }
+
+    },
       allotButton() {
       this.allotButtons = []
       var ButtonDatas = [];
@@ -1681,4 +1693,14 @@ export default {
 .highlight {
   color: #f50;
 }
+.aBut {
+  margin: 1rem 0 0 1rem;
+}
+/* ----------------条件绑定 */
+.p1 {
+        display: none;
+    }
+    .p {
+        color: blue
+    }
 </style>

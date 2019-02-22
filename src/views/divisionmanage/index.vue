@@ -11,38 +11,36 @@
         <hr>
         buttonAr拥有的：{{buttonAr}} -->
         <span v-for="index in allotButtons" :key="index.Id">
-        <a-button style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        <a-button :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
         </span>  
 
-        
+        <!-- <el-form-item style="float: right;">
+        <span v-for="index in allotButtons" :key="index.Id">
+          <a-button v-if="index.Classname==='search'" :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        </span>
+        </el-form-item> -->
         <!-- 所有部门列表：{{departments}} -->
         <!-- <hr> -->
         <!-- cascaderList树{{cascaderList}} -->
-          <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
-        <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>     
-          <!-- <a-button  v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button> -->
+           <!-- <a-button  v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button> -->
           <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
           <!-- <a-button type="primary" @click="Refresh">刷新</a-button> -->
           <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
           <!-- <a-button type="primary" @click="allotMent">分配权限</a-button> -->
       <!-- <a-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">{{button.batchRemove}}</a-button> -->
-      <el-form-item style="float: right;">
-          <a-button type="primary" v-if="isShowButton.query" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
-        </el-form-item>
-        <el-form-item style="float: right;">
+        <!-- <el-form-item style="float: right;">
           <a-input-group compact>
             <a-select  @change="this.handleSelectChange" defaultValue="部门名称" style="width: 40%">
                 <a-select-option value='Id'>Id</a-select-option>
                 <a-select-option value='Pid'>部门名称</a-select-option>
                 <a-select-option value='Url'>排序</a-select-option>
-                <!-- <a-select-option value='Name'>名称</a-select-option> -->
             </a-select>
           <a-input style="width: 60%" defaultValue="" v-model="filters.data"/>
         </a-input-group>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
 
-    <!--列表--> 
+    <!--列表-->
           <!-- <el-table @row-dblclick='Rowdblclick' stripe :data="dataList" highlight-current-row @selection-change="selsChange" style="width: 100%;">
             <el-table-column v-for="item in tableLabel" :key="item.Label" :label="item.Label" :prop="item.prop" :width='item.width' :type='item.type'>
             </el-table-column>
@@ -207,9 +205,9 @@
                   {{item.Name}}</el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="上级部门1:">
+        <!-- <el-form-item label="上级部门1:">
             <a-cascader :options="cascaderList" changeOnSelect @change="onChangeCascader" placeholder="请选择上级部门" />
-        </el-form-item>
+        </el-form-item> -->
         
         <el-form-item label="排序:">
           <el-input-number v-model="editForm.Sort"></el-input-number>
@@ -568,6 +566,15 @@ export default {
     };
   },
   methods: {
+    setClass(index) {
+      if(index === 'edit'){
+      return 'p1'
+      }
+      if(index === 'search'){
+      return 'p1'
+      }
+
+    },
       allotButton() {
       this.allotButtons = []
       var ButtonDatas = [];
@@ -1100,4 +1107,11 @@ export default {
     transition: transform .3s ease-in-out,-webkit-transform .3s ease-in-out;
     will-change: transform;
 }
+/* ----------------条件绑定 */
+.p1 {
+        display: none;
+    }
+    .p {
+        color: blue
+    }
 </style>

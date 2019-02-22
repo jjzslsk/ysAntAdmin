@@ -9,15 +9,18 @@
         <hr>
         buttonAr拥有的：{{buttonAr}} -->
         <span v-for="index in allotButtons" :key="index.Id">
-        <a-button style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        <a-button :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
         </span>
 
         <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
         <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>       
 
       <el-form-item style="float: right;">
-          <a-button v-if="isShowButton.query" type="primary" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
+        <span v-for="index in allotButtons" :key="index.Id">
+          <a-button v-if="index.Classname==='search'" :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        </span>
         </el-form-item>
+
         <el-form-item style="float: right;">
           <a-input-group compact>
             <a-select  @change="this.handleSelectChange" defaultValue="名称" style="width: 40%">
@@ -67,7 +70,7 @@
             <!-- <a href="javascript:;" v-if="isShowButton.edit" @click="onEdit(record)">编辑</a>
             <a href="javascript:;" v-if="isShowButton.del" @click="onDelete(record)">删除</a> -->
             <a href="javascript:;" @click="allotMent(record)">权限</a>
-            <a href="javascript:;" @click="onDelete(record)">详情</a>
+            <!-- <a href="javascript:;" @click="onDelete(record)">详情</a> -->
             <span  v-for="index in allotButtons" :key="index.Id">
             <a href="javascript:;" v-if="index.Classname==='edit'"  @click="onEdit(record.Id)">{{index.Name}}</a>
             <a href="javascript:;" v-if="index.Classname==='del'"  @click="onDelete(record)">{{index.Name}}</a>
@@ -663,6 +666,15 @@ export default {
   },
 
   methods: {
+    setClass(index) {
+      if(index === 'edit'){
+      return 'p1'
+      }
+      if(index === 'search'){
+      return 'p1'
+      }
+
+    },
     onSelectTable(){
       alert (1)
     },
@@ -1382,5 +1394,11 @@ export default {
 .highlight {
   color: #f50;
 }
-
+/* ----------------条件绑定 */
+.p1 {
+        display: none;
+    }
+    .p {
+        color: blue
+    }
 </style>

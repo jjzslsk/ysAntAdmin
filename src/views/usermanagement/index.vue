@@ -17,7 +17,7 @@
         <hr>
         buttonAr拥有的：{{buttonAr}} -->
         <span v-for="index in allotButtons" :key="index.Id">
-        <a-button style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        <a-button :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
         </span>     
                   
           <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
@@ -38,8 +38,11 @@
       </a-button> -->
 
       <el-form-item style="float: right;">
-          <a-button type="primary" v-if="isShowButton.query" :icon="buttonList[5].Icon" @click="getKeyList">{{buttonList[5].Name}}</a-button>
+        <span v-for="index in allotButtons" :key="index.Id">
+          <a-button v-if="index.Classname==='search'" :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        </span>
         </el-form-item>
+
         <el-form-item style="float: right;">
           <a-input-group compact>
             <a-select  @change="this.handleSelectChange" defaultValue="名称" style="width: 40%">
@@ -155,7 +158,7 @@
             <!-- <a href="javascript:;" @click="allotMent(record)">权限</a> -->
             <!-- <a-divider type="vertical" /> -->
             <!-- <a href="javascript:;" @click="allotRoles(record)">角色</a> -->
-            <a href="javascript:;"  @click="onEdit(record)">详情</a>
+            <!-- <a href="javascript:;"  @click="onEdit(record)">详情</a> -->
             <!-- <a-divider type="vertical" /> -->
             <span  v-for="index in allotButtons" :key="index.Id">
           <a href="javascript:;" v-if="index.Classname==='edit'"  @click="onEdit(record.Id)">{{index.Name}}</a>
@@ -626,8 +629,8 @@
             </el-form>
           </a-tab-pane>
 
-          <a-tab-pane tab="详情" key="3">
-            <h1>123</h1>
+          <a-tab-pane tab="其他" key="3">
+
       
           </a-tab-pane>
         </a-tabs>
@@ -1177,6 +1180,15 @@ export default {
     }
   },
   methods: {
+    setClass(index) {
+      if(index === 'edit'){
+      return 'p1'
+      }
+      if(index === 'search'){
+      return 'p1'
+      }
+
+    },
         allotButton() {
       this.allotButtons = []
       var ButtonDatas = [];
@@ -2101,4 +2113,11 @@ export default {
 .highlight {
   color: #f50;
 }
+/* ----------------条件绑定 */
+.p1 {
+        display: none;
+    }
+    .p {
+        color: blue
+    }
 </style>
