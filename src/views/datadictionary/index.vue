@@ -19,6 +19,7 @@
           <a-button size="small" type="primary" @click="handleEditType">编辑</a-button>
           <a-button size="small" type="primary" @click="handleDelType">删除</a-button>
   </dir>
+  无接口
 
   <div class="text item">
     <template>
@@ -287,7 +288,7 @@
     </a-modal>
 
         <!--添加类型-->
-    <a-modal title="添加类型" @ok="dialogFormVisibleAddType = true" @click="addType" v-model="dialogFormVisibleAddType">
+    <a-modal title="添加类型无接口" @ok="dialogFormVisibleAddType = true" @click="addType" v-model="dialogFormVisibleAddType">
       <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
         <el-form-item label="类别名称:" prop="Name">
           <el-input v-model="editForm.Name" auto-complete="off"></el-input>
@@ -310,7 +311,7 @@
     </a-modal>
 
         <!--编辑类型-->
-    <a-modal title="编辑类型" @ok="dialogFormVisibleEditType = true" @click="updateData" v-model="dialogFormVisibleEditType">
+    <a-modal title="编辑类型无接口" @ok="dialogFormVisibleEditType = true" @click="updateData" v-model="dialogFormVisibleEditType">
       <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
         <el-form-item label="类别名称:" prop="Name">
           <el-input v-model="editForm.Name" auto-complete="off"></el-input>
@@ -1500,7 +1501,8 @@ export default {
       this.dialogFormVisibleAdd = true;
       this.editForm = {
         Issuper: true,
-        State: true
+        State: true,
+        PId:'0',
       };
       // this.para.Code = 'GetListYsdatabaseYsDepartment';      
       // handlePost(this.para).then(res => {

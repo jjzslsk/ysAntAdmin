@@ -13,13 +13,13 @@
               <a-row :gutter="24">
                 <a-col :span="8">
                   <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作人">
-                    <a-input/>
+                    <a-input placeholder='无接口'></a-input>
                   </a-form-item>
                 </a-col>
 
                 <a-col :span="8">
                   <a-form-item  :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作类型">
-                    <a-select placeholder='请选择操作类型' @change="this.handleSelectChange">
+                    <a-select placeholder='请选择操作类型 无接口' @change="this.handleSelectChange">
                       <a-select-option value="login">登录</a-select-option>
                       <a-select-option value="exit">退出</a-select-option>
                       <a-select-option value="add">添加</a-select-option>
@@ -32,12 +32,19 @@
 
                 <a-col :span="8">
                   <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作表">
-                    <a-input/>
+                    <a-input placeholder='无接口'></a-input>
                   </a-form-item>
                 </a-col>
               </a-row>
 
               <a-row :gutter="24">
+                
+                <a-col :span="8">
+                  <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="业务">
+                    <a-input placeholder='无接口'></a-input>
+                  </a-form-item>
+                </a-col>
+
                 <a-col :span="8">
                   <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作时间">
                     <a-range-picker
@@ -51,27 +58,21 @@
                 </a-col>
 
                 <a-col :span="8">
-                  <!-- <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="业务">
-                    <a-input/>
-                  </a-form-item> -->
-                </a-col>
-
-                <a-col :span="8">
                   <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label></a-form-item>
                 </a-col>
               </a-row>
 
               <a-row>
                 <a-col :span="24" :style="{ textAlign: 'right' }">
-                  <!-- <a-button
+                  <a-button
                     type="primary"
-                    @click="getKeyList"
-                  >刷新</a-button> -->
+                    @click="search"
+                  >查询</a-button>
                   <a-button
                     type="primary"
                     :loading="loadingRefresh"
                     @click="Refresh"
-                  >{{buttonList[1].Name}}</a-button>
+                  >刷新</a-button>
                   <a-button @click="clickDel">
                     保留时间
                   </a-button>
@@ -93,7 +94,7 @@
       </template>
 
       <!--日志详细信息-->
-    <a-modal :width="920" title="日志详细信息" @ok="dialogFormVisibleAdd = true" @click="createData" v-model="dialogFormVisibleAdd">
+    <a-modal :width="920" title="日志详细信息无接口" @ok="dialogFormVisibleAdd = true" @click="createData" v-model="dialogFormVisibleAdd">
       <a-table :pagination="false" :columns="columnsInfo" :dataSource="dataInfo" bordered>
         <template slot="name" slot-scope="text">
           {{text}}
@@ -141,8 +142,8 @@
           <a-badge v-if="record.Issuccess === 'false'" status="error" text="失败"/>
         </template>
         <template slot="action" slot-scope="text, record">
-          <a href="javascript:;" v-if="isShowButton.del" @click="handleAdd()">详情</a>
-          <a href="javascript:;" v-if="isShowButton.del" @click="onDelete(record)">删除</a>
+          <a href="javascript:;" @click="handleAdd()">详情</a>
+          <a href="javascript:;" @click="onDelete(record)">删除</a>
         </template>
       </a-table>
 
@@ -278,9 +279,21 @@ export default {
           // width: 200
         },
         {
-          title: "操作类型",
+          title: "操作类型无接口",
           dataIndex: "type",
           key: "type",
+          width: 100
+        },
+        {
+          title: "IP无接口",
+          dataIndex: "IP",
+          key: "IP",
+          width: 100
+        },
+        {
+          title: "业务名称无接口",
+          dataIndex: "oaName",
+          key: "oaName",
           width: 100
         },
         {
@@ -510,6 +523,7 @@ export default {
     //时间选择
     onChange(value, dateString) {
       this.dateString = dateString
+      this.filters.Time = dateString
       console.log("Selected Time: ", value);
       console.log("Formatted Selected Time: ", dateString);
     },
@@ -520,6 +534,22 @@ export default {
     handleSelectChange(value) {
       this.selectValue = value;
     },
+    search(){
+        const paraId = {
+          Page: this.page,
+          StartTime: this.filters.Time[0],
+          EndTime: this.filters.Time[1],
+          Size: this.size
+        };
+        this.para.Code = this.bllCode.getList;
+        this.para.Data = JSON.stringify(paraId);
+        handlePost(this.para).then(res => {
+          if (res.IsSuccess == true) {
+            this.total = res.Data.Count;
+            this.dataList = res.Data.List;
+          }
+        });
+    },
     //刷新页面
     Refresh() {
       this.filters = {};
@@ -528,7 +558,22 @@ export default {
         this.loadingRefresh = false;
         this.page = 1;
         this.current = 1;
-        this.getDataList();
+
+        const paraId = {};
+        this.para.Code = this.bllCode.getList;
+        this.para.Data = JSON.stringify(paraId);
+        handlePost(this.para).then(res => {
+          if (res.IsSuccess == true) {
+            this.total = res.Data.Count;
+            this.dataList = res.Data.List;
+            this.$message({
+                message: "刷新成功！",
+                type: "success"
+              });
+          }
+        });
+        
+
       }, 1000);
     },
     //穿梭框
@@ -580,10 +625,14 @@ export default {
         const paraId = {
           Page: this.page,
           // Createdate: this.dateString,
-          Createdate: '2018-12-30 16:33:44',
+          // Createdate: '2018-12-30 16:33:44',
+          // StartTime: this.filters.Time[0],
+          // EndTime: this.filters.Time[1],
           Size: this.size
         };
         // this.dataList = [];
+        // console.log (this.dateString,'1111')
+        // console.log (paraId.StartTime,'StartTime11')
         this.para.Code = this.bllCode.getList;
         this.para.Data = JSON.stringify(paraId);
         handlePost(this.para).then(res => {
@@ -591,50 +640,6 @@ export default {
             this.total = res.Data.Count;
             this.dataList = res.Data.List;
 
-            //初始化按钮
-            this.isShowButton = {
-              add: false,
-              Refresh: false,
-              edit: false,
-              del: false,
-              dels: false,
-              query: false
-            };
-            //获取多菜单按钮
-            const paraId = {
-              MenuId: 38
-            };
-            this.para.Code = "GetYsMenuButton";
-            this.para.Data = JSON.stringify(paraId);
-            handlePost(this.para).then(res => {
-              if (res.IsSuccess == true) {
-                const buttonAr = res.Data[0].ButtonIds;
-                console.log("buttonAr", buttonAr);
-                buttonAr.forEach(i => {
-                  switch (i) {
-                    case 1:
-                      this.isShowButton.add = true;
-                      break;
-                    case 38:
-                      this.isShowButton.Refresh = true;
-                      break;
-                    case 39:
-                      this.isShowButton.edit = true;
-                      break;
-                    case 40:
-                      this.isShowButton.del = true;
-                      break;
-                    case 43:
-                      this.isShowButton.dels = true;
-                      break;
-                    case 45:
-                      this.isShowButton.query = true;
-                      break;
-                  }
-                  // if(typeof i == 'null'){
-                });
-              }
-            });
           }
         });
       });

@@ -1,6 +1,9 @@
 <template>
   <section class="app-container">
     <el-card class="box-card">
+
+      {{columns}}
+        
     <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
           <!-- <a-button  v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button>
@@ -648,13 +651,13 @@
     </a-modal>
 
     <!--导出界面-->
-    <a-modal :width="600" title="导出Excel" @ok="dialogFormVisibleExport = true" @click="exportData" v-model="dialogFormVisibleExport">
+    <a-modal :width="600" title="编辑用户" @ok="dialogFormVisibleExport = true" @click="exportData" v-model="dialogFormVisibleExport">
 
 
       <template>
         <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
           <div>
-            <!-- <div :style="{ borderBottom: '1px solid #E9E9E9' }">
+            <div :style="{ borderBottom: '1px solid #E9E9E9' }">
               <a-checkbox
                 :indeterminate="indeterminate"
                 @change="onCheckAllChange"
@@ -663,8 +666,8 @@
                 全部导出
               </a-checkbox>
             </div>
-            <br /> -->
-            <a-checkbox-group :options="plainOptions" v-model="checkedList" @change="onChange" />
+            <br />
+            <a-checkbox-group :options="columnsTitle" v-model="checkedList" @change="onChange" />
           </div>
 
       </el-form>
@@ -699,17 +702,12 @@ const options = [
   { label: 'Pear', value: 'Pear' },
   { label: 'Orange', value: 'Orange' },
 ]
-// const plainOptions = ['Apple', 'Pear', 'Orange']
-const plainOptions = [
-  { label: '名称', value: 'Name as 名称' },
-  { label: 'Id', value: 'Id as Id' },
-  { label: '账号', value: 'Username as 账号' },
-  { label: '部门名称', value: 'DepartmentName as 部门名称' },
-  { label: '是否启用', value: 'State as 是否启用' },
-  { label: '是否超管', value: 'Issuper as 是否超管' },
-  { label: '邮箱', value: 'Email as 邮箱' },
-  { label: '手机', value: 'Mobile as 手机' },
-  ]
+const plainOptions = ['Apple', 'Pear', 'Orange']
+// const plainOptions = [
+//   { label: 'Apple', value: 'Apple1' },
+//   { label: 'Pear', value: 'Pear2' },
+//   { label: 'Orange', value: 'Orange3' },
+//   ]
 
 const columnsTree= [
 //   {
@@ -1235,25 +1233,25 @@ export default {
   methods: {
 
     onChange (checkedList) {
-      this.indeterminate = !!checkedList.length && (checkedList.length < plainOptions.length)
-      this.checkAll = checkedList.length === plainOptions.length
-      // console.log ('单选')
-      // console.log ('this.indeterminate',this.indeterminate)
-      // console.log ('this.checkAll',this.checkAll)
-      // console.log ('checkedList',this.checkedList)
-      // console.log (checkedValues)
-      console.log (this.checkedList)
+      this.indeterminate = !!checkedList.length && (checkedList.length < this.columnsTitle.length)
+      this.checkAll = checkedList.length === this.columnsTitle.length
+      console.log ('单选')
+      console.log ('this.indeterminate',this.indeterminate)
+      console.log ('this.checkAll',this.checkAll)
+      console.log ('checkedList',this.checkedList)
     },
     onCheckAllChange (e) {
+      // alert (123)
+
       Object.assign(this, {
-        checkedList: e.target.checked ? plainOptions : [],
+        checkedList: e.target.checked ? this.columnsTitle : [],
         indeterminate: false,
         checkAll: e.target.checked,
       })
-      // console.log (e)
+      console.log (e)
       console.log (this.checkedList)
-      // console.log (this.indeterminate)
-      // console.log (this.checkAll)
+      console.log (this.indeterminate)
+      console.log (this.checkAll)
     },
 
 
@@ -1319,8 +1317,6 @@ export default {
     },
     //导出
     exportData(){
-      const ColumnsData = [];
-
       const paraId = {
         // Columns: ["Id as id", "Name as 名称"],
         Columns: this.checkedList,
@@ -1430,9 +1426,9 @@ export default {
             // 显示导出界面
     export(row) {
       this.dialogFormVisibleExport = true;
-      // this.columnsTitle = this.columns.map((i)=>{
-      //   return i.dataIndex;
-      // })
+      this.columnsTitle = this.columns.map((i)=>{
+        return i.dataIndex;
+      })
     },
             // 显示编辑界面
     onEdit(row) {
