@@ -704,7 +704,7 @@ const plainOptions = [
   { label: '名称', value: 'Name as 名称' },
   { label: 'Id', value: 'Id as Id' },
   { label: '账号', value: 'Username as 账号' },
-  { label: '部门名称', value: 'DepartmentName as 部门名称' },
+  // { label: '部门名称', value: 'DepartmentName as 部门名称' },
   { label: '是否启用', value: 'State as 是否启用' },
   { label: '是否超管', value: 'Issuper as 是否超管' },
   { label: '邮箱', value: 'Email as 邮箱' },

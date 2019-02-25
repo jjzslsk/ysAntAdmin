@@ -69,8 +69,9 @@
     <template slot="action" slot-scope="text, record">
             <!-- <a href="javascript:;" v-if="isShowButton.edit" @click="onEdit(record)">编辑</a>
             <a href="javascript:;" v-if="isShowButton.del" @click="onDelete(record)">删除</a> -->
-            <a href="javascript:;" @click="allotMent(record)">权限</a>
+            <!-- <a href="javascript:;" @click="allotMent(record)">权限</a> -->
             <!-- <a href="javascript:;" @click="onDelete(record)">详情</a> -->
+            <a href="javascript:;" @click="allotMent(record)">权限</a>
             <span  v-for="index in allotButtons" :key="index.Id">
             <a href="javascript:;" v-if="index.Classname==='edit'"  @click="onEdit(record.Id)">{{index.Name}}</a>
             <a href="javascript:;" v-if="index.Classname==='del'"  @click="onDelete(record)">{{index.Name}}</a>
@@ -98,20 +99,23 @@
         <a-button type="primary" @click="setRole" >设置</a-button>
         <!-- {{}} -->
         获取到权限数组:{{userRole}}
+    <br>
+        菜单列表
+      <!-- {{menuList}} -->
+      {{treeDatas}}
+
 
         <!-- 导航菜单：{{treeData}} -->
 
           <template>
             <a-tree
               checkable
-              @expand="onExpand"
-              :expandedKeys="expandedKeys"
-              :autoExpandParent="autoExpandParent"
-              v-model="checkedKeys"
-              @select="onSelect"
-              :selectedKeys="selectedKeys"
-              :treeData="treeData123"
-            />
+              :treeData="treeDatas"
+              @select="this.onSelect"
+              @check="this.onCheck"
+            >
+            <span slot="title0010" style="color: #1890ff">sss</span>
+            </a-tree>
           </template>
       
 
@@ -220,6 +224,52 @@ import store from "@/store/index.js"; //引入本地存储
 import util from "@/utils/table.js";
 import { paraHelper } from "@/utils/para.js"; //请求参数格式
 import { handlePost, handleGet } from "@/api/apihelper.js";
+
+const treeData = [{
+  title: 'parent 1',
+  key: '0-0',
+  children: [{
+    title: 'parent 1-0',
+    key: '0-0-0',
+    disabled: true,
+    children: [
+      { title: 'leaf', key: '0-0-0-0', disableCheckbox: true },
+      { title: 'leaf', key: '0-0-0-1' },
+    ],
+  }, {
+    title: 'parent 1-1',
+    key: '0-0-1',
+    children: [
+      { key: '0-0-1-0', slots: { title: 'title0010' }},
+      { key: '0-0-1-1', slots: { title: 'title0010' }},
+    ],
+  }],
+}]
+
+const treeDatas = 
+
+[ { key: "1", Icon: "anticon anticon-inbox", Code: "sys", Url: "sys_manage", Sort: "0", Show: "√", children: 
+[ { key: "3", Icon: "anticon anticon-inbox", Code: "button", Url: "/views/button/index", Sort: "1", Show: "√",
+
+ children: [//此菜单下拥有的权限按钮
+  { key: "90",title: "添加" },
+  { key: "91",title: "删除" },
+  { key: "92",title: "编辑" },
+  { key: "93",title: "查询" }, 
+  ],
+
+
+  Edit: "编辑", Del: "删除", title: "1操作按钮" }, 
+{ key: "17", Icon: "anticon anticon-desktop", Code: "rolemanagement", Url: "/views/rolemanagement/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "角色管理" },
+ { key: "18", Icon: "anticon anticon-user", Code: "usermanagement", Url: "/views/usermanagement/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "用户管理" }, 
+ { key: "19", Icon: "anticon anticon-solution", Code: "divisionmanage", Url: "/views/divisionmanage/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "部门管理" }, 
+ { key: "20", Icon: "anticon anticon-exception", Code: "datadictionary", Url: "/views/datadictionary/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "数据字典" },
+  { key: "21", Icon: "anticon anticon-save", Code: "systemsetup", Url: "/views/systemsetup/index", Sort: "1", Show: "X", children: null,Edit: "编辑", Del: "删除", title: "参数设置" },
+   { key: "38", Icon: "anticon anticon-export", Code: "operationlog", Url: "/views/operationlog/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "操作日志" }, 
+   { key: "40", Icon: "anticon anticon-setting", Code: "configure", Url: "/views/configure/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "系统配置" }, 
+   { key: "1064", Icon: "anticon anticon-file-unknown", Code: "test", Url: "/views/test/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "test1" },
+    { key: "2", Icon: "anticon anticon-database", Code: "navigationmenu", Url: "/views/navigationmenu/index", Sort: "2", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "导航菜单" } ],
+    Edit: "编辑", Del: "删除", title: "系统设置" } ]
 
 //树形选择
 
@@ -420,6 +470,9 @@ export default {
         return data;
       };
     return {
+      treeData,
+      treeDatas,
+      menuList:[],
       //按钮
       ButtonData:[],
       ButtonIcons: {},
@@ -666,6 +719,26 @@ export default {
   },
 
   methods: {
+
+        //转列表对象值
+    carButton() {
+      var buttonkeyMap = {
+        Name: "title",
+      };
+
+      for (var i = 0; i < this.menuList.length; i++) {
+        var obj = this.menuList[i];
+        for (var key in obj) {
+          var newKey = buttonkeyMap[key];
+          if (newKey) {
+            obj[newKey] = obj[key];
+            delete obj[key];
+          }
+        }
+      }
+
+    },
+
     setClass(index) {
       if(index === 'edit'){
       return 'p1'
@@ -724,20 +797,12 @@ export default {
           }
 },
       //树形选择
-      onExpand (expandedKeys) {
-      console.log('onExpand', expandedKeys)
-      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-      // or, you can remove all expanded children keys.
-      this.expandedKeys = expandedKeys
-      this.autoExpandParent = false
+      onSelect (selectedKeys, info) {
+      console.log('selected', selectedKeys, info)
     },
-    onCheck (checkedKeys) {
-      console.log('onCheck', checkedKeys)
-      this.checkedKeys = checkedKeys
-    },
-    onSelect (selectedKeys, info) {
-      console.log('onSelect', info)
-      this.selectedKeys = selectedKeys
+    onCheck (checkedKeys, info) {
+      console.log('onCheck', checkedKeys, info)
+      console.log('info', info.halfCheckedKeys)
     },
 
     getRole(i){
@@ -755,19 +820,19 @@ export default {
         this.para.Data = JSON.stringify(paraId[0]);
         handlePost(this.para).then(res => {
           if (res.IsSuccess == true ) {
-            console.log (res.Data)
+            console.log (res)
 
             this.userRole = res.Data.Power
           }
-          if(typeof res.Data === "null"){
-            alert(1)
-          }
-          if(typeof res.Data === null){
-            alert(1)
-          }
-          if(typeof res.Data == "null"){
-            alert(1)
-          }
+          // if(typeof res.Data === "null"){
+          //   alert(1)
+          // }
+          // if(typeof res.Data === null){
+          //   alert(1)
+          // }
+          // if(typeof res.Data == "null"){
+          //   alert(1)
+          // }
         });
     },
     setRole(){
@@ -778,7 +843,8 @@ export default {
       }).then(() => {
         const paraId = [
           {
-            Id: 10,
+            Pid: 1,
+            Id: 1030,
             Power: [{
               MenuId: 19,	//菜单id
               Buttons: [1,38,39]	//按钮id数组
@@ -976,9 +1042,26 @@ export default {
     allotIcon() {
       this.dialogFormVisibleIcon = true;
     },
-    //分配二维权限
+    //修树KEY
+    trans (data) {
+      data.forEach(item => {
+        item.title = item.Name // 把title属性赋值给name属性
+        delete item.Name // 删除title属性
+        item.children && this.trans(item.children) // 如果有children，递归调用
+      })
+    },
+
+
+
     allotMent(i) {
-      console.log (i.Id)
+      const paraId = {}; 
+      this.para.Code = 'GetListYsdatabaseYsMenu';
+      this.para.Data = JSON.stringify(paraId);
+      handlePost(this.para).then(res =>{
+        this.menuList = res.Data
+        this.trans(this.menuList)
+      })
+      // console.log (i.Id)
       this.getRole(i.Id)
       this.dialogFormVisibleData = true;
 
