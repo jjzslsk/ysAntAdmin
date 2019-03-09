@@ -206,4 +206,8 @@ export default {
 .ant-pagination-total-text {
   /* float: left; */
 }
+.ant-tree-treenode-switcher-open .ant-tree-treenode-switcher-close {
+  /* float: left;
+  background: #f50; */
+}
 </style>

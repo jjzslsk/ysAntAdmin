@@ -1,7 +1,6 @@
 <template>
   <section class="app-container">
     <el-card class="box-card">
-      {{filters}}
       <template>
         <template>
           <div id="components-form-demo-advanced-search">
@@ -14,7 +13,7 @@
               <a-row :gutter="24">
                 <a-col :span="8">
                   <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作人">
-                    <a-input placeholder='无接口' v-model="filters.AdminName"></a-input>
+                    <a-input placeholder='无接口'></a-input>
                   </a-form-item>
                 </a-col>
 
@@ -32,13 +31,19 @@
                 </a-col>
 
                 <a-col :span="8">
-                  <!-- <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作表">
+                  <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作表">
                     <a-input placeholder='无接口'></a-input>
-                  </a-form-item> -->
+                  </a-form-item>
                 </a-col>
               </a-row>
 
               <a-row :gutter="24">
+                
+                <a-col :span="8">
+                  <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="业务">
+                    <a-input placeholder='无接口'></a-input>
+                  </a-form-item>
+                </a-col>
 
                 <a-col :span="8">
                   <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作时间">
@@ -51,13 +56,6 @@
                     />
                   </a-form-item>
                 </a-col>
-                
-                <a-col :span="8">
-                  <!-- <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="业务">
-                    <a-input placeholder='无接口'></a-input>
-                  </a-form-item> -->
-                </a-col>
-
 
                 <a-col :span="8">
                   <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label></a-form-item>
@@ -354,10 +352,7 @@ export default {
       },
       // para: paraHelper,
       dialogStatus: "",
-      filters: {
-        AdminName:'',
-        Time:[],
-      },
+      filters: {},
       ListsuperiorMenu: [],
       dataList: [], //主页数据
       total: 0,
@@ -545,13 +540,11 @@ export default {
       this.selectValue = value;
     },
     search(){
-      alert (123)
         const paraId = {
           Page: this.page,
           StartTime: this.filters.Time[0],
           EndTime: this.filters.Time[1],
-          Size: this.size,
-          AdminName:this.filters.AdminName
+          Size: this.size
         };
         this.para.Code = this.bllCode.getList;
         this.para.Data = JSON.stringify(paraId);
@@ -559,18 +552,12 @@ export default {
           if (res.IsSuccess == true) {
             this.total = res.Data.Count;
             this.dataList = res.Data.List;
-            this.$message({
-                message: "查询完成",
-                type: "success"
-              });
           }
         });
-        console.log (paraId)
     },
     //刷新页面
     Refresh() {
-      this.filters = {},
-      this.dateString = [];
+      this.filters = {};
       this.loadingRefresh = true;
       setTimeout(() => {
         this.loadingRefresh = false;
