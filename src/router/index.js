@@ -55,11 +55,34 @@ export const constantRouterMap = [
   { path: '/401', component: () => import('@/views/errorPage/401'), hidden: true },
   { path: '/index', component: () => import('@/views/index'), hidden: true },
   { path: '/dashboard/sys/rolemanagement', component: () => import('@/views/rolemanagement'), hidden: true },
-  { path: '/dashboard/sys/navigationmenu', component: () => import('@/views/navigationmenu'), hidden: true },
+  { path: '/dashboard/sys/navigationmenu', component: () => import('@/views/navigationmenu'),name: '导航1', hidden: true },
   { path: '/divisionmanage', component: () => import('@/views/divisionmanage'), hidden: true },
   { path: '/usermanagement', component: () => import('@/views/usermanagement'), hidden: true },
   { path: '/datadictionary', component: () => import('@/views/datadictionary'), hidden: true },
   { path: '/operationlog', component: () => import('@/views/operationlog'), hidden: true },
+
+  //shop
+  {
+    path: '/shop',
+    component: Layout,
+    hidden: true,
+    meta: {
+      title: 'shop',
+      icon: 'shop'
+    },
+    children: [
+      {
+        path: 'league',
+        name: '1加盟',
+        component: () => import('@/views/league'),
+        meta: {
+          title: '2加盟',
+          icon: 'league'
+        }
+      }
+    ]
+  },
+
   // 锁屏
   {
     path: '/lock',
@@ -96,3 +119,5 @@ export default new Router({
   routes: constantRouterMap
 })
 export const asyncRouterMap = []
+
+// alert (123)

@@ -1,6 +1,9 @@
 <template>
   <section class="app-container">
     <el-card class="box-card">
+      {{buttonArs}}
+      <hr>
+      {{buttonArList}}
       <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
         <!-- allotButtons:过滤好的 {{allotButtons}}
@@ -9,7 +12,7 @@
         <hr>
         buttonAr拥有的：{{buttonAr}} -->
         <span v-for="index in allotButtons" :key="index.Id">
-        <a-button :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
+        <a-button :disabled='buttonDisabled(index.Classname)' :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
         </span>
 
         <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
@@ -479,6 +482,8 @@ export default {
       ButtonNames: {},
       buttonList: [],
       buttonAr:[],
+      buttonArs:[],
+      buttonArList:[],
       allotButtons:[],
       //树形选择
       expandedKeys: ['0-0-0', '0-0-1'],
@@ -719,6 +724,12 @@ export default {
   },
 
   methods: {
+    //按钮权限
+    buttonDisabled(index){
+      if(index === 'inport'){
+      return true
+      }
+    },
 
         //转列表对象值
     carButton() {
@@ -1204,7 +1215,7 @@ export default {
               eval("car." + key + "='" + value + "'");
             })
 
-            //获取多菜单按钮
+            //获取单菜单按钮
             const paraId = {
               MenuId:17,
             };
@@ -1214,6 +1225,8 @@ export default {
               if (res.IsSuccess == true) {
                 this.buttonAr = res;
                 this.allotButton()
+                this.GetYsMenuButtons()
+                // this.GetListButton()
               }
             }); 
         } else {
@@ -1222,11 +1235,43 @@ export default {
               type: "warning"
             });
           }
-
       });
-
     });
     },
+
+    //获取多菜单按钮
+    GetYsMenuButtons(){
+      const paraIds = {
+
+            };
+            this.para.Code = "GetYsMenuButton";
+            this.para.Data = JSON.stringify(paraIds);
+            handlePost(this.para).then(res => {
+              if (res.IsSuccess == true) {
+                this.buttonArs = res;
+                // this.allotButton()
+                this.GetListButton()
+
+              }
+            }); 
+    },
+
+    //获取操作按钮列表
+    GetListButton(){
+      const paraIds = {
+
+            };
+            this.para.Code = "GetListYsdatabaseYsButton";
+            this.para.Data = JSON.stringify(paraIds);
+            handlePost(this.para).then(res => {
+              if (res.IsSuccess == true) {
+                this.buttonArList = res;
+                // this.allotButton()
+              }
+            }); 
+    },
+    
+
     // 删除
     handleDel(index, row) {
       this.$confirm("确认删除该记录吗?", "提示", {

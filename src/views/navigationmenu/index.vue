@@ -1686,7 +1686,7 @@ export default {
               this.ListsuperiorMenu = res.Data.List;
               let top = {
                 Id: 0,
-                Name: "无"
+                Name: "一级菜单"
               };
               this.ListsuperiorMenu.push(top);
             }
@@ -2121,7 +2121,7 @@ export default {
           this.ListsuperiorMenu = res.Data.List;
           let top = {
             Id: 0,
-            Name: "无"
+            Name: "一级菜单"
           };
           this.ListsuperiorMenu.push(top);
         }

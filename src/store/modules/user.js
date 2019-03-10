@@ -45,6 +45,7 @@ const user = {
     },
     SET_TOKEN: (state, token) => {
       state.token = token
+      console.log ('SET_TOKEN00')
     },
     SET_ID: (state, id) => {
       state.id = id
@@ -110,12 +111,12 @@ const user = {
           console.log ('response::::::4',response)
 
             setId(response.Data.MId)
-            setToken(response.Data.Token)
+            setToken(response.Data.Token)//写入Cookies
             commit('SET_ID', response.Data.Id)
-            commit('SET_TOKEN', response.Data.Token)
+            commit('SET_TOKEN', response.Data.Token)//写入store
             // setToken("admin")//设置token
             // commit('SET_TOKEN', "admin")//设置token
-            resolve()
+            resolve()//括号内可携带返回
           }
           else {
             Message({

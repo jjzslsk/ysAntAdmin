@@ -32,6 +32,8 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
   response => {
     console.log (5)
+    console.log ('5',response)
+
     /**
      * code为非20000是抛错 可结合自己业务进行修改
      */

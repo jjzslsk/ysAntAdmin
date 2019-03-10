@@ -33,6 +33,9 @@ import systemsetup from '@/views/systemsetup/index'
 import errorPage from '@/views/errorPage/404'
 import test from '@/views/test/index'
 
+// 商户管理
+import league from '@/views/league/index'
+
 
 //财务管理
 import bonusdetailed from '@/views/errorPage/404'
@@ -103,6 +106,8 @@ function loadLayout(name) {
     return proxysetting
   } else if (name == 'test') {
     return test
+  } else if (name == 'league') {
+    return league
   } else {
     return errorPage
   }

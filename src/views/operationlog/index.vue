@@ -1,7 +1,6 @@
 <template>
   <section class="app-container">
     <el-card class="box-card">
-      {{filters}}
       <template>
         <template>
           <div id="components-form-demo-advanced-search">
@@ -19,7 +18,7 @@
                 </a-col>
 
                 <a-col :span="8">
-                  <a-form-item  :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作类型">
+                  <a-form-item  :labelCol="{ span: 6 }" :wrapperCol="{ span: 18 }" label="操作类型">
                     <a-select placeholder='请选择操作类型 无接口' @change="this.handleSelectChange">
                       <a-select-option value="login">登录</a-select-option>
                       <a-select-option value="exit">退出</a-select-option>
@@ -32,16 +31,21 @@
                 </a-col>
 
                 <a-col :span="8">
-                  <!-- <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作表">
+                  <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作表">
                     <a-input placeholder='无接口'></a-input>
-                  </a-form-item> -->
+                  </a-form-item>
                 </a-col>
               </a-row>
 
               <a-row :gutter="24">
+                <a-col :span="8">
+                  <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="业务">
+                    <a-input placeholder='无接口'></a-input>
+                  </a-form-item>
+                </a-col>
 
                 <a-col :span="8">
-                  <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作时间">
+                  <a-form-item :labelCol="{ span: 6 }" :wrapperCol="{ span: 18 }" label="操作时间">
                     <a-range-picker
                       :showTime="{ format: 'HH:mm' }"
                       format="YYYY-MM-DD HH:mm"
@@ -52,11 +56,6 @@
                   </a-form-item>
                 </a-col>
                 
-                <a-col :span="8">
-                  <!-- <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="业务">
-                    <a-input placeholder='无接口'></a-input>
-                  </a-form-item> -->
-                </a-col>
 
 
                 <a-col :span="8">
@@ -173,6 +172,8 @@ import store from "@/store/index.js"; //引入本地存储
 import util from "@/utils/table.js";
 import { paraHelper } from "@/utils/para.js"; //请求参数格式
 import { handlePost, handleGet } from "@/api/apihelper.js";
+
+import moment from 'moment';
 
 const columnsInfo = [{
   title: '字段',
@@ -451,6 +452,11 @@ export default {
     }
   },
   methods: {
+    //清空时间
+    defaultTime(){
+      return []
+    },
+    moment,
     handleChangeSelect(value) {
       console.log(`selected ${value}`);
     },
@@ -545,7 +551,6 @@ export default {
       this.selectValue = value;
     },
     search(){
-      alert (123)
         const paraId = {
           Page: this.page,
           StartTime: this.filters.Time[0],
@@ -569,7 +574,9 @@ export default {
     },
     //刷新页面
     Refresh() {
+      this.onChange()
       this.filters = {},
+      this.filters.Time = [],
       this.dateString = [];
       this.loadingRefresh = true;
       setTimeout(() => {

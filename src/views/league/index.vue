@@ -1,3 +1,3 @@
 <template>
-    <h1>测试页</h1>
+    <h1>shop</h1>
 </template>
