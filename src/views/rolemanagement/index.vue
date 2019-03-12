@@ -101,11 +101,11 @@
         <a-button type="primary" @click="getRole" >获取</a-button>
         <a-button type="primary" @click="setRole" >设置</a-button>
         <!-- {{}} -->
-        获取到权限数组:{{userRole}}
-    <br>
-        菜单列表
+        <!-- 获取到权限数组:{{userRole}} -->
+    <!-- <br> -->
+        <!-- 菜单列表 -->
       <!-- {{menuList}} -->
-      {{treeDatas}}
+      <!-- {{treeDatas}} -->
 
 
         <!-- 导航菜单：{{treeData}} -->
@@ -263,7 +263,17 @@ const treeDatas =
 
 
   Edit: "编辑", Del: "删除", title: "1操作按钮" }, 
-{ key: "17", Icon: "anticon anticon-desktop", Code: "rolemanagement", Url: "/views/rolemanagement/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "角色管理" },
+{ key: "17", Icon: "anticon anticon-desktop", Code: "rolemanagement", Url: "/views/rolemanagement/index", Sort: "1", Show: "√", 
+
+children: [//此菜单下拥有的权限按钮
+  { key: "90",title: "添加" },
+  { key: "91",title: "删除" },
+  { key: "92",title: "编辑" },
+  { key: "93",title: "查询" }, 
+  ],
+
+
+Edit: "编辑", Del: "删除", title: "角色管理" },
  { key: "18", Icon: "anticon anticon-user", Code: "usermanagement", Url: "/views/usermanagement/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "用户管理" }, 
  { key: "19", Icon: "anticon anticon-solution", Code: "divisionmanage", Url: "/views/divisionmanage/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "部门管理" }, 
  { key: "20", Icon: "anticon anticon-exception", Code: "datadictionary", Url: "/views/datadictionary/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "数据字典" },

@@ -68,7 +68,7 @@
                     @click="Refresh"
                   >刷新</a-button>
                   <a-button @click="clickDel">
-                    删除时段
+                    保留时间
                   </a-button>
                   <!-- <a-button
                     type="danger"
@@ -105,17 +105,16 @@
       </div>
     </a-modal>
 
-    <!--删除界面-->
+    <!--编辑界面-->
     <a-modal title="删除日志" @ok="handleOkEdit" @click="updateData" v-model="dialogFormVisibleEdit">
       <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="删除时段:">
-          <a-range-picker
-                      :showTime="{ format: 'HH:mm' }"
-                      format="YYYY-MM-DD HH:mm"
-                      :placeholder="['开始时间', '结束时间']"
-                      @change="onChangeDel"
-                      @ok="onOkDel"
-                    />
+        <el-form-item label="日志保留时间:">
+          <a-select defaultValue="lucy" style="width: 300px" @change="handleChangeSelect">
+            <a-select-option value="jack">保留近一周</a-select-option>
+            <a-select-option value="lucy">保留近一个月</a-select-option>
+            <a-select-option value="disabled">保留近三个月</a-select-option>
+            <a-select-option value="Yiminghe" disabled>不保留，全部删除</a-select-option>
+          </a-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -226,8 +225,6 @@ export default {
       form: this.$form.createForm(this),
       // 按时间查询
       dateString:[],
-      //按时间删除
-      dateStringDel:[],
       //分页初始化
       total: 0,
       page: 1,
@@ -454,6 +451,9 @@ export default {
       return []
     },
     moment,
+    handleChangeSelect(value) {
+      console.log(`selected ${value}`);
+    },
     handleOkEdit() {
       this.dialogFormVisibleEdit = false;
     },
@@ -530,7 +530,7 @@ export default {
         console.log("Received values of form: ", values);
       });
     },
-    //查询时间选择
+    //时间选择
     onChange(value, dateString) {
       this.dateString = dateString
       this.filters.Time = dateString
@@ -538,16 +538,6 @@ export default {
       console.log("Formatted Selected Time: ", dateString);
     },
     onOk(value) {
-      console.log("onOk: ", value);
-    },
-    //删除时间选择
-    onChangeDel(value, dateString) {
-      this.dateStringDel = dateString
-      this.filters.Time = dateString
-      console.log("Selected TimeDEL: ", value);
-      console.log("Formatted Selected TimeDEL: ", dateString);
-    },
-    onOkDel(value) {
       console.log("onOk: ", value);
     },
     //搜索
