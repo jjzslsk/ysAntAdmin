@@ -100,20 +100,18 @@
     <a-modal class="allotMent" title="分配权限" @ok="handleOkData" @click="allotMent" v-model="dialogFormVisibleData">
         <a-button type="primary" @click="getRole" >获取</a-button>
         <a-button type="primary" @click="setRole" >设置</a-button>
-        <!-- {{}} -->
-        <!-- 获取到权限数组:{{userRole}} -->
     <!-- <br> -->
-        <!-- 菜单列表 -->
-      <!-- {{menuList}} -->
+        菜单列表:{{menuList}}
       <!-- {{treeDatas}} -->
-
+      <hr>
+      获取单个角色权限:{{userRole}}
 
         <!-- 导航菜单：{{treeData}} -->
 
           <template>
             <a-tree
               checkable
-              :treeData="treeDatas"
+              :treeData="menuList"
               @select="this.onSelect"
               @check="this.onCheck"
             >
@@ -249,6 +247,7 @@ const treeData = [{
   }],
 }]
 
+//模拟数据
 const treeDatas = 
 
 [ { key: "1", Icon: "anticon anticon-inbox", Code: "sys", Url: "sys_manage", Sort: "0", Show: "√", children: 
@@ -483,6 +482,8 @@ export default {
         return data;
       };
     return {
+      //权限按钮
+      roleBotton:[],
       treeData,
       treeDatas,
       menuList:[],
@@ -742,23 +743,23 @@ export default {
     },
 
         //转列表对象值
-    carButton() {
-      var buttonkeyMap = {
-        Name: "title",
-      };
+    // carButton() {
+    //   var buttonkeyMap = {
+    //     Name: "title",
+    //   };
 
-      for (var i = 0; i < this.menuList.length; i++) {
-        var obj = this.menuList[i];
-        for (var key in obj) {
-          var newKey = buttonkeyMap[key];
-          if (newKey) {
-            obj[newKey] = obj[key];
-            delete obj[key];
-          }
-        }
-      }
+    //   for (var i = 0; i < this.menuList.length; i++) {
+    //     var obj = this.menuList[i];
+    //     for (var key in obj) {
+    //       var newKey = buttonkeyMap[key];
+    //       if (newKey) {
+    //         obj[newKey] = obj[key];
+    //         delete obj[key];
+    //       }
+    //     }
+    //   }
 
-    },
+    // },
 
     setClass(index) {
       if(index === 'edit'){
@@ -822,8 +823,16 @@ export default {
       console.log('selected', selectedKeys, info)
     },
     onCheck (checkedKeys, info) {
+
       console.log('onCheck', checkedKeys, info)
-      console.log('info', info.halfCheckedKeys)
+
+      this.roleBotton = []
+      info.checkedNodes.forEach((i)=>{
+        // console.log ('lsk',i.data.props.Id)
+        this.roleBotton.push(i.data.props.Id)
+      })
+      console.log ('rrrrr',this.roleBotton)
+      // console.log('info', info.halfCheckedKeys)
     },
 
     getRole(i){
@@ -845,15 +854,15 @@ export default {
 
             this.userRole = res.Data.Power
           }
-          // if(typeof res.Data === "null"){
-          //   alert(1)
-          // }
-          // if(typeof res.Data === null){
-          //   alert(1)
-          // }
-          // if(typeof res.Data == "null"){
-          //   alert(1)
-          // }
+        //   // if(typeof res.Data === "null"){
+        //   //   alert(1)
+        //   // }
+        //   // if(typeof res.Data === null){
+        //   //   alert(1)
+        //   // }
+        //   // if(typeof res.Data == "null"){
+        //   //   alert(1)
+        //   // }
         });
     },
     setRole(){
@@ -1064,28 +1073,77 @@ export default {
       this.dialogFormVisibleIcon = true;
     },
     //修树KEY
+    // trans (data) {
+    //   data.forEach(item => {
+    //     item.title = item.Name // 把title属性赋值给name属性
+    //     delete item.Name // 删除title属性
+    //     item.children && this.trans(item.children) // 如果有children，递归调用
+    //   })
+    // },
+
+    //修树KEY
     trans (data) {
+
+      // var buttonkeyMap = {
+      //   children: "childrens",
+      // };
+
+      // for (var i = 0; i < data.length; i++) {
+      //   var obj = data[i];
+      //   for (var key in obj) {
+      //     var newKey = buttonkeyMap[key];
+      //     if (newKey) {
+      //       obj[newKey] = obj[key];
+      //       delete obj[key];
+      //     }
+      //   }
+      // }
+
+
+      var isFirst = true;
+
+      if(isFirst){
       data.forEach(item => {
-        item.title = item.Name // 把title属性赋值给name属性
-        delete item.Name // 删除title属性
-        item.children && this.trans(item.children) // 如果有children，递归调用
+        item.title = item.Name 
+        delete item.Name 
+        item.children.forEach(i=>{
+        delete i.children
+        i.children = i.Buttons
+        delete i.Buttons 
+        i.title = i.Name 
+        delete i.Name 
+        i.children.forEach((index)=>{
+          index.title = index.Name 
+          delete index.Name
+          index.value = index.Id
+          // index.key = JSON.stringify(index.Id)
+          // index.key = index.Id.toString() 
+          // delete index.Id
+        })
+        })
+        // item.title = item.Name // 把title属性赋值给name属性
+        // delete item.Name // 删除title属性
+        // item.children && this.trans(item.children) // 如果有children，递归调用
       })
+      isFirst = false;
+      }
+
+    console.log ('data',data)
     },
 
 
-
     allotMent(i) {
-      const paraId = {}; 
+      this.dialogFormVisibleData = true;
+      const paraId = {
+        ButtonShow:true
+      }; 
       this.para.Code = 'GetListYsdatabaseYsMenu';
       this.para.Data = JSON.stringify(paraId);
       handlePost(this.para).then(res =>{
         this.menuList = res.Data
-        this.trans(this.menuList)
+        this.trans(this.menuList)//修树KEY
+        this.getRole(i.Id)//获取单个角色权限
       })
-      // console.log (i.Id)
-      this.getRole(i.Id)
-      this.dialogFormVisibleData = true;
-
       // const paraId = {}; 
       // this.para.Code = 'GetListYsdatabaseYsMenu';
       // this.para.Data = JSON.stringify(paraId);

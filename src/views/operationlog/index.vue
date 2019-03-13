@@ -461,10 +461,29 @@ export default {
       // ----------
       this.dialogStatus = "update";
       this.dialogFormVisibleEdit = true;
+      this.filters = {}
     },
     // 编辑
     updateData() {
+      const paraId = {
+          Page: this.page,
+          StartTime: this.filters.Time[0],
+          EndTime: this.filters.Time[1],
+          Size: this.size,
+        };
+        this.para.Code = 'DelYsdatabaseYsLog';
+        this.para.Data = JSON.stringify(paraId);
+        handlePost(this.para).then(res => {
+          if (res.IsSuccess == true) {
+            this.total = res.Data.Count;
+            this.dataList = res.Data.List;
+            this.$message({
+                message: "删除完成",
+                type: "success"
+              });
       this.dialogFormVisibleEdit = false;
+          }
+        });
     },
     //分页操作
     onShowSizeChange(current, pageSize) {

@@ -1,6 +1,7 @@
 <template>
   <section class="app-container">
     <el-card class="box-card">
+      {{dataList}}
       <!--工具条-->
       <!-- buttonList::{{buttonList}} -->
       <el-form :inline="true" :model="filters" @submit.native.prevent>

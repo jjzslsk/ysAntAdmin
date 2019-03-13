@@ -19,7 +19,7 @@
           <span
             v-if="item.children[0].meta&&item.children[0].meta.title"
             slot="title"
-          >0.{{generateTitle(item.children[0].meta.title)}}</span>
+          >{{generateTitle(item.children[0].meta.title)}}</span>
         </el-menu-item>
       </router-link>
 
@@ -28,7 +28,7 @@
         <!-- 一级 -->
         <template slot="title">
           <i v-if="item.meta&&item.meta.icon" :class="item.meta.icon"></i>
-          <span v-if="item.meta&&item.meta.title" slot="title">1.{{generateTitle(item.meta.title)}}</span>
+          <span v-if="item.meta&&item.meta.title" slot="title">{{generateTitle(item.meta.title)}}</span>
         </template>
 
         <!-- 二级 -->
@@ -47,7 +47,7 @@
               <span
                 v-if="child.meta&&child.meta.title"
                 slot="title"
-              >2.{{generateTitle(child.meta.title)}}</span>
+              >{{generateTitle(child.meta.title)}}</span>
               <!-- <span class="pull-right-container"> <small class="label pull-right bg-purple">new</small></span> -->
             </el-menu-item>
           </router-link>
