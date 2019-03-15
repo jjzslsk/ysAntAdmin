@@ -1,7 +1,6 @@
 <template>
   <section class="app-container">
     <el-card class="box-card">
-          <!-- <a-button size="small" type="primary" @click="getType">getType</a-button> -->
       
 
           <!-- 部门树形 -->
@@ -17,19 +16,21 @@
   <dir style="margin:0 auto;padding-inline-start: 0px;padding-bottom:1rem;">
           <a-button size="small" type="primary" @click="handleAddType">添加</a-button>
           <a-button size="small" type="primary" @click="handleEditType">编辑</a-button>
-          <a-button size="small" type="primary" @click="handleDelType">删除</a-button>
+          <a-button size="small" type="primary" @click="delType">删除</a-button>
   </dir>
   无接口
 
   <div class="text item">
     <template>
-      <a-table :bordered='false' :pagination='false' :columns="columnsData" :dataSource="DataSource" size="small" />
-      
+      <a-table :rowSelection="{ onChange: rowOnSelectChange}" :bordered='false' :pagination='false' :columns="columnsData" :dataSource="columnsDataInfo" size="small">
+      <a slot="name" slot-scope="text, record" href="javascript:;" @click="onSelectTable(record.Id)">{{text}}</a>
       <!-- <a-tree
       defaultExpandAll
         @select="onSelect"
         :treeData="treeData"
       /> -->
+
+      </a-table>
 
     </template>
 
@@ -59,6 +60,7 @@
         buttonList全部:{{buttonList}}
         <hr>
         buttonAr拥有的：{{buttonAr}} -->
+        {{columnsDataInfo}}
         <span class="aBut">
         <span  v-for="index in allotButtons" :key="index.Id">
         <a-button :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
@@ -328,8 +330,8 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="dialogFormVisibleEditType=false">取消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="dialogFormVisibleAddType=false">添加</el-button>
-        <el-button v-else type="primary" @click="dialogFormVisibleAddType=false">修改</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="dialogFormVisibleEditType=false">添加</el-button>
+        <el-button v-else type="primary" @click="editType">修改</el-button>
       </div>
     </a-modal>
 
@@ -349,6 +351,7 @@ import { paraHelper } from "@/utils/para.js"; //请求参数格式
 const columnsData = [{
   // title: 'Name',
   dataIndex: 'name',
+  scopedSlots: { customRender: 'name' },
 }];
 const DataSource = [{
   key: '1',
@@ -578,6 +581,9 @@ export default {
             //批量选择
       selectedRowKeys: [], // Check here to configure the default column
       selectedRows:[],
+      //类别选择
+      selectedRowKeysType: [], // Check here to configure the default column
+      selectedRowsType:[],
       loading: false,
       loadingRefresh: false,
       //分页
@@ -652,6 +658,7 @@ export default {
 
       DataSource,
       columnsData,
+      columnsDataInfo:[],
 
       //按钮KEY
       buttonKey:'',
@@ -881,6 +888,32 @@ export default {
     }
   },
   methods: {
+    //类别勾选事件
+  rowOnSelectChange(selectedRowKeys, selectedRows){
+    this.selectedRowKeysType = [],
+    this.selectedRowsType = [],
+    this.selectedRowKeysType = selectedRowKeys,
+    this.selectedRowsType = selectedRows
+    console.log ('rrr',this.selectedRowKeysType, this.selectedRowsType)
+
+  },
+    //点击行事件
+    onSelectTable(index){
+      alert (index)
+      const Pid ={
+              PId:index,
+            }
+            this.para.Data = JSON.stringify(Pid);
+            this.para.Code = this.bllCode.getList;
+            handlePost(this.para).then(res => {
+              if (res.IsSuccess == true) {
+                console.log ('res.Data.List',res.Data.List)
+                this.total = res.Data.Count;
+                this.dataList = res.Data.List;
+                
+              }
+            });
+    },
     setClass(index) {
       if(index === 'edit'){
       return 'p1'
@@ -941,18 +974,23 @@ export default {
             const Pid ={
               PId:0,
             }
-            // const paraObj = Object.assign(Pid);
             this.para.Data = JSON.stringify(Pid);
-            this.para.Code = 'GetYsdatabaseYsDictionary';
+            this.para.Code = this.bllCode.getList;
             handlePost(this.para).then(res => {
               if (res.IsSuccess == true) {
-                console.log ('sssssssssssss',res)
-              }else {
-                  this.$message({
-                    message: res.Code + ':' + res.Message,
-                    type: "warning"
-                  });
+                this.columnsDataInfo = res.Data.List
+                // console.log ('res.Data.List',res.Data.List)
+                this.columnsDataInfo.forEach((item)=>{
+                  console.log ('colll:',item)
+                  item.key = item.Id
+                  item.name = item.Name
+                })
+                const paraData = {
+                  Id:0,
+                  name:"全部"
                 }
+                this.columnsDataInfo.unshift(paraData)
+              }
             });
     },
     addType(){
@@ -991,6 +1029,76 @@ export default {
         }
       });
     },
+    editType(){
+        this.$refs.editForm.validate(valid => {
+        if (valid) {
+          this.$confirm("确认提交吗？", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            const Pid ={
+              Pid:0,
+            }
+            const paraObj = Object.assign({}, this.editForm,Pid);
+            // console.log (paraObj)
+            this.para.Data = JSON.stringify(paraObj);
+            this.para.Code = 'UpdateYsdatabaseYsDictionary';
+            console.log(this.para);
+            handlePost(this.para).then(res => {
+              if (res.IsSuccess == true) {
+                this.$refs["editForm"].resetFields();
+                this.dialogFormVisibleEditType = false;
+                this.getDataList();
+                this.$message({
+                  message: "添加成功！",
+                  type: "success"
+                });
+              }else {
+                  this.$message({
+                    message: res.Code + ':' + res.Message,
+                    type: "warning"
+                  });
+                }
+            });
+          });
+        }
+      });
+    },
+    delType(index, row) {
+        this.$confirm("确认删除该记录吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+            const Pid ={
+              Pid:0,
+              Id:this.selectedRowsType[0].Id
+            }
+            const paraObj = Object.assign({}, this.editForm,Pid);
+            // console.log (paraObj)
+            this.para.Data = JSON.stringify(paraObj);
+            this.para.Code = 'DelYsdatabaseYsDictionary';
+            console.log(this.para);
+            handlePost(this.para).then(res => {
+              if (res.IsSuccess == true) {
+                this.dialogFormVisibleEditType = false;
+                this.getDataList();
+                this.$message({
+                  message: "删除成功！",
+                  type: "success"
+                });
+              }else {
+                  this.$message({
+                    message: res.Code + ':' + res.Message,
+                    type: "warning"
+                  });
+                }
+            });
+          });
+        },
+  
+
         //分页操作
     onShowSizeChange(current, pageSize) {
         console.log('111',current, pageSize);
@@ -1321,7 +1429,8 @@ export default {
       const paraId = [{
         Page: this.page,
         Data: this.filters.data,
-        Size: this.size
+        Size: this.size,
+        PId: -1
       }];
 
       var keyMap = {
@@ -1356,6 +1465,7 @@ export default {
               if (res.IsSuccess == true) {
                 this.buttonAr = res;
                 this.allotButton()
+                this.getType()
               }
             }); 
 
@@ -1364,9 +1474,9 @@ export default {
       });
       });
 
+
+
     },
-    //
-    
     //闭包
     getMenuName() {
             var menus  = this.dataList
@@ -1449,7 +1559,8 @@ export default {
       this.dialogFormVisibleEditType = true;
       this.editForm = {};
       const paraId = {
-        Id: row.Key,
+        PId:0,
+        Id: this.selectedRowsType[0].Id,
       }; 
       this.para.Code = 'GetYsdatabaseYsDictionary';
       this.para.Data = JSON.stringify(paraId);
@@ -1464,13 +1575,7 @@ export default {
                 }
       });
     },
-        handleDelType(index, row) {
-        this.$confirm("确认删除该记录吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-    },
+        
 
 
     // 显示编辑界面

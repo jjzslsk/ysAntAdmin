@@ -487,10 +487,10 @@ export default {
       //选择的按钮
       selectRole:[],
       //构造权限对象
-      roleSelect:{
-        MenuId:0,
-        Buttons:[],
-      },
+      // roleSelect:{
+      //   MenuId:0,
+      //   Buttons:[],
+      // },
       //权限按钮
       roleBotton:[],
       treeData,
@@ -852,12 +852,11 @@ export default {
       // info.halfCheckedKeys.forEach((item)=>{
       //     this.roleSelect = {
       //     MenuId: item,	//菜单id
-      //     Buttons:this.roleBotton
       //   }
-      //   // this.roleBotton.forEach((i)=>{
-      //   //   this.roleSelect.Buttons.push(i)
-      //   //   // console.log (i)
-      //   // })
+      //   this.roleBotton.forEach((i)=>{
+      //     // this.roleSelect.Buttons.push(i)
+      //     console.log (i)
+      //   })
       //   this.selectRole.push(this.roleSelect)
       // })
       // console.log ('this.selectRole',this.selectRole)
@@ -883,7 +882,7 @@ export default {
           if (res.IsSuccess == true ) {
             console.log (res)
 
-            // this.userRole = res.Data.Power
+            this.userRole = res.Data.Power
           }
         //   // if(typeof res.Data === "null"){
         //   //   alert(1)
