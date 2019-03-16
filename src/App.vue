@@ -210,4 +210,7 @@ export default {
   /* float: left;
   background: #f50; */
 }
+    .text .ant-table-thead {
+      display: none;
+    }
 </style>

@@ -18,7 +18,6 @@
           <a-button size="small" type="primary" @click="handleEditType">编辑</a-button>
           <a-button size="small" type="primary" @click="delType">删除</a-button>
   </dir>
-  无接口
 
   <div class="text item">
     <template>
@@ -234,8 +233,16 @@
     <!--添加界面-->
     <a-modal title="添加字典" @ok="dialogFormVisibleAdd = true" @click="createData" v-model="dialogFormVisibleAdd">
       <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="父编号:" prop="PId">
-          <el-input v-model="editForm.PId" auto-complete="off"></el-input>
+        <el-form-item label="类别:" prop="PId">
+          <!-- <el-input v-model="editForm.PId" auto-complete="off"></el-input> -->
+          <el-select v-model="editForm.PId" placeholder="请选择">
+            <el-option
+              v-for="item in columnsDataInfo"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="名称:" prop="Name">
           <el-input v-model="editForm.Name" auto-complete="off"></el-input>
@@ -262,9 +269,18 @@
 
     <!--编辑界面-->
     <a-modal title="编辑字典" @ok="dialogFormVisibleEdit = true" @click="updateData" v-model="dialogFormVisibleEdit">
+      {{editForm}}
       <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="父编号:" prop="PId">
-          <el-input v-model="editForm.PId" auto-complete="off"></el-input>
+        <el-form-item label="类别:" prop="PId">
+          <!-- <el-input v-model="editForm.PId" auto-complete="off"></el-input> -->
+          <el-select v-model="editForm.PId" placeholder="请选择">
+            <el-option
+              v-for="item in columnsDataInfo"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="名称:" prop="Name">
           <el-input v-model="editForm.Name" auto-complete="off"></el-input>
@@ -566,6 +582,23 @@ const treeData = [{
 export default {
   data() {
     return {
+      options1: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+
       //按钮显示隐藏
       isShowButton:{},
       //按钮
@@ -895,11 +928,10 @@ export default {
     this.selectedRowKeysType = selectedRowKeys,
     this.selectedRowsType = selectedRows
     console.log ('rrr',this.selectedRowKeysType, this.selectedRowsType)
-
   },
     //点击行事件
     onSelectTable(index){
-      alert (index)
+      // alert (index)
       const Pid ={
               PId:index,
             }
@@ -984,12 +1016,14 @@ export default {
                   console.log ('colll:',item)
                   item.key = item.Id
                   item.name = item.Name
+                  item.value = item.Id
+                  item.label = item.Name
                 })
-                const paraData = {
-                  Id:0,
-                  name:"全部"
-                }
-                this.columnsDataInfo.unshift(paraData)
+                // const paraData = {
+                //   Id:0,
+                //   name:"全部"
+                // }
+                // this.columnsDataInfo.unshift(paraData)
               }
             });
     },
@@ -1071,9 +1105,14 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
+        const Ids = []
+            this.selectedRowsType.forEach((item)=>{
+                Ids.push(item.Id) 
+            })
+            console.log ('Ids',Ids)
             const Pid ={
               Pid:0,
-              Id:this.selectedRowsType[0].Id
+              Ids:Ids
             }
             const paraObj = Object.assign({}, this.editForm,Pid);
             // console.log (paraObj)
@@ -1173,7 +1212,6 @@ export default {
 
                 // 显示编辑界面
     onEdit(row) {
-      // ----------
       this.dialogStatus = "update";
       this.editForm = {};
       const paraId = {
@@ -1602,12 +1640,12 @@ export default {
     },
     // 显示新增界面
     handleAdd() {
+      this.editForm.PId = null
       this.dialogStatus = "create";
       this.dialogFormVisibleAdd = true;
       this.editForm = {
         Issuper: true,
         State: true,
-        PId:'0',
       };
       // this.para.Code = 'GetListYsdatabaseYsDepartment';      
       // handlePost(this.para).then(res => {
@@ -1810,4 +1848,5 @@ export default {
     .p {
         color: blue
     }
+    /* ------- */
 </style>
