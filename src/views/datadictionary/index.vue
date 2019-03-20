@@ -59,7 +59,7 @@
         buttonList全部:{{buttonList}}
         <hr>
         buttonAr拥有的：{{buttonAr}} -->
-        {{columnsDataInfo}}
+        <!-- {{columnsDataInfo}} -->
         <span class="aBut">
         <span  v-for="index in allotButtons" :key="index.Id">
         <a-button :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
@@ -269,11 +269,15 @@
 
     <!--编辑界面-->
     <a-modal title="编辑字典" @ok="dialogFormVisibleEdit = true" @click="updateData" v-model="dialogFormVisibleEdit">
-      {{editForm}}
+      <!-- {{editForm}}
+      <hr>
+        {{columnsDataInfo}} -->
+
+
       <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="类别:" prop="PId">
+        <el-form-item :class="{classSelect}" label="类别:" prop="PId">
           <!-- <el-input v-model="editForm.PId" auto-complete="off"></el-input> -->
-          <el-select v-model="editForm.PId" placeholder="请选择">
+          <el-select v-model="editForm.Pid" placeholder="请选择">
             <el-option
               v-for="item in columnsDataInfo"
               :key="item.value"
@@ -582,6 +586,11 @@ const treeData = [{
 export default {
   data() {
     return {
+      //编辑信息
+      paraDataInfo :{},
+      
+
+      classSelect:false,
       options1: [{
           value: '选项1',
           label: '黄金糕'
@@ -1212,6 +1221,7 @@ export default {
 
                 // 显示编辑界面
     onEdit(row) {
+      this.classSelect = false
       this.dialogStatus = "update";
       this.editForm = {};
       const paraId = {
@@ -1222,13 +1232,25 @@ export default {
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
       this.dialogFormVisibleEdit = true;
-      const Para = {
-        PId : String(res.Data.Pid)
+      if(res.Data.Pid === 0){
+        this.classSelect = true
       }
-      console.log ('ppp',Para)
+      this.columnsDataInfo.forEach((item)=>{
+        if(item.Id==res.Data.Pid){
+          console.log ('ggg',item)
+          // this.paraDataInfo = {
+          //   PId : String(res.Data.Pid),
+          //   value: String(res.Data.Pid),
+          //   label: item.name
+          // }
+        }
+      })
+      // var paraDataInfo = {
+      //   PId : String(res.Data.Pid)
+      // }
       // const resData = res.Data
       // delete resData.Pid
-      this.editForm = Object.assign({}, res.Data,Para);
+      this.editForm = Object.assign({}, res.Data);
         }else {
                   this.$message({
                     message: res.Code + ':' + res.Message,
@@ -1492,6 +1514,10 @@ export default {
         if (res.IsSuccess == true) {
           this.total = res.Data.Count;
           this.dataList = res.Data.List;
+           this.dataList = res.Data.List.filter((item)=>{//去除类型
+            return item.Pid > 0
+          })
+
 
             //获取多菜单按钮
             const paraId = {
@@ -1592,8 +1618,9 @@ export default {
     },
     // 显示编辑类型
     handleEditType(index, row) {
-      console.log (index,row)
-      this.dialogStatus = "update";
+      // console.log (index,row)
+      if(this.selectedRowKeysType.length == 1){
+        this.dialogStatus = "update";
       this.dialogFormVisibleEditType = true;
       this.editForm = {};
       const paraId = {
@@ -1612,6 +1639,12 @@ export default {
                   });
                 }
       });
+      }else{
+        this.$message({
+                    message: '请选择一个需要编辑的类型',
+                    type: "warning"
+                  });
+      }
     },
         
 
@@ -1673,7 +1706,10 @@ export default {
           })
             .then(() => {
               // Vue.delete(this.editForm,'zhanghao')
-              const paraObj = Object.assign({}, this.editForm);
+              const editFormInfo = {
+                PId:this.editForm.Pid
+              }
+              const paraObj = Object.assign({}, this.editForm,editFormInfo);
               this.para.Data = JSON.stringify(paraObj);
               this.para.Code = 'UpdateYsdatabaseYsDictionary';
               handlePost(this.para)
@@ -1849,4 +1885,7 @@ export default {
         color: blue
     }
     /* ------- */
+    .classSelect {
+      display: none;
+    }
 </style>

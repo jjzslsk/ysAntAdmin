@@ -147,7 +147,7 @@
 <a-checkbox-group style="width: 732px;"  >
     <a-row style="margin: 5px 0;" v-for="index in menuListInfo" :key="index.key">
       <a-col :span="4"><a-checkbox :value="index.key">{{index.Name}}</a-checkbox></a-col>
-      <!-- 已拥有按钮{{index.ButtonData}} <a @click="clickRadio">取消所选</a> -->
+      已拥有按钮{{index.ButtonData}} <a @click="clickRadio">取消所选</a>
       <br />
 
       <!-- <a-col :span="3" v-for="item in index.Buttons" :key="item.Id"><a-checkbox :value="item.value">{{item.label}}</a-checkbox></a-col> -->
@@ -158,6 +158,7 @@
       <el-checkbox>{{item.label}}</el-checkbox>
   </el-checkbox-group> -->
 
+  <a-radio @change="onChangeRadio" v-for="item in index.Buttons" :key="item.Id" :value="item.value" :defaultChecked='defaultCheckedRadio(index.Buttons,index.ButtonData,index.MenuId,index.key)'>{{item.label}}</a-radio>
     <hr>
     ButtonData:{{index.ButtonData}}
     <br>
@@ -166,29 +167,10 @@
     key:{{index.key}}
     <br>
     values:{{values}}
-    <br>
-    index.Buttons{{index.Buttons}}
 
 
       <!-- <a-col v-for="item in index.Buttons" :span="3" ><a-checkbox @change="checkboxOnChange" :value="item.Id">{{item.Name}}</a-checkbox></a-col> -->
       <hr style="margin: 20px 0 10px 0;">
-  <!-- <a-radio @change="onChangeRadio" v-for="item in index.Buttons" :key="item.Id" :value="item.value" :defaultChecked='defaultCheckedRadio(index.Buttons,index.ButtonData,index.MenuId,index.key)'>{{item.label}}</a-radio> -->
-   <a-select
-      mode="tags"
-      size="default"
-      placeholder="选择按钮"
-      style="width: 200px"
-      :defaultValue="index.MenuId"
-      @change="handleChange"
-    >
-      <a-select-option v-for="item in index.Buttons" :key="item.Id.toString()">
-        {{item.Name.toString()}}
-      </a-select-option>
-      <!-- <a-select-option v-for="i in 25" :key="(i + 9).toString(36) + i">
-        {{(i + 9).toString(36) + i}}
-      </a-select-option> -->
-    </a-select>
-   
 
 
 
@@ -1021,54 +1003,12 @@ export default {
 
                   index.ButtonData = item.Buttons.toString().split(",")
                   index.MenuId = item.MenuId.toString()
+
+                  
+
                 }
-
-                // if(index.key == 1){
-                //       index.children.forEach((e)=>{
-                //    delete e.ButtonData
-
-                //       })
-
-                // }
-
-                
-                
+              // console.log (index.key)
             })
-
-            // this.menuListInfo.forEach((index)=>{
-                
-            //     if(index.key == 1){
-            //           index.children.forEach((e)=>{
-            //             if(item.MenuId == e.key){
-            //                 // delete e.ButtonData
-                          
-            //                 // Object.keys(e).forEach((b)=>{
-            //                 //     // console.log('obj：',b,e[b]);
-            //                 // delete b.ButtonData
-            //                 //     console.log('ButtonDataoo',b.MenuId);
-
-            //                 //     console.log('obj：',b,e[b]);
-
-            //                 //     })
-             
-            //               console.log('www',e.key,e)
-            //           // delete e.ButtonData
-            //             }
-            //             // e.forEach((info)=>{
-            //             //   console.log('info:',info)
-            //             // })
-            //           // delete e.ButtonData
-            //         // console.log ('kkk',e)
-
-            //         })
-            //         // console.log ('kkk',index)
-            //         }
-                
-            // })
-
-            
-
-
            })
 
         console.log ('menuListInfoooo',this.menuListInfo)
@@ -1114,10 +1054,6 @@ export default {
       }
 
       return true;
-    },
-
-    handleChange(value) {
-      console.log(`Selected: ${value}`);
     },
 
     //默认选择回调
