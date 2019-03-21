@@ -97,19 +97,19 @@
 
 
         <!--二维权限-->
-    <a-modal :afterClose='afterCloseModal' class="allotMent" title="分配权限" @ok="handleOkData" @click="allotMent" v-model="dialogFormVisibleData">
-        <a-button type="primary" @click="getRole" >获取</a-button>
+    <a-modal :afterClose='afterCloseModal' class="allotMent" title="分配权限" @ok="handleOkData" @click="roleSelectData" v-model="dialogFormVisibleData">
+        <!-- <a-button type="primary" @click="getRole" >获取</a-button>
         <a-button type="primary" @click="setRole" >设置</a-button>
 
-      <hr>
+      <hr> -->
       获取单个角色权限:{{userRole}}
       <hr>
       <!-- {{menuListInfo}} -->
-      <ul>
+      <!-- <ul>
       <li v-for="item in menuListInfo" :key="item.key">{{item}}
       <hr>
       </li>
-      </ul>
+      </ul> -->
       <!-- 权限{{menuList}} -->
 <!-- <template v-for="index in menuListInfo"> -->
 
@@ -144,21 +144,35 @@
 <!-- <el-form-item v-for="index in menuListInfo" :label="index.Name"> -->
   <!-- {{index.Buttons}} -->
   <!-- <a-checkbox @change="onChange">Checkbox</a-checkbox> -->
-<a-checkbox-group style="width: 732px;"  >
+<!-- <a-checkbox-group style="width: 732px;"  > -->
     <a-row style="margin: 5px 0;" v-for="index in menuListInfo" :key="index.key">
-      <a-col :span="4"><a-checkbox :value="index.key">{{index.Name}}</a-checkbox></a-col>
+      <a-col :span="4"><a-checkbox @change='checkboxChange' :value="index.key">{{index.Name}}</a-checkbox></a-col>
+      <!-- <a-select
+      mode="tags"
+      size="default"
+      placeholder="选择按钮"
+      style="width: 200px"
+      @change="handleChangeOption"
+    >
+      <a-select-option v-for="item in index.Buttons" :key="item.Id.toString()">
+        {{item.Name.toString()}}
+      </a-select-option>
+    </a-select> -->
+    已有权限
+    <!-- {{index.ButtonData}} -->
+    :{{index.ButtonDataName}}
       <!-- 已拥有按钮{{index.ButtonData}} <a @click="clickRadio">取消所选</a> -->
       <br />
 
       <!-- <a-col :span="3" v-for="item in index.Buttons" :key="item.Id"><a-checkbox :value="item.value">{{item.label}}</a-checkbox></a-col> -->
       
 
-    <!-- <a-checkbox-group :options="defaultValueInfo(index.Buttons,index.ButtonData,index.MenuId,index.key)" /> -->
+    <a-checkbox-group :options="defaultValueInfo(index.Buttons,index.ButtonData,index.MenuId,index.key)" @change="checkboxOnChange" />
   <!-- <el-checkbox-group v-for="item in index.Buttons" :key="item.Id" v-model="checkList">
       <el-checkbox>{{item.label}}</el-checkbox>
   </el-checkbox-group> -->
 
-    <hr>
+    <!-- <hr>
     ButtonData:{{index.ButtonData}}
     <br>
     MenuId:{{index.MenuId}}
@@ -167,34 +181,20 @@
     <br>
     values:{{values}}
     <br>
-    index.Buttons{{index.Buttons}}
+    index.Buttons{{index.Buttons}} -->
 
 
       <!-- <a-col v-for="item in index.Buttons" :span="3" ><a-checkbox @change="checkboxOnChange" :value="item.Id">{{item.Name}}</a-checkbox></a-col> -->
       <hr style="margin: 20px 0 10px 0;">
   <!-- <a-radio @change="onChangeRadio" v-for="item in index.Buttons" :key="item.Id" :value="item.value" :defaultChecked='defaultCheckedRadio(index.Buttons,index.ButtonData,index.MenuId,index.key)'>{{item.label}}</a-radio> -->
-   <a-select
-      mode="tags"
-      size="default"
-      placeholder="选择按钮"
-      style="width: 200px"
-      :defaultValue="index.MenuId"
-      @change="handleChange"
-    >
-      <a-select-option v-for="item in index.Buttons" :key="item.Id.toString()">
-        {{item.Name.toString()}}
-      </a-select-option>
-      <!-- <a-select-option v-for="i in 25" :key="(i + 9).toString(36) + i">
-        {{(i + 9).toString(36) + i}}
-      </a-select-option> -->
-    </a-select>
+   
+
    
 
 
 
     </a-row>
     
-  </a-checkbox-group>
 
 <!-- </el-form-item> -->
 <!-- </el-form> -->
@@ -205,7 +205,7 @@
 
       <div slot="footer" class="dialog-footer">
         <a-button @click.native="dialogFormVisibleData=false">取消</a-button>
-        <a-button type="primary" @click.native="dialogFormVisibleData=false">确认</a-button>
+        <a-button type="primary" @click="roleSelectData">确认</a-button>
       </div>
     </a-modal>
 
@@ -572,6 +572,15 @@ export default {
         return data;
       };
     return {
+      ButtonDataNameInfo:[],
+      roleButtons:[],
+      roleInfoId:'',
+      menuId:'',
+      
+
+      //菜单是否被选中
+      selectData:{},
+
       //el
       // checkAll: false,
       //   checkedCities: ['添加', '刷新'],
@@ -877,9 +886,11 @@ export default {
       console.log(`checked = ${e.target.value}`)
     },
 
-    checkboxOnChange(checkedValues){
-      console.log('checked = ', checkedValues)
-    },
+    // checkboxOnChange(checkedValues){
+    //   console.log('checked = ', checkedValues)
+    // },
+
+
 
     onChange (checkedList) {
       console.log (1)
@@ -987,6 +998,7 @@ export default {
 
 
     getRole(i){//获取权限
+    this.roleInfoId = i
       this.userRole = []
         const paraId = [
           {
@@ -1010,6 +1022,7 @@ export default {
 
             
             // var ButtonsString = []
+            this.ButtonDataNameInfo = []
             this.userRole.forEach((item)=>{//对比MenuId，将权限按钮组添加到menuListInfo
               // item.Buttons.forEach((i)=>{
               //   i.ButtonsString=i.toString()
@@ -1017,10 +1030,22 @@ export default {
               // item.value2 = ButtonsString
               console.log ('mmm',item)
               this.menuListInfo.forEach((index)=>{
-                if(item.MenuId == index.key){
 
+                if(item.MenuId == index.key){//筛选
+
+                  item.Buttons.forEach((i)=>{//收集已分配的按钮名称集
+                    index.Buttons.forEach((itemData)=>{
+                    if(i == itemData.Id){
+                    this.ButtonDataNameInfo.push(itemData.Name)
+                     index.ButtonDataName = this.ButtonDataNameInfo
+                    }
+                  })
+              })
+                  
+                  
                   index.ButtonData = item.Buttons.toString().split(",")
                   index.MenuId = item.MenuId.toString()
+
                 }
 
                 // if(index.key == 1){
@@ -1097,28 +1122,93 @@ export default {
     },
     defaultCheckedRadio(Buttons,ButtonData,MenuId,key){
       if(MenuId == key){
-        // this.values = ButtonData
-        // const valueData = {}
-        // this.values.push (valueData) 
-        // return ButtonData
-        // ButtonData.forEach((item)=>{
-        //   this.values.push(item)
-        // })
-
-      // alert(MenuId)
-
-      console.log ('sss',Buttons,ButtonData,MenuId,key)
-      // return true;
-
-        
+        return true;
+        alert (MenuId)
       }
 
-      return true;
     },
 
-    handleChange(value) {
-      console.log(`Selected: ${value}`);
+    checkboxOnChange(e,checkedValues){
+      console.log('checked = ', checkedValues)
+      console.log('e = ',e)
+      if(checkedValues.length > 0){
+        // this.menuId
+        this.roleButtons = checkedValues
+        this.selectData = {
+          Id:this.roleInfoId,
+          Power: [{
+          MenuId: this.menuId,	//菜单id
+          Buttons: this.roleButtons	//按钮id数组
+        }]
+        }
+      }
     },
+
+    checkboxChange(e){
+      // console.log (e)
+      // console.log (e.target.value)
+      this.menuId = ''
+      if(e.target.checked){
+        this.menuId = e.target.value
+        console.log (this.menuId)
+      }
+
+      // this.checkedCheckbox = !this.checkedCheckbox
+    },
+
+    handleChangeOption(value, direction, movedKeys) {
+      console.log(`Selected: ${value}`);
+      console.log('Selecteds:',value, direction, movedKeys);
+      if(value.length > 0){
+        // this.menuId
+        this.roleButtons = value
+        this.selectData = {
+          Id:this.roleInfoId,
+          Power: [{
+          MenuId: this.menuId,	//菜单id
+          Buttons: this.roleButtons	//按钮id数组
+        }]
+        }
+      }
+    },
+
+    roleSelectData(){
+      this.$confirm("确认为该菜单分配按钮吗?", "提示", {
+        type: "warning",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      }).then(() => {
+        // const paraId = [
+        //   {
+        //     Pid: 1,
+        //     Id: 1030,
+        //     Power: [{
+        //       MenuId: 19,	//菜单id
+        //       Buttons: [1,38,39]	//按钮id数组
+        //     },
+        //     {
+        //       MenuId: 20,	//菜单id
+        //       Buttons: [1,38]	//按钮id数组
+        //     },]
+        //   }
+        // ];
+        this.para.Code = "SetYsRolePower";
+        this.para.Data = JSON.stringify(this.selectData);
+        console.log ('000',this.para)
+        handlePost(this.para).then(res => {
+          if (res.IsSuccess == true) {
+            this.dialogFormVisibleData = false;
+            this.getDataList()
+            this.$message({
+              message: "分配成功！",
+              type: "success"
+            });
+          }
+        });
+      });
+    },
+  
+
 
     //默认选择回调
     defaultValueInfo(Buttons,ButtonData,MenuId,key){
@@ -1139,7 +1229,8 @@ export default {
       //   console.log ('i',i)
       // })
         // const valueData = Buttons
-        console.log(1)
+
+        // this.MenuId = MenuId
         return Buttons
 
 
@@ -1158,21 +1249,34 @@ export default {
 
 
       // var valuedata = ['1','38']
-        // console.log(31,valuedata)
-        // return valuedata
-        // console.log(32,valuedata)
+      //   // console.log(31,valuedata)
+      //   // return valuedata
+      //   // console.log(32,valuedata)
         // this.values = ['1','38']
-        this.defaultInfo()
-        console.log ('lsk')
+      //   // this.defaultInfo()
+      //   // console.log ('lsk')
+      //   return valuedata
+
+        // this.values = ['1','38']
+
+        alert (1)
 
         
       }
+      // var valuedata = ['1','38']
+        // console.log(31,valuedata)
+        // return valuedata
+        // console.log(32,valuedata)
+        // this.values.push('1')
+        // this.defaultInfo()
+        // console.log ('lsk')
+        return this.values
+        // alert (1)
       // Buttons.forEach((i)=>{
       //   console.log ('i',i)
       // })
       // var valuedata = ['1','38']
 
-        return this.values
         
         // valueData.forEach((i)=>{
         //   this.values.push(i)
