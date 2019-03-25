@@ -29,7 +29,7 @@ export function login(username, password) {
 }
 //获取用户信息
 export function getInfo(token) {
-  console.log ('22',token)
+  console.log ('221',token)
   let para = {
     Code: 'YsAdminGetInfo',
     Data: '',

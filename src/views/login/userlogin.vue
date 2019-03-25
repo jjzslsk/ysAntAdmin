@@ -90,7 +90,7 @@ export default {
           this.$store.dispatch('Login', this.loginForm).then(res => {
             console.log(7)
             console.log('userlogin::resolve',res)
-            this.$router.push({ path: '/' })
+            this.$router.push({ path: '/' })//触发路由permission.js
           })
         }
       })

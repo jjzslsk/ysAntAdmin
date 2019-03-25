@@ -23,7 +23,7 @@ function hasPermission(roles, permissionRoles) {
 const whiteList = ['/login'] // 不重定向白名单
 
 router.beforeEach((to, from, next) => {
-  console.log (22,'permission')
+  console.log (223,'permission')
   console.log ('to:',to, 'from:',from,'next:', next)
 
   NProgress.start()
