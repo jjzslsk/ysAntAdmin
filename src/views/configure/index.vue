@@ -2,17 +2,18 @@
   <section class="app-container">
     <!-- <el-col :span="18"> -->
     <el-card class="box-card">
+      {{users}}
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form label-width="130px" :inline="true" :model="filters" @submit.native.prevent>
-        <el-form-item label="是否校验权限:">
+        <!-- <el-form-item label="是否校验权限:">
           <el-switch
             v-model="users.IsCheck"
             active-color="#13ce66"
             inactive-color="#ff4949">
             </el-switch>
-        </el-form-item><br>
-        <el-form-item label="缓存设置:">
+        </el-form-item><br> -->
+        <!-- <el-form-item label="缓存设置:">
           <el-select
             v-model="SysCache"
             filterable
@@ -26,7 +27,7 @@
               :value="item">
             </el-option>
           </el-select>
-        </el-form-item><br>
+        </el-form-item><br> -->
 
         <!-- <el-form-item label="系统数据库:">
           <el-select
@@ -43,10 +44,16 @@
             </el-option>
           </el-select>
         </el-form-item><br> -->
+        <el-form-item label="默认缓存:">
+          <el-input style="width:30rem" type="input" rows="5" v-model="users.SysCache"></el-input>
+        </el-form-item><br>
         <el-form-item label="系统数据库:">
-          <el-input style="width:30rem" type="input" rows="5" v-model="users.usersSysDB"></el-input>
+          <el-input style="width:30rem" type="input" rows="5" v-model="users.SysDB"></el-input>
         </el-form-item><br>
         <el-form-item label="数据库类型:">
+          <el-input style="width:30rem" type="input" rows="5" v-model="users.SysDBType"></el-input>
+        </el-form-item><br>
+        <!-- <el-form-item label="数据库类型:">
           <el-select
             v-model="SysDB"
             filterable
@@ -60,11 +67,12 @@
               :value="item">
             </el-option>
           </el-select>
-        </el-form-item><br>
+        </el-form-item><br> -->
         <el-form-item label="文件上传路径:">
            <el-input style="width:30rem" type="input" rows="5" v-model="users.UpFilePath"></el-input>
         </el-form-item><br>
           <a-button class="SubmissionForm" type="primary" v-on:click="SubmissionForm">提交</a-button>
+          <!-- <a-button class="SubmissionForm" type="primary" v-on:click="SubmissionForm">获取</a-button> -->
         <hr>
         <el-form-item label="其他功能:">
           <!-- <span>其他功能：</span> -->
@@ -106,6 +114,7 @@ export default {
       usersSysDBList: [],
       usersSysCacheList: [],
       usersSysDBType: [],
+      usersUpFilePath:'',
 
       SysDB: [],
       SysCache: [],
@@ -123,11 +132,19 @@ export default {
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
           this.users = res.Data;
+          this.usersSysDBType = this.users.SysDBType;//数据库类型
+
+          this.usersSysDB = this.users.SysDB;//系统数据库
           this.usersSysDBList = this.users.SysDBList;
+
+          this.usersSysCache = this.users.SysCache;//默认缓存
           this.usersSysCacheList = this.users.SysCacheList;
-          this.usersSysDBType = this.users.SysDBType;
-          this.usersSysDB = this.users.SysDB;
-          this.usersSysCache = this.users.SysCache;
+
+          this.usersUpFilePath = this.users.UpFilePath;
+
+
+
+
 
           // 默认缓存-SysCache
           // 系统数据库-SysDB
@@ -145,19 +162,19 @@ export default {
         cancelButtonText: '取消',
         type: "warning"
       }).then(() => {
-        this.users.SysDB = this.SysDB;
-        this.users.SysCache = this.SysCache;
+        // this.users.SysDB = this.SysDB;
+        // this.users.SysCache = this.SysCache;
 
-        const sysData = {
-          IsCheck: this.users.IsCheck,
-          SysCache: this.users.SysCache,
-          SysDBType: this.users.SysDBType,
+        // const sysData = {
+        //   IsCheck: this.users.IsCheck,
+        //   SysCache: this.users.SysCache,
+        //   SysDBType: this.users.SysDBType,
 
-          SysDB: this.users.SysDB,
-          UpFilePath: this.users.UpFilePath,
-        };
+        //   SysDB: this.users.SysDB,
+        //   UpFilePath: this.users.UpFilePath,
+        // };
         this.para.Code = "AddYsdatabaseYsConfig";
-        this.para.Data = JSON.stringify(sysData);
+        this.para.Data = JSON.stringify(this.users);
         console.log(this.para);
 
         handlePost(this.para).then(res => {

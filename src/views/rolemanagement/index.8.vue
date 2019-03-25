@@ -12,9 +12,8 @@
         <hr>
         buttonAr拥有的：{{buttonAr}}-->
         <span v-for="index in allotButtons" :key="index.Id">
-
           <a-button
-            :disabled="buttonDisabled(index.Id)"
+            :disabled="buttonDisabled(index.Classname)"
             :class="setClass(index.Classname)"
             style="margin-right:.3rem"
             :icon="index.Icon"
@@ -1125,18 +1124,10 @@ export default {
     },
 
     //按钮权限
-    buttonDisabled(Id) {
-      // this.userRole.forEach(item => {
-      //   item.Buttons.forEach(i => {
-      //       if (Id == i) {
-      //       return true;
-      //       alert (1)
-      //     }
-      //   })
-      // })
-      // if (Id === "inport") {
-      //   return true;
-      // }
+    buttonDisabled(index) {
+      if (index === "inport") {
+        return true;
+      }
     },
 
     //转列表对象值
@@ -1224,33 +1215,43 @@ export default {
       const paraId = [
         {
           Id: i
+          // Power: [{
+          //   MenuId: 19,	//菜单id
+          //   Buttons: [1,38,39]	//按钮id数组
+          // }]
         }
       ];
       this.para.Code = "GetYsRolePower";
       this.para.Data = JSON.stringify(paraId[0]);
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
+          console.log(res);
+
           this.userRole = res.Data.Power;
+
           //---------------------
+
+          // var ButtonsString = []
           this.ButtonDataNameInfo = [];
-          this.userRole.forEach(item => {//对比MenuId，将权限按钮组添加到menuListInfo
+          this.userRole.forEach(item => {
+            //对比MenuId，将权限按钮组添加到menuListInfo
             console.log(1, item);
 
-            this.menuListInfo.forEach(index => {console.log(2, index);
+            this.menuListInfo.forEach(index => {
+              console.log(2, index);
 
-              if (item.MenuId == index.key) {//筛选
+              if (item.MenuId == index.key) {
+                //筛选
                 
-                item.Buttons.forEach(i => {//收集已分配的按钮名称集
+                item.Buttons.forEach(i => {
+                  //收集已分配的按钮名称集
                   console.log(3, i);
                   index.Buttons.forEach(itemData => {
                     console.log(4, itemData);
 
                     if (i == itemData.Id) {
-                          console.log (5,itemData.Id)
-                          this.ButtonDataNameInfo.push(itemData.Name);
-                          index.ButtonDataName = this.ButtonDataNameInfo;
-                    
-                          this.delsArr()//去除数组中的重复记录
+                      this.ButtonDataNameInfo.push(itemData.Name);
+                      index.ButtonDataName = this.ButtonDataNameInfo;
                     }
                   });
                 });
@@ -1270,8 +1271,48 @@ export default {
               //   Buttons: this.roleButtons
               // }
 
+              // if(index.key == 1){
+              //       index.children.forEach((e)=>{
+              //    delete e.ButtonData
+
+              //       })
+
+              // }
             });
+
+            // this.menuListInfo.forEach((index)=>{
+
+            //     if(index.key == 1){
+            //           index.children.forEach((e)=>{
+            //             if(item.MenuId == e.key){
+            //                 // delete e.ButtonData
+
+            //                 // Object.keys(e).forEach((b)=>{
+            //                 //     // console.log('obj：',b,e[b]);
+            //                 // delete b.ButtonData
+            //                 //     console.log('ButtonDataoo',b.MenuId);
+
+            //                 //     console.log('obj：',b,e[b]);
+
+            //                 //     })
+
+            //               console.log('www',e.key,e)
+            //           // delete e.ButtonData
+            //             }
+            //             // e.forEach((info)=>{
+            //             //   console.log('info:',info)
+            //             // })
+            //           // delete e.ButtonData
+            //         // console.log ('kkk',e)
+
+            //         })
+            //         // console.log ('kkk',index)
+            //         }
+
+            // })
           });
+
+          console.log("menuListInfoooo", this.menuListInfo);
         }
         //   // if(typeof res.Data === "null"){
         //   //   alert(1)
@@ -1283,25 +1324,6 @@ export default {
         //   //   alert(1)
         //   // }
       });
-
-    },
-
-    delsArr(){//去除数组中的重复记录
-      // let arr = array
-        let arr = this.ButtonDataNameInfo
-        let i
-        let j
-        let len = arr.length
-        for (i = 0; i < len; i++) {
-          for (j = i + 1; j < len; j++) {
-            if (arr[i] === arr[j]) {
-              arr.splice(j, 1)
-              len--
-              j--
-            }
-          }
-        }
-        return arr
     },
 
     //

@@ -136,7 +136,7 @@
           <a-badge v-if="record.Issuccess === 'false'" status="error" text="失败"/>
         </template>
         <template slot="action" slot-scope="text, record">
-          <a href="javascript:;" @click="handleAdd()">详情</a>
+          <a href="javascript:;" @click="handleAdd(record)">详情</a>
           <!-- <a href="javascript:;" @click="onDelete(record)">删除</a> -->
         </template>
       </a-table>
@@ -762,9 +762,25 @@ export default {
     },
 
     // 显示添加界面
-    handleAdd() {
+    handleAdd(row) {
       this.dialogStatus = "create";
       this.dialogFormVisibleAdd = true;
+
+      const paraId = {
+            Id: row.Id
+          };
+      this.para.Code = this.bllCode.getObj;
+      this.para.Data = JSON.stringify(paraId);
+      handlePost(this.para).then(res => {
+        if (res.IsSuccess == true) {
+          
+          // this.getDataList();
+          // this.$message({
+          //   message: "删除成功！",
+          //   type: "success"
+          // });
+        }
+      });
     },
     //查询
     getKeyList() {
