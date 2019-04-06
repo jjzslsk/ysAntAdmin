@@ -505,10 +505,7 @@
                     mode="multiple"
                     style="width: 100%"
                     @change="handleChangeSelect"
-                    v-decorator="[
-          'RoleIds',
-              {rules: [{ required: true, message: '请选择角色' }]}
-            ]"
+                    v-decorator="['RoleIds',  {rules: [{ required: true, message: '请选择角色' }]} ]"
                     placeholder="选择角色"
                   >
                     <a-select-option v-for="item in userRoles" :key="item.Id">{{item.Name}}</a-select-option>

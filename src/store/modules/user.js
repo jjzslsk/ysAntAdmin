@@ -148,6 +148,7 @@ const user = {
            if (data.MenuButtons && data.MenuButtons.length > 0) { // 验证返回的接口是否是一个非空数组
              commit('SET_INTERFACE', data.MenuButtons)//
              console.log('SET_INTERFACE', state.interface)
+             console.log('MenuButtons::', data.MenuButtons)
            } else {
              reject('getInfo: MenuButtons must be a non-null array !')
            }

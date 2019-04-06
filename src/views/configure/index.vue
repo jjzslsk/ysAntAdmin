@@ -47,12 +47,12 @@
         <el-form-item label="默认缓存:">
           <el-input style="width:30rem" type="input" rows="5" v-model="users.SysCache"></el-input>
         </el-form-item><br>
-        <el-form-item label="系统数据库:">
+        <!-- <el-form-item label="系统数据库:">
           <el-input style="width:30rem" type="input" rows="5" v-model="users.SysDB"></el-input>
         </el-form-item><br>
         <el-form-item label="数据库类型:">
           <el-input style="width:30rem" type="input" rows="5" v-model="users.SysDBType"></el-input>
-        </el-form-item><br>
+        </el-form-item><br> -->
         <!-- <el-form-item label="数据库类型:">
           <el-select
             v-model="SysDB"
