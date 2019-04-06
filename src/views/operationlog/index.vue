@@ -89,17 +89,40 @@
 
       <!--日志详细信息-->
     <a-modal :width="920" title="日志详细信息无接口" @ok="dialogFormVisibleAdd = true" @click="createData" v-model="dialogFormVisibleAdd">
-      <a-table :pagination="false" :columns="columnsInfo" :dataSource="dataInfo" bordered>
+
+      <a-row>
+        <!-- <template slot="title" slot-scope="currentPageData"> -->
+          <div class="panel-title">操作人：<font color="red">undefined</font> 操作类型：<font color="red">编辑</font> 操作表：<font color="red">操作按钮(sys_buttons)</font> 操作时间：<font color="red">2019-01-24 01:50:14</font></div>
+        <!-- </template> -->
+      <a-col :span="12"><a-table :pagination="false" :columns="columnsInfo" :dataSource="dataInfo" bordered>
         <template slot="name" slot-scope="text">
           {{text}}
         </template>
-        <template slot="title" slot-scope="currentPageData">
+        <!-- <template slot="title" slot-scope="currentPageData">
           <div class="panel-title">操作人：<font color="red">undefined</font> 操作类型：<font color="red">编辑</font> 操作表：<font color="red">操作按钮(sys_buttons)</font> 操作时间：<font color="red">2019-01-24 01:50:14</font></div>
-        </template>
+        </template> -->
         <!-- <template slot="footer" slot-scope="currentPageData">
           Footer
         </template> -->
       </a-table>
+      </a-col>
+        <a-col :span="12"><a-table :pagination="false" :columns="columnsInfoOutput" :dataSource="dataInfoOutput" bordered>
+          <template slot="name" slot-scope="text">
+            {{text}}
+          </template>
+          <!-- <template slot="title" slot-scope="currentPageData">
+            <div class="panel-title">操作人：<font color="red">undefined</font> 操作类型：<font color="red">编辑</font> 操作表：<font color="red">操作按钮(sys_buttons)</font> 操作时间：<font color="red">2019-01-24 01:50:14</font></div>
+          </template> -->
+          <!-- <template slot="footer" slot-scope="currentPageData">
+            Footer
+          </template> -->
+        </a-table></a-col>
+      </a-row>
+
+      
+
+      
+
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="dialogFormVisibleAdd=false">取消</el-button>
       </div>
@@ -186,6 +209,42 @@ const columnsInfo = [{
 }];
 
 const dataInfo = [{
+  key: '1',
+  name: 'ButtonTag',
+  money: '按钮标识',
+  address: 'edit1',
+  address1: 'edit',
+}, {
+  key: '2',
+  name: 'ButtonHTML',
+  money: '按钮标识',
+  address: 'edit1',
+  address1: 'edit',
+}, {
+  key: '3',
+  name: 'Button',
+  money: '按钮标识',
+  address: 'edit1',
+  address1: 'edit',
+}];
+
+const columnsInfoOutput = [{
+  title: '字段',
+  dataIndex: 'name',
+  scopedSlots: { customRender: 'name' },
+}, {
+  title: '名称',
+  className: 'column-money',
+  dataIndex: 'money',
+}, {
+  title: '旧值',
+  dataIndex: 'address',
+}, {
+  title: '新值',
+  dataIndex: 'address1',
+}];
+
+const dataInfoOutput = [{
   key: '1',
   name: 'ButtonTag',
   money: '按钮标识',
@@ -579,7 +638,7 @@ export default {
           StartTime: this.filters.Time[0],
           EndTime: this.filters.Time[1],
           Size: this.size,
-          AdminName:this.filters.AdminName,
+          // AdminName:this.filters.AdminName,
           OperName:this.filters.OperName
         };
         this.para.Code = this.bllCode.getList;

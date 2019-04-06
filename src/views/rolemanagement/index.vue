@@ -125,7 +125,7 @@
 
       <div slot="footer" class="dialog-footer">
         <a-button @click.native="dialogFormVisibleData=false">取消</a-button>
-        <a-button type="primary" @click.native="dialogFormVisibleData=false">确认</a-button>
+        <a-button type="primary" @click="submitRole">确认</a-button>
       </div>
     </a-modal>
 
@@ -748,6 +748,16 @@ export default {
   },
 
   methods: {
+    //提交权限
+    submitRole(){
+        this.para.Code = "SetYsRolePower";
+        this.para.Data = JSON.stringify(this.roleBottonItem);
+        handlePost(this.para).then(res => {
+          if (res.IsSuccess == true ) {
+            console.log (res)
+          }
+        });
+    },
     //按钮权限
     buttonDisabled(index){
       if(index === 'inport'){
@@ -841,9 +851,12 @@ export default {
       console.log('onCheck', checkedKeys, info)
 
       this.roleBotton = []
+      
       info.checkedNodes.forEach((i)=>{
         // console.log ('lsk',i.data.props.Id)
+        if(typeof(i.data.props.Id)!='undefined'){
         this.roleBotton.push(i.data.props.Id)
+        }
       })
 
       this.roleBottonItem = {
@@ -864,6 +877,12 @@ export default {
       //      return
       //    }
       //  })
+      const rolePid = {
+         MenuId:info.halfCheckedKeys[0],
+         Buttons:this.roleBotton
+       }
+      this.roleBottonItem.Power.push(rolePid)
+
       this.roleBottonItem.Power.push(PowerInfo)
 
 
