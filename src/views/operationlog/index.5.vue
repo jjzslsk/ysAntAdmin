@@ -89,37 +89,36 @@
 
       <!--日志详细信息-->
     <a-modal :width="920" title="日志详细信息无接口" @ok="dialogFormVisibleAdd = true" @click="createData" v-model="dialogFormVisibleAdd">
-      <div class="panel-title">操作人：<font color="red">undefined</font> 操作类型：<font color="red">{{OperName}}</font> 操作表：<font color="red">操作按钮(sys_buttons)</font> 操作时间：<font color="red">{{Createdate}}</font></div>
-    
-    <a-row>
-      <a-col :span="11">
-        <h4>输入：</h4>
-      </a-col>
-      <a-col :span="1">
-      </a-col>
-        <a-col :span="11">
-        <h4>输出：</h4>
-        </a-col>
-      </a-row>
 
       <a-row>
-
-      <a-col :span="11">
-        <a-table :pagination="false" :columns="columnsInfo" :dataSource="dataInfo" bordered>
+        <!-- <template slot="title" slot-scope="currentPageData"> -->
+          <div class="panel-title">操作人：<font color="red">undefined</font> 操作类型：<font color="red">编辑</font> 操作表：<font color="red">操作按钮(sys_buttons)</font> 操作时间：<font color="red">2019-01-24 01:50:14</font></div>
+        <!-- </template> -->
+      <a-col :span="12"><a-table :pagination="false" :columns="columnsInfo" :dataSource="dataInfo" bordered>
+        <template slot="name" slot-scope="text">
+          {{text}}
+        </template>
+        <!-- <template slot="title" slot-scope="currentPageData">
+          <div class="panel-title">操作人：<font color="red">undefined</font> 操作类型：<font color="red">编辑</font> 操作表：<font color="red">操作按钮(sys_buttons)</font> 操作时间：<font color="red">2019-01-24 01:50:14</font></div>
+        </template> -->
+        <!-- <template slot="footer" slot-scope="currentPageData">
+          Footer
+        </template> -->
       </a-table>
       </a-col>
-
-      <a-col :span="1">
-      </a-col>
-
-        <a-col :span="11">
-          <a-table :pagination="false" :columns="columnsInfoOutput" :dataSource="dataInfoOutput" bordered>
-        </a-table>
-        </a-col>
-
+        <a-col :span="12"><a-table :pagination="false" :columns="columnsInfoOutput" :dataSource="dataInfoOutput" bordered>
+          <template slot="name" slot-scope="text">
+            {{text}}
+          </template>
+          <!-- <template slot="title" slot-scope="currentPageData">
+            <div class="panel-title">操作人：<font color="red">undefined</font> 操作类型：<font color="red">编辑</font> 操作表：<font color="red">操作按钮(sys_buttons)</font> 操作时间：<font color="red">2019-01-24 01:50:14</font></div>
+          </template> -->
+          <!-- <template slot="footer" slot-scope="currentPageData">
+            Footer
+          </template> -->
+        </a-table></a-col>
       </a-row>
 
-      
       
 
       
@@ -195,82 +194,75 @@ import moment from 'moment';
 
 const columnsInfo = [{
   title: '字段',
-  dataIndex: 'Name',
-  scopedSlots: { customRender: 'Name' },
-}
-, {
-  title: '值',
-  dataIndex: 'Value',
-},
-{
-  title: '类型',
-  dataIndex: 'Value.Type',
-}
-// , {
-//   title: '类型',
-//   dataIndex: 'Type',
-// }, {
-//   title: '新值',
-//   dataIndex: 'address1',
-// }
-];
+  dataIndex: 'name',
+  scopedSlots: { customRender: 'name' },
+}, {
+  title: '名称',
+  className: 'column-money',
+  dataIndex: 'money',
+}, {
+  title: '旧值',
+  dataIndex: 'address',
+}, {
+  title: '新值',
+  dataIndex: 'address1',
+}];
 
-// const dataInfo = [{
-//   key: '1',
-//   name: 'ButtonTag',
-//   money: '按钮标识',
-//   address: 'edit1',
-//   address1: 'edit',
-// }, {
-//   key: '2',
-//   name: 'ButtonHTML',
-//   money: '按钮标识',
-//   address: 'edit1',
-//   address1: 'edit',
-// }, {
-//   key: '3',
-//   name: 'Button',
-//   money: '按钮标识',
-//   address: 'edit1',
-//   address1: 'edit',
-// }];
+const dataInfo = [{
+  key: '1',
+  name: 'ButtonTag',
+  money: '按钮标识',
+  address: 'edit1',
+  address1: 'edit',
+}, {
+  key: '2',
+  name: 'ButtonHTML',
+  money: '按钮标识',
+  address: 'edit1',
+  address1: 'edit',
+}, {
+  key: '3',
+  name: 'Button',
+  money: '按钮标识',
+  address: 'edit1',
+  address1: 'edit',
+}];
 
 const columnsInfoOutput = [{
   title: '字段',
-  dataIndex: 'Name',
-}, 
-{
-  title: '值',
-  dataIndex: 'Value',
-}, 
-// {
-//   title: '旧值',
-//   dataIndex: 'address',
-// }, {
-//   title: '新值',
-//   dataIndex: 'address1',
-// }];
+  dataIndex: 'name',
+  scopedSlots: { customRender: 'name' },
+}, {
+  title: '名称',
+  className: 'column-money',
+  dataIndex: 'money',
+}, {
+  title: '旧值',
+  dataIndex: 'address',
+}, {
+  title: '新值',
+  dataIndex: 'address1',
+}];
 
-// const dataInfoOutput = [{
-//   key: '1',
-//   name: 'ButtonTag',
-//   money: '按钮标识',
-//   address: 'edit1',
-//   address1: 'edit',
-// }, {
-//   key: '2',
-//   name: 'ButtonHTML',
-//   money: '按钮标识',
-//   address: 'edit1',
-//   address1: 'edit',
-// }, {
-//   key: '3',
-//   name: 'Button',
-//   money: '按钮标识',
-//   address: 'edit1',
-//   address1: 'edit',
-// }
-];
+const dataInfoOutput = [{
+  key: '1',
+  name: 'ButtonTag',
+  money: '按钮标识',
+  address: 'edit1',
+  address1: 'edit',
+}, {
+  key: '2',
+  name: 'ButtonHTML',
+  money: '按钮标识',
+  address: 'edit1',
+  address1: 'edit',
+}, {
+  key: '3',
+  name: 'Button',
+  money: '按钮标识',
+  address: 'edit1',
+  address1: 'edit',
+}];
 
 export default {
   data() {
@@ -288,11 +280,7 @@ export default {
       return data;
     };
     return {
-      OperName:'',
-      Createdate:'',
-      dataInfo:[],
-      dataInfoOutput:[],
-      columnsInfoOutput,
+      dataInfo,
       columnsInfo,
       form: this.$form.createForm(this),
       // 按时间查询
@@ -844,14 +832,12 @@ export default {
       this.para.Data = JSON.stringify(paraId);
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
-          // JSON.parse(res.Data.InputColumns)
-          // JSON.stringify(res.Data.InputColumns)
-          this.dataInfo = res.Data.InputColumns
-          this.OperName = res.Data.OperName
-          this.Createdate = res.Data.Createdate
-          // ---
-          this.dataInfoOutput = res.Data.OutputColumns
-
+          
+          // this.getDataList();
+          // this.$message({
+          //   message: "删除成功！",
+          //   type: "success"
+          // });
         }
       });
     },

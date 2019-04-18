@@ -106,7 +106,6 @@ export default {
     thirdPartyWebsite: 'thirdPartyWebsite',
     charts: 'Charts',
     emoji: 'emoji',
-    test: 'test',
     excel: 'Excel',
     exportExcel: 'Export Excel',
     selectExcel: 'Export Selected',

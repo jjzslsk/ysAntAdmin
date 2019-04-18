@@ -104,7 +104,6 @@ export default {
     thirdPartyWebsite: '第三方网站',
     charts: 'Charts',
     emoji: 'emoji',
-    test: 'test',
     excel: 'Excel',
     exportExcel: 'Export Excel',
     selectExcel: 'Export Selected',

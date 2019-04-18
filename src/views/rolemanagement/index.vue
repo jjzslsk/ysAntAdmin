@@ -282,7 +282,7 @@ Edit: "编辑", Del: "删除", title: "角色管理" },
   { key: "21", Icon: "anticon anticon-save", Code: "systemsetup", Url: "/views/systemsetup/index", Sort: "1", Show: "X", children: null,Edit: "编辑", Del: "删除", title: "参数设置" },
    { key: "38", Icon: "anticon anticon-export", Code: "operationlog", Url: "/views/operationlog/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "操作日志" }, 
    { key: "40", Icon: "anticon anticon-setting", Code: "configure", Url: "/views/configure/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "系统配置" }, 
-   { key: "1064", Icon: "anticon anticon-file-unknown", Code: "test", Url: "/views/test/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "test1" },
+  //  { key: "1064", Icon: "anticon anticon-file-unknown", Code: "test", Url: "/views/test/index", Sort: "1", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "test1" },
     { key: "2", Icon: "anticon anticon-database", Code: "navigationmenu", Url: "/views/navigationmenu/index", Sort: "2", Show: "√", children: null,Edit: "编辑", Del: "删除", title: "导航菜单" } ],
     Edit: "编辑", Del: "删除", title: "系统设置" } ]
 
