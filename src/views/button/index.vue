@@ -5,11 +5,11 @@
       <!--工具条-->
       <!-- buttonList::{{buttonList}} -->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
-        <span v-for="index in allotButtons" :key="index.Id">
+        <span v-for="index in MenuButtonsData" :key="index.Id">
         <a-button :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
         </span>
         <el-form-item style="float: right;">
-        <span v-for="index in allotButtons" :key="index.Id">
+        <span v-for="index in MenuButtonsData" :key="index.Id">
           <a-button v-if="index.Classname==='search'" :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
         </span>
         </el-form-item>
@@ -78,7 +78,7 @@
           <a-badge v-if="record.Isvisiable == false" status="error" text="隐藏"/>
         </template>
         <template  slot="action" slot-scope="text, record">
-          <span  v-for="index in allotButtons" :key="index.Id">
+          <span  v-for="index in MenuButtonsData" :key="index.Id">
           <a href="javascript:;" v-if="index.Classname==='edit'"  @click="onEdit(record.Id)">{{index.Name}}</a>
           <a href="javascript:;" v-if="index.Classname==='del'"  @click="onDelete(record)">{{index.Name}}</a>
           </span>
@@ -1145,6 +1145,11 @@ export default {
     };
 
     return {
+      //获取按钮
+      MenuButtonsData: [],
+      MenuButtons: [],
+      roleButtonItem: null,
+
       //按钮
       ButtonIcons: {},
       ButtonNames: {},
@@ -1630,6 +1635,24 @@ export default {
       //   note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
       // })
     },
+
+
+    YsAdminGetInfo() { //获取按钮
+      this.para.Code = "YsAdminGetInfo";
+      this.para.Data = "";
+      handlePost(this.para).then(res => {
+        if (res.IsSuccess == true) {
+          this.roleButtonItem = res.Data;
+          this.MenuButtons = this.roleButtonItem.MenuButtons;
+          this.MenuButtons.forEach(item => {
+            if (item.MenuId == 3) {
+              this.MenuButtonsData = item.Button;
+            }
+          });
+        }
+      });
+    },
+
     // 获取列表
     getDataList() {
       const paras = {};
@@ -1683,6 +1706,7 @@ export default {
                 this.buttonAr = res;
                 this.allotButton()
                 this.setClass()
+                this.YsAdminGetInfo()
               }
             });
           } else {

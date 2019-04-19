@@ -8,8 +8,8 @@
         buttonList全部:{{buttonList}}
         <hr>
         buttonAr拥有的：{{buttonAr}} -->
-        <span v-for="index in allotButtons" :key="index.Id">
-        <a-button  :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.label}}</a-button>
+        <span v-for="index in MenuButtonsData" :key="index.Id">
+        <a-button  :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
         </span>
         <!-- <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].label}}</a-button>
         <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].label}}</a-button> -->
@@ -79,9 +79,9 @@
           <a-divider  type="vertical"/>
           <a  href="javascript:;" @click="onDelete(record)">{{record.Del}}</a> -->
 
-          <span  v-for="index in allotButtons" :key="index.Id">
-          <a href="javascript:;" v-if="index.Classname==='edit'"  @click="onEdit(record)">{{index.label}}</a>
-          <a href="javascript:;" v-if="index.Classname==='del'"  @click="onDelete(record)">{{index.label}}</a>
+          <span  v-for="index in MenuButtonsData" :key="index.Id">
+          <a href="javascript:;" v-if="index.Classname==='edit'"  @click="onEdit(record)">{{index.Name}}</a>
+          <a href="javascript:;" v-if="index.Classname==='del'"  @click="onDelete(record)">{{index.Name}}</a>
           </span>
         </template>
       </a-table>
@@ -1274,6 +1274,11 @@ export default {
   inject:['reload'],
   data() {
     return {
+      //获取按钮
+      MenuButtonsData: [],
+      MenuButtons: [],
+      roleButtonItem: null,
+
       //按钮
       ButtonData:[],
       ButtonIcons: {},
@@ -1825,6 +1830,22 @@ export default {
       }
     },
 
+    YsAdminGetInfo() { //获取按钮
+      this.para.Code = "YsAdminGetInfo";
+      this.para.Data = "";
+      handlePost(this.para).then(res => {
+        if (res.IsSuccess == true) {
+          this.roleButtonItem = res.Data;
+          this.MenuButtons = this.roleButtonItem.MenuButtons;
+          this.MenuButtons.forEach(item => {
+            if (item.MenuId == 2) {
+              this.MenuButtonsData = item.Button;
+            }
+          });
+        }
+      });
+    },
+
     // 获取列表
     getDataList() {
       //获取操作按钮
@@ -1882,7 +1903,7 @@ export default {
                 this.buttonAr = res;
                 this.allotButton()
                 this.setClass()
-
+                this.YsAdminGetInfo()
               }
             });
           } else {

@@ -11,33 +11,19 @@
               :form="form"
             >
               <a-row :gutter="24">
-                <a-col :span="8">
+                <a-col :span="6">
                   <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作人">
                     <a-input placeholder='无接口' v-model="filters.AdminName"></a-input>
                   </a-form-item>
                 </a-col>
 
-                <a-col :span="8">
+                <a-col :span="6">
                   <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作类型">
                     <a-input placeholder='输入类型' v-model="filters.OperName"></a-input>
                   </a-form-item>
                 </a-col>
 
-                <a-col :span="8">
-                  <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作表">
-                    <a-input placeholder='无接口'></a-input>
-                  </a-form-item>
-                </a-col>
-              </a-row>
-
-              <a-row :gutter="24">
-                <a-col :span="8">
-                  <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="业务">
-                    <a-input placeholder='无接口'></a-input>
-                  </a-form-item>
-                </a-col>
-
-                <a-col :span="8">
+                <a-col :span="12">
                   <a-form-item :labelCol="{ span: 6 }" :wrapperCol="{ span: 18 }" label="操作时间">
                     <a-range-picker
                       :showTime="{ format: 'HH:mm' }"
@@ -47,6 +33,21 @@
                       @ok="onOk"
                     />
                   </a-form-item>
+                  <!-- <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="操作表">
+                    <a-input placeholder='无接口'></a-input>
+                  </a-form-item> -->
+                </a-col>
+              </a-row>
+
+              <!-- <a-row :gutter="24">
+                <a-col :span="8">
+                  <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label="业务">
+                    <a-input placeholder='无接口'></a-input>
+                  </a-form-item>
+                </a-col>
+
+                <a-col :span="8">
+                  
                 </a-col>
                 
 
@@ -54,7 +55,7 @@
                 <a-col :span="8">
                   <a-form-item :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }" label></a-form-item>
                 </a-col>
-              </a-row>
+              </a-row> -->
 
               <a-row>
                 <a-col :span="24" :style="{ textAlign: 'right' }">

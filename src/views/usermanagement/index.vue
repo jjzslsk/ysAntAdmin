@@ -3,19 +3,7 @@
     <el-card class="box-card">
       <!--工具条-->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
-        <!-- <a-button  v-if="buttons.selectshow==true" type="primary" v-on:click="getKeyList">刷新</a-button>
-          <a-button type="primary" @click="handleAdd">{{button.add}}</a-button>
-        <a-button type="primary" :loading="loadingRefresh" @click="Refresh">刷新</a-button>-->
-        <!-- <a-button type="primary" v-if="isShowButton.add" @click="handleAdd" :icon="buttonList[0].Icon">{{buttonList[0].Name}}</a-button>
-        <a-button type="primary" v-if="isShowButton.Refresh" :loading="loadingRefresh" :icon="buttonList[1].Icon" @click="Refresh">{{buttonList[1].Name}}</a-button>     
-        <a-button type="primary"  @click="exportData">导出</a-button>-->
-
-        <!-- allotButtons:过滤好的 {{allotButtons}}
-        <hr>
-        buttonList全部:{{buttonList}}
-        <hr>
-        buttonAr拥有的：{{buttonAr}}-->
-        <span v-for="index in allotButtons" :key="index.Id">
+        <span v-for="index in MenuButtonsData" :key="index.Id">
           <a-button
             :class="setClass(index.Classname)"
             style="margin-right:.3rem"
@@ -24,26 +12,8 @@
             type="primary"
           >{{index.Name}}</a-button>
         </span>
-
-        <!-- <a-button type="primary" @click="handleAdd">编辑</a-button> -->
-        <!-- <a-button type="primary" @click="allotButton">分配按钮</a-button> -->
-        <!-- <a-button type="primary" @click="allotMent">权限</a-button> -->
-        <!-- <a-button type="primary" @click="allotRoles">角色</a-button> -->
-        <!-- <a-button
-        type="danger"
-        @click="start"
-        :disabled="!hasSelected"
-        :loading="loading"
-        :icon="ButtonIcons.del"
-      >
-        批量删除
-        <template v-if="hasSelected">
-          {{`(${selectedRowKeys.length})`}}
-        </template>
-        </a-button>-->
-
         <el-form-item style="float: right;">
-          <span v-for="index in allotButtons" :key="index.Id">
+          <span v-for="index in MenuButtonsData" :key="index.Id">
             <a-button
               v-if="index.Classname==='search'"
               :icon="index.Icon"
@@ -68,18 +38,9 @@
         </el-form-item>
       </el-form>
 
-      <!-- <a-row> -->
-
       <!-- 部门树形 -->
       <a-col style="height:100%;margin-top: 2.5rem; width:14rem;float: left;padding-bottom:20px;">
         <el-card class="box-card">
-          <!-- <div slot="header" class="clearfix">
-    <el-input
-      placeholder="快速查找部门"
-      v-model="filterText">
-    </el-input>
-    <el-button style="float: right; padding: 3px 0" type="text"></el-button>
-          </div>-->
           <div class="text item">
             <template>
               <a-tree
@@ -96,43 +57,6 @@
 
       <a-col class="UserTable" style="margin-top: 2.5rem;">
         <el-card class="box-card">
-          <!-- <el-table @row-dblclick='Rowdblclick' :data="users" highlight-current-row @selection-change="selsChange" style="width: 100%;">
-      <el-table-column type="selection" width="55">
-      </el-table-column>
-      <el-table-column prop="Id" label="Id" width="60">
-      </el-table-column>
-      <el-table-column prop="Name" label="名称" width="120">
-      </el-table-column>
-      <el-table-column prop="Username" label="账号" width="120">
-      </el-table-column>
-      <el-table-column prop="DepartmentName" label="部门名称" width="120">
-      </el-table-column>
-      <el-table-column prop="Email" label="邮箱" width="120">
-      </el-table-column>
-      <el-table-column prop="Mobile" label="手机" width="120">
-      </el-table-column>
-      <el-table-column prop="Issuper" label="是否超管" width="100" :formatter="formatIsAdmin">
-      </el-table-column>
-      <el-table-column prop="State" label="是否启用" min-width="100" :formatter="formatIsDisabled">
-      </el-table-column>
-      <el-table-column prop="Memo" label="备注" min-width="100">
-      </el-table-column>
-      <el-table-column label="操作" fixed="right" width="160">
-        <template slot-scope="scope">
-          <a @click="allotMent">权限</a>
-          <a @click="allotRoles">角色</a>
-          <a @click="handleEdit(scope.$index, scope.row)">编辑</a>
-          <a @click="handleDel(scope.$index, scope.row)">删除</a>
-        </template>
-      </el-table-column>
-          </el-table>-->
-
-          <!--工具条-->
-          <!-- <el-col :span="24" class="toolbar"><el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total"
-        style="float:right;">
-      </el-pagination>
-          </el-col>-->
-
           <a-table
             @click="expandRowByClick()"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
@@ -186,13 +110,7 @@
               <a-badge v-if="record.State == false" status="error" text="停用"/>
             </template>
             <template slot="action" slot-scope="text, record">
-              <!-- <a-divider type="vertical" /> -->
-              <!-- <a href="javascript:;" @click="allotMent(record)">权限</a> -->
-              <!-- <a-divider type="vertical" /> -->
-              <!-- <a href="javascript:;" @click="allotRoles(record)">角色</a> -->
-              <!-- <a href="javascript:;"  @click="onEdit(record)">详情</a> -->
-              <!-- <a-divider type="vertical" /> -->
-              <span v-for="index in allotButtons" :key="index.Id">
+              <span v-for="index in MenuButtonsData" :key="index.Id">
                 <a
                   href="javascript:;"
                   v-if="index.Classname==='edit'"
@@ -205,79 +123,6 @@
                 >{{index.Name}}</a>
               </span>
             </template>
-
-            <!-- <p slot="expandedRowRender" slot-scope="record" style="margin: 0">{{record.description}}:</p> -->
-            <!-- <div
-        slot="expandedRowRender"
-        slot-scope="record"
-        style="margin: 0">
-        <a-row
-          :gutter="24">
-          <a-col :span="12">
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>用户管理：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
-              <a-tag color="cyan" >{{ record.description }}</a-tag>
-              <a-tag color="cyan" >查询</a-tag>
-              <a-tag color="cyan" >详情</a-tag>
-              <a-tag color="cyan" >修改</a-tag>
-              <a-tag color="cyan" >删除</a-tag>
-            </a-col>
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>菜单管理：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
-              <a-tag color="cyan" >{{ record.description }}</a-tag>
-              <a-tag color="cyan" >查询</a-tag>
-              <a-tag color="cyan" >详情</a-tag>
-              <a-tag color="cyan" >修改</a-tag>
-              <a-tag color="cyan" >导入</a-tag>
-            </a-col>
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>权限管理：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
-              <a-tag color="cyan" >{{ record.description }}</a-tag>
-              <a-tag color="cyan" >查询</a-tag>
-              <a-tag color="cyan" >详情</a-tag>
-              <a-tag color="cyan" >删除</a-tag>
-            </a-col>
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>测试权限</span>
-            </a-col>
-            <a-col :span="20" style="margin-bottom: 12px;" >-</a-col>
-          </a-col>
-
-                    <a-col :span="12">
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>角色管理：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
-              <a-tag color="cyan" >{{ record.description }}</a-tag>
-              <a-tag color="cyan" >查询</a-tag>
-              <a-tag color="cyan" >详情</a-tag>
-              <a-tag color="cyan" >修改</a-tag>
-              <a-tag color="cyan" >删除</a-tag>
-            </a-col>
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>会员管理：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;">
-              <a-tag color="cyan" >{{ record.description }}</a-tag>
-              <a-tag color="cyan" >查询</a-tag>
-              <a-tag color="cyan" >详情</a-tag>
-              <a-tag color="cyan" >修改</a-tag>
-              <a-tag color="cyan" >删除</a-tag>
-            </a-col>
-            <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
-              <span>测试权限：</span>
-            </a-col>
-            <a-col :lg="20" :md="24" style="margin-bottom: 12px;" >-</a-col>
-          </a-col>
-
-        </a-row>
-            </div>-->
           </a-table>
 
           <a-pagination
@@ -292,8 +137,6 @@
         </el-card>
       </a-col>
 
-      <!-- </a-row> -->
-
       <a-modal
         title="分配角色"
         class="amodalButton"
@@ -301,26 +144,7 @@
         @ok="dialogFormVisibleRoles = true"
         @click="dialogFormVisibleRoles = true"
       >
-        <!-- <template>
-        <a-transfer
-          :titles="['未选角色', '已选角色']"
-          :dataSource="mockData"
-          :filterOption="filterOption"
-          :targetKeys="targetKeys"
-          @change="handleChange"
-          :render="item=>item.title"
-        >
-        </a-transfer>
-        </template>-->
-
         <a-form-item :labelCol="{ span: 3 }">
-          <!-- <a-checkbox
-                 :indeterminate="indeterminate"
-                 @change="onCheckAllChange"
-                  :checked="checkAll" >
-                  全选
-          </a-checkbox>-->
-
           <a-checkbox-group :options="options" v-model="value" @change="onChangeCheckbox"/>
         </a-form-item>
 
@@ -338,37 +162,19 @@
         @click="allotMent"
         v-model="dialogFormVisibleData"
       >
-        <!-- <a-table defaultExpandAllRows :pagination="false" size="small" :columns="columnsTree" :dataSource="dataTree" :rowSelection="rowSelectionTree">
-              <span slot="tags" slot-scope="tags">
-                <a-checkbox></a-checkbox>
-              </span>
-              <span slot="action" slot-scope="text, record">
-                <a href="javascript:;">{{record.edit}}</a>
-                <a-divider type="vertical" />
-                <a href="javascript:;">{{record.del}}</a>
-              </span>
-        </a-table>-->
-
         <template>
-          <!-- <a-form-item v-for="i in GetYsMenuButtonsData" 
-          :key="i.value" :label="i.Name" :labelCol="{ span: 3 }">-->
           <a-form-item
             v-for="i in jurisdiction"
             :label="i.label"
             :key="i.Id"
             :labelCol="{ span: 3 }"
           >
-            <!-- {{i}} -->
-            <!-- <a-checkbox :indeterminate="indeterminate" @click="allClik(i.all)" @change="onCheckAllChange" :checked="checkAll">
-                  全选
-            </a-checkbox>-->
             <a-checkbox-group
               :options="i.all"
               v-model="i.part"
               @change="onChange(i.all,i.part,i.Id,i)"
             />
           </a-form-item>
-          <!-- {{jurisdiction}} -->
         </template>
 
         <div slot="footer" class="dialog-footer">
@@ -384,86 +190,6 @@
         @click="createData"
         v-model="dialogFormVisibleAdd"
       >
-        <!-- <a-tabs @change="callback" type="card">
-          <a-tab-pane tab="基本信息" key="1">
-      <template>
-        <a-form @submit="handleSubmit" :form="form">
-          <a-form-item label='名称' :labelCol="{ span: 5 }" :wrapperCol="{ span: 12 }">
-            <a-input
-              v-decorator="[
-                'Name',
-                {rules: [{ required: true, message: '输入名称' }]}
-              ]"
-            />
-          </a-form-item>
-          <a-form-item label='账号' :labelCol="{ span: 5 }" :wrapperCol="{ span: 12 }">
-            <a-input
-              v-decorator="[
-                'Username',
-                {rules: [{ required: true, message: '输入账号' }]}
-              ]"
-            />
-          </a-form-item>
-          <a-form-item label='密码' :labelCol="{ span: 5 }" :wrapperCol="{ span: 12 }">
-            <a-input
-              v-decorator="[
-                'password',
-                {rules: [{ required: true, message: '输入密码' }]}
-              ]"
-            />
-          </a-form-item>
-
-          <a-form-item label='部门' :labelCol="{ span: 5 }" :wrapperCol="{ span: 12 }">
-            <a-select
-              v-decorator="[
-                'DepartmentId',
-                {rules: [{ required: true, message: '选择部门' }]}
-              ]"
-              placeholder='选择部门'
-              @change="this.handleSelectChangeDepartment">
-              <a-select-option v-for="item in departments" :key="item.Id" :value="item.Id">{{item.Name}}</a-select-option>
-            </a-select>
-          </a-form-item>
-          
-          <a-form-item
-              label='角色'
-              :labelCol="{ span: 5 }"
-              :wrapperCol="{ span: 12 }">
-              <a-select size="large" mode="multiple" style="width: 100%" @change="handleChangeSelect" 
-          v-decorator="[
-          'RoleIds',
-              {rules: [{ required: true, message: '请选择角色' }]}
-            ]"
-           placeholder="选择角色">
-            <a-select-option v-for="item in userRoles" :key="item.Id">{{item.Name}}</a-select-option>
-          </a-select>
-            </a-form-item>
-
-            <a-row>
-              <a-col :span="12">
-                <a-form-item label='是否超管'>
-                  <a-switch @change='aSwitch' v-model="editForm.Issuper" v-decorator="['Issuper', { valuePropName: 'checked' }]"/>                  
-                </a-form-item>
-              </a-col>
-
-              <a-col :span="12">
-                <a-form-item label='是否启用'>
-                  <a-switch @change='aSwitch' v-model="editForm.State" v-decorator="['State', { valuePropName: 'checked' }]"/>
-               </a-form-item>
-              </a-col>
-            </a-row>
-
-          <a-form-item
-            :wrapperCol="{ span: 12, offset: 5 }">
-            <a-button type='primary' htmlType='submit'>
-              Submit
-            </a-button>
-          </a-form-item>
-        </a-form>
-</template>
-          </a-tab-pane>
-        </a-tabs>-->
-
         <template>
           <a-tabs @change="callback" type="card">
             <a-tab-pane tab="基本信息" key="1">
@@ -528,15 +254,9 @@
             </a-tab-pane>
             <a-tab-pane tab="联系方式" key="20">
               <el-form label-width="100px">
-                <!-- <el-form-item label="姓名:" prop>
-                  <el-input auto-complete="off"></el-input>
-                </el-form-item> -->
                 <el-form-item label="手机:" prop="Mobile">
                   <el-input v-model="editForm.Mobile"></el-input>
                 </el-form-item>
-                <!-- <el-form-item label="QQ:" prop>
-                  <el-input></el-input>
-                </el-form-item> -->
                 <el-form-item label="邮箱:" prop="Email">
                   <el-input v-model="editForm.Email"></el-input>
                 </el-form-item>
@@ -698,15 +418,9 @@
             </a-tab-pane>
             <a-tab-pane tab="联系方式" key="2">
               <el-form label-width="100px">
-                <!-- <el-form-item label="姓名:" prop>
-                  <el-input auto-complete="off"></el-input>
-                </el-form-item> -->
                 <el-form-item label="手机:" prop="Mobile">
                   <el-input v-model="editForm.Mobile"></el-input>
                 </el-form-item>
-                <!-- <el-form-item label="QQ:" prop>
-                  <el-input></el-input>
-                </el-form-item> -->
                 <el-form-item label="邮箱:" prop="Email">
                   <el-input v-model="editForm.Email"></el-input>
                 </el-form-item>
@@ -740,16 +454,6 @@
         <template>
           <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
             <div>
-              <!-- <div :style="{ borderBottom: '1px solid #E9E9E9' }">
-              <a-checkbox
-                :indeterminate="indeterminate"
-                @change="onCheckAllChange"
-                :checked="checkAll"
-              >
-                全部导出
-              </a-checkbox>
-            </div>
-              <br />-->
               <a-checkbox-group :options="plainOptions" v-model="checkedList" @change="onChange"/>
             </div>
           </el-form>
@@ -792,168 +496,6 @@ const plainOptions = [
   { label: "邮箱", value: "Email as 邮箱" },
   { label: "手机", value: "Mobile as 手机" }
 ];
-
-const columnsTree = [
-  ,
-  //   {
-  //   dataIndex: 'name',
-  //   key: 'name',
-  //   slots: { title: 'customTitle' },
-  // }
-  {
-    title: "菜单名称",
-    key: "name",
-    dataIndex: "name"
-  },
-  {
-    title: "浏览",
-    key: "icon",
-    dataIndex: "icon",
-    scopedSlots: { customRender: "tags" }
-  },
-  {
-    title: "添加",
-    key: "code",
-    dataIndex: "code",
-    scopedSlots: { customRender: "tags" }
-  },
-  {
-    title: "下话单",
-    key: "url",
-    dataIndex: "url",
-    scopedSlots: { customRender: "tags" }
-  },
-  {
-    title: "重发通知",
-    key: "show",
-    dataIndex: "show",
-    scopedSlots: { customRender: "tags" }
-  },
-  {
-    title: "重置",
-    key: "sort",
-    dataIndex: "sort",
-    scopedSlots: { customRender: "tags" }
-  },
-  {
-    title: "编辑",
-    key: "action",
-    dataIndex: "action",
-    scopedSlots: { customRender: "tags" }
-    // scopedSlots: { customRender: 'action' },
-  },
-  {
-    title: "删除",
-    key: "del",
-    dataIndex: "del",
-    scopedSlots: { customRender: "tags" }
-    // scopedSlots: { customRender: 'action' },
-  },
-  {
-    title: "查询",
-    key: "query",
-    dataIndex: "query",
-    scopedSlots: { customRender: "tags" }
-    // scopedSlots: { customRender: 'action' },
-  },
-  {
-    title: "导出",
-    key: "export",
-    dataIndex: "export",
-    scopedSlots: { customRender: "tags" }
-    // scopedSlots: { customRender: 'action' },
-  }
-];
-
-const dataTree = [
-  {
-    key: 1,
-    name: "系统设置",
-    icon: "icon",
-    code: "Button",
-    url: "sys/ButtonList",
-    sort: "1",
-    age: 60,
-    edit: "编辑",
-    del: "删除",
-    children: [
-      {
-        key: 11,
-        name: "导航菜单",
-        icon: "icon",
-        code: "Button",
-        url: "sys/ButtonList",
-        sort: "1",
-        age: 42,
-        edit: "编辑",
-        del: "删除"
-      },
-      {
-        key: 12,
-        name: "用户管理",
-        icon: "icon",
-        code: "Button",
-        url: "sys/ButtonList",
-        sort: "1",
-        age: 30,
-        edit: "编辑",
-        del: "删除",
-        tags: ["nice", "developer", "111"]
-      },
-      {
-        key: 13,
-        name: "部门管理",
-        icon: "icon",
-        code: "Button",
-        url: "sys/ButtonList",
-        sort: "1",
-        age: 72,
-        edit: "编辑",
-        del: "删除"
-      }
-    ]
-  },
-  {
-    key: 2,
-    name: "财务管理",
-    icon: "icon",
-    code: "Button",
-    url: "sys/ButtonList",
-    sort: "1",
-    age: 32,
-    edit: "编辑",
-    del: "删除",
-    children: [
-      {
-        key: 22,
-        name: "奖金明细",
-        icon: "icon",
-        code: "Button",
-        url: "sys/ButtonList",
-        sort: "1",
-        age: 42,
-        edit: "编辑",
-        del: "删除"
-      }
-    ]
-  }
-];
-
-const rowSelectionTree = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-  onSelect: (record, selected, selectedRows) => {
-    console.log(record, selected, selectedRows);
-  },
-  onSelectAll: (selected, selectedRows, changeRows) => {
-    console.log(selected, selectedRows, changeRows);
-  }
-};
 
 const treeData = [
   {
@@ -1001,8 +543,11 @@ const treeData = [
 export default {
   data() {
     return {
-      RoleIdsInfo:[],
+      MenuButtonsData: [],
+      MenuButtons: [],
+      roleButtonItem: null,
 
+      RoleIdsInfo: [],
       // 导出选择
       checkedList: defaultCheckedList,
       indeterminate: true,
@@ -1170,28 +715,8 @@ export default {
       //按钮KEY
       buttonKey: "",
 
-      mockDatas: [
-        { chosen: true, key: "0", title: "管理员" },
-        {
-          chosen: false,
-          key: "1",
-          title: "运营管理"
-        },
-        { chosen: true, key: "2", title: "运营人员" },
-        {
-          chosen: false,
-          key: "3",
-          title: "市场管理"
-        }
-      ],
-
       mockData: [],
       targetKeys: [],
-
-      // tree列表
-      dataTree,
-      columnsTree,
-      rowSelectionTree,
 
       dataList: [], //主页数据
       //tree
@@ -1324,11 +849,11 @@ export default {
       },
       // 编辑界面数据
       editForm: {
-        RoleIds: [],
+        RoleIds: []
       },
       Roles: [],
 
-      resData:{},
+      resData: {},
 
       departments: [],
 
@@ -1359,18 +884,13 @@ export default {
     };
   },
   watch: {
-    checkedKeys(val) {
-      console.log("onCheck", val);
-    },
+    checkedKeys(val) {},
     filterText(val) {
       this.$refs.tree2.filter(val);
     },
 
-    pageSize(val) {
-      console.log("pageSize", val);
-    },
+    pageSize(val) {},
     current(val) {
-      console.log("current", val);
       this.page = val;
       this.getDataList();
     }
@@ -1385,12 +905,6 @@ export default {
       this.indeterminate =
         !!checkedList.length && checkedList.length < plainOptions.length;
       this.checkAll = checkedList.length === plainOptions.length;
-      // console.log ('单选')
-      // console.log ('this.indeterminate',this.indeterminate)
-      // console.log ('this.checkAll',this.checkAll)
-      // console.log ('checkedList',this.checkedList)
-      // console.log (checkedValues)
-      console.log(this.checkedList);
     },
     onCheckAllChange(e) {
       Object.assign(this, {
@@ -1398,10 +912,6 @@ export default {
         indeterminate: false,
         checkAll: e.target.checked
       });
-      // console.log (e)
-      console.log(this.checkedList);
-      // console.log (this.indeterminate)
-      // console.log (this.checkAll)
     },
 
     setClass(index) {
@@ -1423,15 +933,12 @@ export default {
         });
         ButtonDatas.push(allotButton);
       });
-      console.log("ButtonDatas00000::", ButtonDatas);
       this.allotButtons = ButtonDatas.filter(e => {
         return e;
       });
-      console.log("eeeeeeeee", this.allotButtons);
     },
     //默认点击事件
     defaultClick(index) {
-      console.log(index);
       switch (index.Classname) {
         case "add":
           this.handleAdd();
@@ -1461,9 +968,7 @@ export default {
       }
     },
     //expandRowByClick
-    expandRowByClick() {
-      console.log(1);
-    },
+    expandRowByClick() {},
     //导出
     exportData() {
       const ColumnsData = [];
@@ -1477,7 +982,6 @@ export default {
       this.para.Data = JSON.stringify(paraId);
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
-          console.log(res.Data.Url);
           const hrefUrl = res.Data.Url;
           // this.$router.push("www.baidu.com");
           window.location.href = process.env.BASE_URL + hrefUrl;
@@ -1490,28 +994,10 @@ export default {
       });
     },
     // 多选框
-    onChangeCheckbox(checkedList, checkedValues) {
-      //单选
-      // this.checkedLists = checkedList
-      // console.log("checked = ", checkedList, checkedValues);
-      // this.indeterminate =
-      //   !!checkedList.length && checkedList.length < this.ButtonData.length;
-      // this.checkAll = checkedList.length === this.ButtonData.length;
-    },
-    //多选
-    // onChange (all,part,Id,i) {
-    // console.log ('all:',all)
-    // console.log ('part:',part)
-    // console.log ('Id:',Id)
-    // console.log ('i:',i)
-    // const parts = this.jurisdiction.find((index)=>{
-    //     return index.Id === Id
-    // })
-    // console.log ('ssss:',this.jurisdiction)
-    // },
+    onChangeCheckbox(checkedList, checkedValues) {},
+
     //分页操作
     onShowSizeChange(current, pageSize) {
-      console.log("111", current, pageSize);
       // this.page = val;
       this.page = current;
       this.size = pageSize;
@@ -1561,12 +1047,10 @@ export default {
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRows = [];
-      console.log("selectedRowKeys changed: ", selectedRowKeys, selectedRows);
       this.selectedRowKeys = selectedRowKeys;
       selectedRows.forEach(car => {
         this.selectedRows.push(car.Id);
       });
-      console.log(this.selectedRows);
     },
     //是否显示
     aSwitch(checked) {
@@ -1581,7 +1065,7 @@ export default {
     },
     // 显示编辑界面
     onEdit(row) {
-          this.RoleIdsInfo = []
+      this.RoleIdsInfo = [];
 
       // ----------
       this.dialogStatus = "update";
@@ -1596,44 +1080,34 @@ export default {
       this.para.Data = JSON.stringify(paraId);
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
-          this.resData = res.Data
+          this.resData = res.Data;
           this.editForm = Object.assign({}, this.resData);
-          var RolejsonData = JSON.parse(res.Data.Rolejson)
-          RolejsonData.forEach((item)=>{
-            this.RoleIdsInfo.push(item)
-          })
+          var RolejsonData = JSON.parse(res.Data.Rolejson);
+          RolejsonData.forEach(item => {
+            this.RoleIdsInfo.push(item);
+          });
           this.para.Data = "";
           this.para.Code = "GetListYsdatabaseYsDepartment";
-          handlePost(this.para).then(res => {//获取部门列表
+          handlePost(this.para).then(res => {
+            //获取部门列表
             if (res.IsSuccess == true) {
               this.departments = res.Data.List;
 
               this.para.Code = "GetListYsdatabaseYsRole";
               this.para.Data = "{}";
-              handlePost(this.para).then(res => {//获取角色列表
+              handlePost(this.para).then(res => {
+                //获取角色列表
                 if (res.IsSuccess == true) {
                   this.roles = res.Data.List;
-
                 }
               });
             }
           });
-
-
-          // this.editForm.DepartmentId = 2
-          // res.Data
-          
-          // this.editForm.DepartmentId = res.Data.Departmentid.toString();
-
-          // this.dataList = res.Data;
-
-          
         }
       });
     },
     //删除
     onDelete(data) {
-      console.log(data);
       this.$confirm("确认删除该记录吗?", "提示", {
         type: "warning",
         confirmButtonText: "确定",
@@ -1677,14 +1151,11 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log("Received values of form: ", values);
           this.editForm = values;
-          console.log("Received values of form: ", this.editForm);
         }
       });
     },
     handleSelectChangeDepartment(value) {
-      console.log(value);
       this.form.setFieldsValue({
         note: `Hi, ${value === "male" ? "man" : "lady"}!`
       });
@@ -1698,33 +1169,11 @@ export default {
       this.editForm.State = checked;
     },
     //tabs
-    callback(key) {
-      console.log(key);
-    },
-    //穿梭框
-    getMock() {
-      const targetKeys = [];
-      const mockData = [];
-      for (let i = 0; i < this.mockDatas.length; i++) {
-        const data = {
-          key: this.mockDatas[i].key,
-          title: this.mockDatas[i].title,
-          chosen: this.mockDatas[i].chosen
-        };
-        if (data.chosen) {
-          targetKeys.push(data.key);
-        }
-        mockData.push(data);
-      }
-      this.mockData = mockData;
-
-      this.targetKeys = targetKeys;
-    },
+    callback(key) {},
     filterOption(inputValue, option) {
       return option.description.indexOf(inputValue) > -1;
     },
     handleChange(targetKeys, direction, moveKeys) {
-      console.log(targetKeys, direction, moveKeys);
       this.targetKeys = targetKeys;
     },
     //搜索
@@ -1759,9 +1208,7 @@ export default {
       }, 1000);
     },
     //穿梭框
-    handleChange(value, direction, movedKeys) {
-      console.log(value, direction, movedKeys);
-    },
+    handleChange(value, direction, movedKeys) {},
     //图标
     allotIcon() {
       this.dialogFormVisibleIcon = true;
@@ -1777,36 +1224,23 @@ export default {
     },
     //
     onExpand(expandedKeys) {
-      console.log("onExpand", expandedKeys);
-      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-      // or, you can remove all expanded children keys.
       this.expandedKeys = expandedKeys;
       this.autoExpandParent = false;
     },
     onCheck(checkedKeys) {
-      console.log("onCheck", checkedKeys);
       this.checkedKeys = checkedKeys;
     },
     // onSelect (selectedKeys, info) {
-    //   console.log('onSelect', info)
     //   this.selectedKeys = selectedKeys
     // },
     onSelect(selectedKeys, info) {
-      console.log("selected::", selectedKeys, info);
       this.TreeId = selectedKeys[0];
-      console.log("nooooooo", this.TreeId);
       this.getTreeList(this.TreeId);
     },
     //
-    nodeClick(data9) {
-      // console.log ('vaaaaaaaaaaaaaaa',data9)
-    },
-    changeClick(data) {
-      console.log(data);
-    },
-    handleNodeClick(data) {
-      console.log(data);
-    },
+    nodeClick(data9) {},
+    changeClick(data) {},
+    handleNodeClick(data) {},
     //行点击事件
     Rowdblclick(row) {
       this.dialogStatus = "update";
@@ -1845,13 +1279,10 @@ export default {
     },
     //多选角色
     handleChangeSelect(value) {
-      this.RoleIdsInfo = value
-      console.log(`Selectedrole: ${value}`);
+      this.RoleIdsInfo = value;
       // this.editForm.RoleIds = value
     },
-    popupScroll() {
-      console.log("popupScroll");
-    },
+    popupScroll() {},
 
     //加载按钮
     loadButton(data) {
@@ -1884,136 +1315,153 @@ export default {
       this.page = 1;
       this.getDataList();
     },
-    // 获取用户列表
-    getDataList() {
-      const paras = {};
-      this.para.Code = "GetListYsdatabaseYsButton";
-      this.para.Data = JSON.stringify(paras);
+
+    YsAdminGetInfo() { //获取按钮
+      this.para.Code = "YsAdminGetInfo";
+      this.para.Data = "";
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
-          this.buttonList = res.Data.List;
-          this.buttonList.map(car => {
-            if (car.Name == "添加") {
-              this.ButtonIcons.add = car.Icon;
-              this.ButtonNames.add = car.Name;
-            }
-            if (car.Name == "编辑") {
-              this.ButtonIcons.edit = car.Icon;
-              this.ButtonNames.edit = car.Name;
-            }
-            if (car.Name == "批量删除") {
-              this.ButtonIcons.del = car.Icon;
-              this.ButtonNames.del = car.Name;
-            }
-            if (car.Name == "刷新") {
-              this.ButtonIcons.refresh = car.Icon;
-              this.ButtonNames.refresh = car.Name;
-            }
-            if (car.Name == "查询") {
-              this.ButtonIcons.query = car.Icon;
-              this.ButtonNames.query = car.Name;
+          this.roleButtonItem = res.Data;
+          this.MenuButtons = this.roleButtonItem.MenuButtons;
+          this.MenuButtons.forEach(item => {
+            if (item.MenuId == 18) {
+              this.MenuButtonsData = item.Button;
             }
           });
         }
+      });
+    },
 
-        this.selectedRowKeys = [];
-        var dataSource = this.selectValue;
-        //取列表
-        const paraId = [
-          {
-            Page: this.page,
-            Data: this.filters.data,
-            Size: this.size
-          }
-        ];
-
-        var keyMap = {
-          Data: dataSource
-        };
-
-        for (var i = 0; i < paraId.length; i++) {
-          var obj = paraId[i];
-          for (var key in obj) {
-            var newKey = keyMap[key];
-            if (newKey) {
-              obj[newKey] = obj[key];
-              delete obj[key];
-            }
-          }
-        }
-
-        this.para.Code = "GetListYsdatabaseYsAdmin";
-        this.para.Data = JSON.stringify(paraId[0]);
-        handlePost(this.para).then(res => {
-          if (res.IsSuccess == true) {
-            const description = {
-              description: "123"
-            };
-            this.total = res.Data.Count;
-            this.users = res.Data.List;
-            this.users.map(car => {
-              // var obj = {};
-              var key = "description";
-              var value = "添加";
-              eval("car." + key + "='" + value + "'");
-            });
-          }
-          console.log("userslist:", this.users);
-          this.para.Data = "";
-          this.para.Code = "GetListYsdatabaseYsDepartment";
+    // 获取用户列表
+    getDataList() {
+          const paras = {};
+          this.para.Code = "GetListYsdatabaseYsButton";
+          this.para.Data = JSON.stringify(paras);
           handlePost(this.para).then(res => {
             if (res.IsSuccess == true) {
-              this.departments = res.Data.List;
-              this.para.Code = "GetListYsdatabaseYsRole";
+              this.buttonList = res.Data.List;
+              this.buttonList.map(car => {
+                if (car.Name == "添加") {
+                  this.ButtonIcons.add = car.Icon;
+                  this.ButtonNames.add = car.Name;
+                }
+                if (car.Name == "编辑") {
+                  this.ButtonIcons.edit = car.Icon;
+                  this.ButtonNames.edit = car.Name;
+                }
+                if (car.Name == "批量删除") {
+                  this.ButtonIcons.del = car.Icon;
+                  this.ButtonNames.del = car.Name;
+                }
+                if (car.Name == "刷新") {
+                  this.ButtonIcons.refresh = car.Icon;
+                  this.ButtonNames.refresh = car.Name;
+                }
+                if (car.Name == "查询") {
+                  this.ButtonIcons.query = car.Icon;
+                  this.ButtonNames.query = car.Name;
+                }
+              });
+            }
+
+            this.selectedRowKeys = [];
+            var dataSource = this.selectValue;
+            //取列表
+            const paraId = [
+              {
+                Page: this.page,
+                Data: this.filters.data,
+                Size: this.size
+              }
+            ];
+
+            var keyMap = {
+              Data: dataSource
+            };
+
+            for (var i = 0; i < paraId.length; i++) {
+              var obj = paraId[i];
+              for (var key in obj) {
+                var newKey = keyMap[key];
+                if (newKey) {
+                  obj[newKey] = obj[key];
+                  delete obj[key];
+                }
+              }
+            }
+
+            this.para.Code = "GetListYsdatabaseYsAdmin";
+            this.para.Data = JSON.stringify(paraId[0]);
+            handlePost(this.para).then(res => {
+              if (res.IsSuccess == true) {
+                const description = {
+                  description: "123"
+                };
+                this.total = res.Data.Count;
+                this.users = res.Data.List;
+                this.users.map(car => {
+                  // var obj = {};
+                  var key = "description";
+                  var value = "添加";
+                  eval("car." + key + "='" + value + "'");
+                });
+              }
+              this.para.Data = "";
+              this.para.Code = "GetListYsdatabaseYsDepartment";
               handlePost(this.para).then(res => {
                 if (res.IsSuccess == true) {
-                  this.userRoles = res.Data.List;
-                  console.log("roles:", this.roles);
-
-                  //获取多菜单按钮
-                  const paraId = {
-                    MenuId: 18
-                  };
-                  this.para.Code = "GetYsMenuButton";
-                  this.para.Data = JSON.stringify(paraId);
+                  this.departments = res.Data.List;
+                  this.para.Code = "GetListYsdatabaseYsRole";
                   handlePost(this.para).then(res => {
                     if (res.IsSuccess == true) {
-                      this.buttonAr = res;
-                      this.allotButton();
+                      this.userRoles = res.Data.List;
+                      //获取多菜单按钮
+                      const paraId = {
+                        MenuId: 18
+                      };
+                      this.para.Code = "GetYsMenuButton";
+                      this.para.Data = JSON.stringify(paraId);
+                      handlePost(this.para).then(res => {
+                        if (res.IsSuccess == true) {
+                          this.buttonAr = res;
+                          this.allotButton();
+                        }
+                      });
                     }
                   });
                 }
               });
-            }
-          });
-          //取部门树
-          const paraTree = {
-            // Page: this.page,
-            // Size: 10
-          };
-          // this.dataList = [];
-          this.para.Code = "GetTreeYsdatabaseYsDepartment";
-          this.para.Data = JSON.stringify(paraTree);
-          handlePost(this.para).then(res => {
-            if (res.IsSuccess == true) {
-              this.dataList = res.Data;
-              const paraData = {
-                Del: "删除",
-                Edit: "编辑",
-                Key: "",
-                title: "全部"
+              //取部门树
+              const paraTree = {
+                // Page: this.page,
+                // Size: 10
               };
-              this.dataList.unshift(paraData);
-              console.log("this.dataList:::000000", this.dataList);
-              // this.getMenuName()
-            }
-          });
-        });
-      });
+              // this.dataList = [];
+              this.para.Code = "GetTreeYsdatabaseYsDepartment";
+              this.para.Data = JSON.stringify(paraTree);
+              handlePost(this.para).then(res => {
+                if (res.IsSuccess == true) {
+                  this.dataList = res.Data;
+                  const paraData = {
+                    Del: "删除",
+                    Edit: "编辑",
+                    Key: "",
+                    title: "全部"
+                  };
+                  this.dataList.unshift(paraData);
+                  this.YsAdminGetInfo() //获取按钮
+                }
+              });
+            });
+          });  
+          
+
+          //获取按钮END
+      //   }
+      // });
     },
     // 按部门查询
     getTreeList(data) {
-      console.log("ddddd:", data);
       //取列表
       var numberData = parseInt(data);
       if (data.length < 1) {
@@ -2079,13 +1527,9 @@ export default {
                 });
               }
             })
-            .catch(err => {
-              console.log(err);
-            });
+            .catch(err => {});
         })
-        .catch(err => {
-          console.log(err);
-        });
+        .catch(err => {});
     },
     // 显示编辑界面
     handleEdit(index, row) {
@@ -2140,12 +1584,10 @@ export default {
       handlePost(this.para).then(res => {
         if (res.IsSuccess == true) {
           this.departments = res.Data.List;
-          // console.log(this.departments);
           this.para.Code = "GetListYsdatabaseYsRole";
           handlePost(this.para).then(res => {
             if (res.IsSuccess == true) {
               this.roles = res.Data.List;
-              // console.log(this.roles);
             } else {
               this.$message({
                 message: res.Code + ":" + res.Message,
@@ -2166,10 +1608,9 @@ export default {
             type: "warning"
           })
             .then(() => {
-              // Vue.delete(this.editForm,'zhanghao')
-              this.editForm.DepartmentId = this.editForm.Departmeid
-              delete this.editForm.RoleIds
-              this.editForm.RoleIds = this.RoleIdsInfo
+              this.editForm.DepartmentId = this.editForm.Departmeid;
+              delete this.editForm.RoleIds;
+              this.editForm.RoleIds = this.RoleIdsInfo;
               const paraObj = Object.assign({}, this.editForm);
               this.para.Data = JSON.stringify(paraObj);
               this.para.Code = "UpdateYsdatabaseYsAdmin";
@@ -2190,13 +1631,10 @@ export default {
                     });
                   }
                 })
-                .catch(err => {
-                  console.log(err);
-                });
+                .catch(err => {});
             })
             .catch(e => {
               // 打印一下错误
-              console.log(e);
             });
         }
       });
@@ -2210,17 +1648,9 @@ export default {
             cancelButtonText: "取消",
             type: "warning"
           }).then(() => {
-            // console.log (this.para)
-
-            // this.editForm.KeyId = (parseInt(Math.random() * 100)).toString() // mock a id
-            // this.editForm = {
-            // RoleIds:[0,1,2]
-            // }
             const paraObj = Object.assign({}, this.editForm);
-            console.log(paraObj);
             this.para.Data = JSON.stringify(paraObj);
             this.para.Code = "AddYsdatabaseYsAdmin";
-            console.log("parapara111", this.para);
             handlePost(this.para).then(res => {
               if (res.IsSuccess == true) {
                 this.$refs["editForm"].resetFields();
@@ -2244,7 +1674,6 @@ export default {
     // 全选单选多选
     selsChange(sels) {
       this.sels = sels;
-      console.log(sels);
     },
     // 批量删除
     batchRemove() {
@@ -2275,13 +1704,9 @@ export default {
                 });
               }
             })
-            .catch(err => {
-              console.log(err);
-            });
+            .catch(err => {});
         })
-        .catch(err => {
-          console.log(err);
-        });
+        .catch(err => {});
     }
   },
   mounted() {

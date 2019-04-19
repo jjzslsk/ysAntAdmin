@@ -61,13 +61,13 @@
         buttonAr拥有的：{{buttonAr}} -->
         <!-- {{columnsDataInfo}} -->
         <span class="aBut">
-        <span  v-for="index in allotButtons" :key="index.Id">
+        <span  v-for="index in MenuButtonsData" :key="index.Id">
         <a-button :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
         </span>
         </span> 
 
       <el-form-item style="float: right;">
-        <span v-for="index in allotButtons" :key="index.Id">
+        <span v-for="index in MenuButtonsData" :key="index.Id">
           <a-button v-if="index.Classname==='search'" :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>
         </span>
         </el-form-item>
@@ -131,7 +131,7 @@
          <a-badge v-if="record.State == false" status="error" text="停用" />
     </template>
     <template slot="action" slot-scope="text, record">
-            <span  v-for="index in allotButtons" :key="index.Id">
+            <span  v-for="index in MenuButtonsData" :key="index.Id">
           <a href="javascript:;" v-if="index.Classname==='edit'"  @click="onEdit(record.Id)">{{index.Name}}</a>
           <a href="javascript:;" v-if="index.Classname==='del'"  @click="onDelete(record)">{{index.Name}}</a>
           </span>
@@ -586,6 +586,11 @@ const treeData = [{
 export default {
   data() {
     return {
+      //获取按钮
+      MenuButtonsData: [],
+      MenuButtons: [],
+      roleButtonItem: null,
+
       //编辑信息
       paraDataInfo :{},
       
@@ -1451,9 +1456,25 @@ export default {
       this.page = 1;
       this.getDataList();
     },
+
+    YsAdminGetInfo() { //获取按钮
+      this.para.Code = "YsAdminGetInfo";
+      this.para.Data = "";
+      handlePost(this.para).then(res => {
+        if (res.IsSuccess == true) {
+          this.roleButtonItem = res.Data;
+          this.MenuButtons = this.roleButtonItem.MenuButtons;
+          this.MenuButtons.forEach(item => {
+            if (item.MenuId == 20) {
+              this.MenuButtonsData = item.Button;
+            }
+          });
+        }
+      });
+    },
+
     // 获取列表
     getDataList() {
-
             const paras = {};
           this.para.Code = 'GetListYsdatabaseYsButton';
           this.para.Data = JSON.stringify(paras);
@@ -1530,6 +1551,7 @@ export default {
                 this.buttonAr = res;
                 this.allotButton()
                 this.getType()
+                this.YsAdminGetInfo()
               }
             }); 
 
