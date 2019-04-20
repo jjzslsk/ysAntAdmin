@@ -1,9 +1,7 @@
 <template>
   <section class="app-container">
     <el-card class="box-card">
-      {{dataList}}
       <!--工具条-->
-      <!-- buttonList::{{buttonList}} -->
       <el-form :inline="true" :model="filters" @submit.native.prevent>
         <span v-for="index in MenuButtonsData" :key="index.Id">
         <a-button :class="setClass(index.Classname)" style="margin-right:.3rem"  :icon="index.Icon"  @click="defaultClick(index)" type="primary" >{{index.Name}}</a-button>

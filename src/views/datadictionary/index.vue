@@ -1457,10 +1457,28 @@ export default {
       this.getDataList();
     },
 
-    YsAdminGetInfo() { //获取按钮
-      this.para.Code = "YsAdminGetInfo";
+    // YsAdminGetInfo() { //获取按钮
+    //   this.para.Code = "YsAdminGetInfo";
+    //   this.para.Data = "";
+    //   handlePost(this.para).then(res => {
+    //     if (res.IsSuccess == true) {
+    //       this.roleButtonItem = res.Data;
+    //       this.MenuButtons = this.roleButtonItem.MenuButtons;
+    //       this.MenuButtons.forEach(item => {
+    //         if (item.MenuId == 20) {
+    //           this.MenuButtonsData = item.Button;
+    //         }
+    //       });
+    //     }
+    //   });
+    // },
+
+    // 获取列表
+    getDataList() {
+
+        this.para.Code = "YsAdminGetInfo";
       this.para.Data = "";
-      handlePost(this.para).then(res => {
+      handlePost(this.para).then(res => {//获取按钮
         if (res.IsSuccess == true) {
           this.roleButtonItem = res.Data;
           this.MenuButtons = this.roleButtonItem.MenuButtons;
@@ -1469,13 +1487,8 @@ export default {
               this.MenuButtonsData = item.Button;
             }
           });
-        }
-      });
-    },
 
-    // 获取列表
-    getDataList() {
-            const paras = {};
+          const paras = {};
           this.para.Code = 'GetListYsdatabaseYsButton';
           this.para.Data = JSON.stringify(paras);
           handlePost(this.para).then(res => {
@@ -1551,7 +1564,7 @@ export default {
                 this.buttonAr = res;
                 this.allotButton()
                 this.getType()
-                this.YsAdminGetInfo()
+                // this.YsAdminGetInfo()
               }
             }); 
 
@@ -1560,6 +1573,12 @@ export default {
       });
       });
 
+
+
+        }
+      });
+
+            
 
 
     },

@@ -287,7 +287,7 @@
         @click="updateData"
         v-model="dialogFormVisibleEdit"
       >
-        <div>
+        <!-- <div>
           <a-row :gutter="24">
             <a-col :span="12">
               <a-col :lg="4" :md="24" style="margin-bottom: 12px;">
@@ -352,12 +352,11 @@
               <a-col :lg="20" :md="24" style="margin-bottom: 12px;">-</a-col>
             </a-col>
           </a-row>
-        </div>
+        </div> -->
 
         <template>
           <a-tabs @change="callback" type="card">
             <a-tab-pane tab="基本信息" key="1">
-              {{editForm}}
               <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
                 <el-form-item label="名称:" prop="Name">
                   <el-input v-model="editForm.Name" auto-complete="off"></el-input>
